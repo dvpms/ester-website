@@ -1,26 +1,135 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ─────────────────────────────────────────────────────────────
+   Design Tokens — Esther Property
+   Semua token didefinisikan di sini (bukan tailwind.config.js)
+   Digunakan via utility class: bg-brand-gold, text-brand-navy, dll.
+──────────────────────────────────────────────────────────────── */
+@theme {
+  /* ── Colors — Brand ───────────────────────────────────────── */
+  --color-brand-gold: #c9a84c;       /* Aksen utama, CTA, highlight */
+  --color-brand-gold-light: #f5e9c8; /* Background tint gold, badge */
+  --color-brand-navy: #0d1b2a;       /* Header, footer, teks gelap utama */
+  --color-brand-navy-light: #1a2e42; /* Hover state navy, dark section */
+
+  /* ── Colors — Neutral ─────────────────────────────────────── */
+  --color-neutral-950: #0a0a0a;
+  --color-neutral-900: #1a1a1a; /* Body text */
+  --color-neutral-700: #404040;
+  --color-neutral-500: #737373; /* Subtext, placeholder */
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-100: #f5f5f5; /* Background section terang */
+  --color-neutral-50: #fafafa;  /* Background halaman default */
+
+  /* ── Colors — Semantic ────────────────────────────────────── */
+  --color-success: #166534;
+  --color-warning: #92400e;
+  --color-error: #991b1b;
+
+  /* ── Typography — Font Family ─────────────────────────────── */
+  --font-sans: "Inter", sans-serif;            /* Body text, nav, caption, label */
+  --font-serif: "Playfair Display", serif;     /* Hero headline, section title premium */
+
+  /* ── Typography — Font Size ───────────────────────────────── */
+  --text-display: 2.5rem;  /* 40px — hero headline */
+  --text-h1: 2rem;         /* 32px — page title */
+  --text-h2: 1.75rem;      /* 28px — section heading */
+  --text-h3: 1.125rem;     /* 18px — card title, sub-heading */
+  --text-body: 1rem;       /* 16px — body text */
+  --text-sm: 0.875rem;     /* 14px — caption, meta */
+  --text-xs: 0.75rem;      /* 12px — label kecil */
+
+  /* ── Spacing ──────────────────────────────────────────────── */
+  --spacing-section: 5rem; /* Padding antar section halaman */
+  --spacing-card: 1.5rem;  /* Padding dalam card */
+
+  /* ── Border Radius ────────────────────────────────────────── */
+  --radius-card: 0.75rem;  /* 12px */
+  --radius-btn: 0.5rem;    /* 8px */
+  --radius-sm: 0.25rem;    /* 4px */
+
+  /* ── Shadows ──────────────────────────────────────────────── */
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.08);
+  --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.14);
+  --shadow-filter: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ─────────────────────────────────────────────────────────────
+   Base Styles
+──────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-neutral-50);
+  color: var(--color-neutral-900);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Headings ─────────────────────────────────────────────────
+   Gunakan font-serif untuk headline premium, font-sans untuk sub-heading
+──────────────────────────────────────────────────────────────── */
+h1,
+h2 {
+  font-family: var(--font-serif);
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--color-brand-navy);
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-sans);
+  line-height: 1.3;
+  font-weight: 600;
+  color: var(--color-neutral-900);
+}
+
+/* ── Links ────────────────────────────────────────────────────
+   Pastikan focus-visible selalu terlihat (aksesibilitas)
+──────────────────────────────────────────────────────────────── */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-brand-gold);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Images ───────────────────────────────────────────────────
+   Semua gambar responsive secara default
+──────────────────────────────────────────────────────────────── */
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── Focus Visible ────────────────────────────────────────────
+   Tombol dan elemen interaktif lain
+──────────────────────────────────────────────────────────────── */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-brand-gold);
+  outline-offset: 2px;
 }
