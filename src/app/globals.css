@@ -27,8 +27,8 @@
   --color-error: #991b1b;
 
   /* ── Typography — Font Family ─────────────────────────────── */
-  --font-sans: "Inter", sans-serif;            /* Body text, nav, caption, label */
-  --font-serif: "Playfair Display", serif;     /* Hero headline, section title premium */
+  --font-sans: var(--font-inter), "Inter", sans-serif;               /* Body text, nav, caption, label */
+  --font-serif: var(--font-playfair), "Playfair Display", serif;    /* Hero headline, section title premium */
 
   /* ── Typography — Font Size ───────────────────────────────── */
   --text-display: 2.5rem;  /* 40px — hero headline */
