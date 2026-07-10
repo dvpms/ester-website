@@ -37,26 +37,26 @@ export function Button({
   const baseStyles = [
     'inline-flex items-center justify-center gap-2',
     'font-sans font-semibold transition-all duration-200',
-    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-gold',
+    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-remax-red',
     'disabled:opacity-50 disabled:cursor-not-allowed',
     fullWidth ? 'w-full' : '',
   ].join(' ');
 
   const variantStyles = {
     primary: [
-      'bg-brand-gold text-brand-navy',
+      'bg-remax-blue text-white',
       'hover:brightness-110 active:brightness-95',
       'shadow-card hover:shadow-card-hover',
     ].join(' '),
     secondary: [
-      'bg-brand-navy text-neutral-50',
-      'hover:bg-brand-navy-light active:opacity-90',
+      'bg-remax-red text-white',
+      'hover:opacity-90 active:opacity-100',
       'shadow-card hover:shadow-card-hover',
     ].join(' '),
     outline: [
-      'bg-transparent text-brand-gold',
-      'border-2 border-brand-gold',
-      'hover:bg-brand-gold hover:text-brand-navy active:opacity-90',
+      'bg-transparent text-remax-blue',
+      'border-2 border-remax-blue',
+      'hover:bg-remax-blue hover:text-white active:opacity-90',
     ].join(' '),
   };
 

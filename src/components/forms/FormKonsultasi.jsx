@@ -7,7 +7,7 @@
 
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
-import { CheckCircle, AlertCircle } from 'lucide-react';
+import { HiCheckCircle, HiExclamationCircle } from 'react-icons/hi2';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { kawasanList } from '@/data/kawasan';
@@ -121,12 +121,12 @@ export function FormKonsultasi({ listingSlug, lang = 'id', onSubmit }) {
 
       {/* Kawasan select */}
       <div className="flex flex-col gap-1">
-        <label htmlFor="konsultasi-kawasan" className="text-sm font-semibold text-neutral-700 font-sans">
+        <label htmlFor="konsultasi-kawasan" className="text-sm font-semibold text-neutral-900 font-sans">
           {text.form.kawasan}
         </label>
         <select
           id="konsultasi-kawasan"
-          className="w-full px-4 py-3 text-sm font-sans bg-white border border-neutral-300 rounded-btn text-neutral-700 hover:border-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-brand-gold transition-all"
+          className="w-full px-4 py-3 text-sm font-sans bg-white border border-neutral-600 rounded-btn text-neutral-900 hover:border-remax-red focus:outline-none focus:ring-2 focus:ring-remax-red focus:border-remax-red transition-all"
           {...register('kawasan')}
         >
           <option value="">-- Pilih Kawasan --</option>
@@ -148,7 +148,7 @@ export function FormKonsultasi({ listingSlug, lang = 'id', onSubmit }) {
       />
 
       {/* Privacy note */}
-      <p className="text-xs text-neutral-400 font-sans">{text.form.privacy}</p>
+      <p className="text-xs text-neutral-600 font-sans">{text.form.privacy}</p>
 
       {/* Submit button */}
       <Button
@@ -164,13 +164,13 @@ export function FormKonsultasi({ listingSlug, lang = 'id', onSubmit }) {
       {/* Feedback messages */}
       {submitStatus === 'success' && (
         <div className="flex items-start gap-2 p-4 bg-green-50 border border-green-200 rounded-btn text-success text-sm font-sans">
-          <CheckCircle size={16} className="shrink-0 mt-0.5" />
+          <HiCheckCircle className="shrink-0 mt-0.5 text-base" />
           {text.form.successMessage}
         </div>
       )}
       {submitStatus === 'error' && (
         <div className="flex items-start gap-2 p-4 bg-red-50 border border-red-200 rounded-btn text-error text-sm font-sans">
-          <AlertCircle size={16} className="shrink-0 mt-0.5" />
+          <HiExclamationCircle className="shrink-0 mt-0.5 text-base" />
           {text.form.errorMessage}
         </div>
       )}

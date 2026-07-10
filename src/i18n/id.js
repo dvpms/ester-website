@@ -7,11 +7,10 @@
 /** @type {typeof import('./en').en} */
 export const id = {
   nav: {
-    home: "Beranda",
     properties: "Properti",
     area: "Kawasan",
-    blog: "Artikel",
-    about: "Tentang Saya",
+    blog: "Blog",
+    about: "Tentang",
     contact: "Kontak",
   },
 
@@ -27,7 +26,7 @@ export const id = {
 
   hero: {
     headline: "Temukan Properti Impian Anda",
-    subheadline: "Spesialis properti multi-kawasan di Tangerang Selatan — BSD City, Gading Serpong, Alam Sutera, dan Bintaro.",
+    subheadline: "Spesialis properti di kawasan Tangerang Selatan — BSD City, Gading Serpong, Alam Sutera, dan Bintaro.",
     searchPlaceholder: "Cari kawasan atau nama properti...",
     badge: "Terpercaya sejak 2015",
   },
@@ -76,7 +75,7 @@ export const id = {
     messagePlaceholder: "Ceritakan kebutuhan properti Anda...",
     successMessage: "Pesan berhasil dikirim! Esther akan menghubungi Anda segera.",
     errorMessage: "Terjadi kesalahan. Silakan coba lagi atau hubungi via WhatsApp.",
-    privacy: "Data Anda aman dan tidak akan dibagikan ke pihak ketiga.",
+    privacy: "",
   },
 
   common: {
@@ -99,7 +98,7 @@ export const id = {
     publishedOn: "Dipublikasikan",
     readMore: "Baca Selengkapnya",
     relatedArticles: "Artikel Terkait",
-    relatedProperties: "Properti di Kawasan Ini",
+    relatedProperties: "Properti di",
     trustBadge: "Transaksi Aman & Terpercaya",
     yearsExperience: "Tahun Pengalaman",
     propertiesSold: "Properti Terjual",
@@ -108,8 +107,8 @@ export const id = {
   },
 
   footer: {
-    tagline: "Spesialis properti multi-kawasan Tangerang Selatan.",
-    quickLinks: "Tautan Cepat",
+    tagline: "Spesialis properti kawasan Tangerang Selatan.",
+    quickLinks: "Navigasi",
     contact: "Hubungi Kami",
     followUs: "Ikuti Kami",
     copyright: `© ${new Date().getFullYear()} Esther Property. Hak cipta dilindungi.`,

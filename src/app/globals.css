@@ -37,7 +37,7 @@
   --text-xs: 0.75rem;      /* 12px — label kecil */
 
   /* ── Spacing ──────────────────────────────────────────────── */
-  --spacing-section: 5rem; /* Padding antar section halaman */
+  --spacing-section: 3rem; /* Padding antar section halaman */
   --spacing-card: 1.5rem;  /* Padding dalam card */
 
   /* ── Border Radius ────────────────────────────────────────── */

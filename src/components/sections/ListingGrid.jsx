@@ -18,7 +18,7 @@ export function ListingGrid({ listings, lang = 'id', title }) {
 
   if (!listings || listings.length === 0) {
     return (
-      <div className="text-center py-16 text-neutral-500 font-sans">
+      <div className="text-center py-16 text-neutral-600 font-sans">
         {text.common.noResult}
       </div>
     );
@@ -27,7 +27,7 @@ export function ListingGrid({ listings, lang = 'id', title }) {
   return (
     <section className="w-full">
       {title && (
-        <h2 className="font-serif text-h2 text-brand-navy mb-8">{title}</h2>
+        <h2 className="font-serif text-h2 text-remax-blue mb-8">{title}</h2>
       )}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {listings.map((listing) => (

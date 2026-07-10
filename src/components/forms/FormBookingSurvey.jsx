@@ -6,7 +6,7 @@
 
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
-import { CheckCircle, AlertCircle, CalendarCheck } from 'lucide-react';
+import { HiCheckCircle, HiExclamationCircle, HiCalendarDays } from 'react-icons/hi2';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { kawasanList } from '@/data/kawasan';
@@ -77,9 +77,9 @@ export function FormBookingSurvey({ lang = 'id', onSubmit }) {
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} noValidate className="flex flex-col gap-5">
       {/* Header */}
-      <div className="flex items-center gap-2 pb-3 border-b border-neutral-100">
-        <CalendarCheck size={18} className="text-brand-gold" />
-        <span className="font-sans text-sm font-semibold text-brand-navy">
+      <div className="flex items-center gap-2 pb-3 border-b border-border-c">
+        <HiCalendarDays className="text-remax-red text-lg" />
+        <span className="font-sans text-sm font-semibold text-remax-blue">
           {lang === 'en' ? 'Book a Property Survey' : 'Booking Survei Properti'}
         </span>
       </div>
@@ -129,12 +129,12 @@ export function FormBookingSurvey({ lang = 'id', onSubmit }) {
 
       {/* Kawasan */}
       <div className="flex flex-col gap-1">
-        <label htmlFor="survey-kawasan" className="text-sm font-semibold text-neutral-700 font-sans">
+        <label htmlFor="survey-kawasan" className="text-sm font-semibold text-neutral-900 font-sans">
           {text.form.kawasan}
         </label>
         <select
           id="survey-kawasan"
-          className="w-full px-4 py-3 text-sm font-sans bg-white border border-neutral-300 rounded-btn text-neutral-700 hover:border-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-brand-gold transition-all"
+          className="w-full px-4 py-3 text-sm font-sans bg-white border border-neutral-600 rounded-btn text-neutral-900 hover:border-remax-red focus:outline-none focus:ring-2 focus:ring-remax-red focus:border-remax-red transition-all"
           {...register('kawasan', { required: text.form.required })}
         >
           <option value="">-- Pilih Kawasan --</option>
@@ -170,7 +170,7 @@ export function FormBookingSurvey({ lang = 'id', onSubmit }) {
         {...register('catatan')}
       />
 
-      <p className="text-xs text-neutral-400 font-sans">{text.form.privacy}</p>
+      <p className="text-xs text-neutral-600 font-sans">{text.form.privacy}</p>
 
       <Button type="submit" variant="primary" size="lg" fullWidth disabled={isSubmitting}>
         {isSubmitting ? text.common.loading : text.cta.bookSurvey}
@@ -178,13 +178,13 @@ export function FormBookingSurvey({ lang = 'id', onSubmit }) {
 
       {submitStatus === 'success' && (
         <div className="flex items-start gap-2 p-4 bg-green-50 border border-green-200 rounded-btn text-success text-sm font-sans">
-          <CheckCircle size={16} className="shrink-0 mt-0.5" />
+          <HiCheckCircle className="shrink-0 mt-0.5 text-base" />
           {text.form.successMessage}
         </div>
       )}
       {submitStatus === 'error' && (
         <div className="flex items-start gap-2 p-4 bg-red-50 border border-red-200 rounded-btn text-error text-sm font-sans">
-          <AlertCircle size={16} className="shrink-0 mt-0.5" />
+          <HiExclamationCircle className="shrink-0 mt-0.5 text-base" />
           {text.form.errorMessage}
         </div>
       )}

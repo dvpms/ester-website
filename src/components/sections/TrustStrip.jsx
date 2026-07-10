@@ -28,25 +28,25 @@ export function TrustStrip({ lang = 'id' }) {
   ];
 
   return (
-    <section className="bg-brand-navy py-16" aria-label="Statistik kepercayaan">
+    <section className="bg-remax-blue py-16" aria-label="Statistik kepercayaan">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── Stats ────────────────────────────────────────── */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-14">
           {stats.map(({ value, label }) => (
             <div key={label} className="flex flex-col items-center text-center gap-1">
-              <span className="font-serif text-display font-bold text-brand-gold">{value}</span>
-              <span className="font-sans text-sm text-neutral-400 leading-tight">{label}</span>
+              <span className="font-serif text-display font-bold text-white">{value}</span>
+              <span className="font-sans text-sm text-neutral-600 leading-tight">{label}</span>
             </div>
           ))}
         </div>
 
         {/* ── Divider ──────────────────────────────────────── */}
-        <div className="border-t border-brand-navy-light mb-10" />
+        <div className="border-t border-blue-tint mb-10" />
 
         {/* ── Bank Partner ─────────────────────────────────── */}
         <div className="flex flex-col items-center gap-6">
-          <p className="font-sans text-xs text-neutral-500 uppercase tracking-widest">
+          <p className="font-sans text-xs text-neutral-600 uppercase tracking-widest">
             {lang === 'en' ? 'KPR Partner Banks' : 'Bank KPR Partner'}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">

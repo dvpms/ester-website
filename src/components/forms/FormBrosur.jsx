@@ -6,7 +6,7 @@
 
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
-import { CheckCircle, AlertCircle, FileText } from 'lucide-react';
+import { HiCheckCircle, HiExclamationCircle, HiDocument } from 'react-icons/hi2';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { id as textId } from '@/i18n/id';
@@ -61,9 +61,9 @@ export function FormBrosur({ listingSlug, lang = 'id', onSubmit }) {
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} noValidate className="flex flex-col gap-4">
       {/* Header form */}
-      <div className="flex items-center gap-2 pb-2 border-b border-neutral-100">
-        <FileText size={18} className="text-brand-gold" />
-        <span className="font-sans text-sm font-semibold text-brand-navy">
+      <div className="flex items-center gap-2 pb-2 border-b border-border-c">
+        <HiDocument className="text-remax-red text-lg" />
+        <span className="font-sans text-sm font-semibold text-remax-blue">
           {lang === 'en' ? 'Request Property Brochure' : 'Minta Brosur Properti'}
         </span>
       </div>
@@ -111,7 +111,7 @@ export function FormBrosur({ listingSlug, lang = 'id', onSubmit }) {
         })}
       />
 
-      <p className="text-xs text-neutral-400 font-sans">{text.form.privacy}</p>
+      <p className="text-xs text-neutral-600 font-sans">{text.form.privacy}</p>
 
       <Button type="submit" variant="primary" size="md" fullWidth disabled={isSubmitting}>
         {isSubmitting ? text.common.loading : text.cta.brochure}
@@ -119,13 +119,13 @@ export function FormBrosur({ listingSlug, lang = 'id', onSubmit }) {
 
       {submitStatus === 'success' && (
         <div className="flex items-start gap-2 p-3 bg-green-50 border border-green-200 rounded-btn text-success text-sm font-sans">
-          <CheckCircle size={15} className="shrink-0 mt-0.5" />
+          <HiCheckCircle className="shrink-0 mt-0.5 text-base" />
           {text.form.successMessage}
         </div>
       )}
       {submitStatus === 'error' && (
         <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-btn text-error text-sm font-sans">
-          <AlertCircle size={15} className="shrink-0 mt-0.5" />
+          <HiExclamationCircle className="shrink-0 mt-0.5 text-base" />
           {text.form.errorMessage}
         </div>
       )}

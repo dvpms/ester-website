@@ -25,13 +25,13 @@ export const Input = forwardRef(function Input(
   const fieldBaseStyles = [
     'w-full px-4 py-3 font-sans text-body text-neutral-900',
     'bg-white border rounded-btn transition-all duration-150',
-    'placeholder:text-neutral-500',
-    'focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-brand-gold',
-    'disabled:bg-neutral-100 disabled:text-neutral-500 disabled:cursor-not-allowed',
+    'placeholder:text-neutral-600',
+    'focus:outline-none focus:ring-2 focus:ring-remax-red focus:border-remax-red',
+    'disabled:bg-neutral-100 disabled:text-neutral-600 disabled:cursor-not-allowed',
   ].join(' ');
 
   const errorStyles = 'border-error focus:ring-error focus:border-error';
-  const defaultBorderStyles = 'border-neutral-300 hover:border-neutral-500';
+  const defaultBorderStyles = 'border-border-c hover:border-neutral-600';
 
   const fieldStyles = [
     fieldBaseStyles,
@@ -44,7 +44,7 @@ export const Input = forwardRef(function Input(
       {label && (
         <label
           htmlFor={id}
-          className="text-sm font-semibold text-neutral-700 font-sans"
+          className="text-sm font-semibold text-neutral-900 font-sans"
         >
           {label}
         </label>
@@ -74,7 +74,7 @@ export const Input = forwardRef(function Input(
         </p>
       )}
       {!error && hint && (
-        <p className="text-xs text-neutral-500 font-sans">{hint}</p>
+        <p className="text-xs text-neutral-600 font-sans">{hint}</p>
       )}
     </div>
   );
