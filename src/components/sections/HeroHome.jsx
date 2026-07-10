@@ -1,6 +1,7 @@
 // src/components/sections/HeroHome.jsx
 
 import Link from "next/link";
+import Image from "next/image";
 import { RiWhatsappLine } from "react-icons/ri";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { id as textId } from "@/i18n/id";
@@ -20,16 +21,14 @@ export function HeroHome({ lang = "id" }) {
       aria-label="Hero section"
     >
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div className="absolute -top-20 -left-20 w-96 h-96 bg-remax-red/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-remax-red/8 rounded-full blur-3xl" />
-        <div
-          className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle, #c9a84c 1px, transparent 1px)",
-            backgroundSize: "40px 40px",
-          }}
+        <Image
+          src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80"
+          alt="Properti mewah di Tangerang Selatan"
+          fill
+          priority
+          className="object-cover"
         />
+        <div className="absolute inset-0 bg-neutral-900/60" />
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -62,7 +61,6 @@ export function HeroHome({ lang = "id" }) {
           </Link>
         </div>
       </div>
-
     </section>
   );
 }
