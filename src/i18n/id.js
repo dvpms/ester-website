@@ -112,7 +112,6 @@ export const id = {
     contact: "Hubungi Kami",
     followUs: "Ikuti Kami",
     copyright: `© ${new Date().getFullYear()} Esther Property. Hak cipta dilindungi.`,
-    disclaimer: "Harga dan ketersediaan dapat berubah sewaktu-waktu. Hubungi kami untuk informasi terkini.",
   },
 
   kpr: {

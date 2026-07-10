@@ -5,6 +5,7 @@ import { HiMapPin, HiPhone } from "react-icons/hi2";
 import { RiInstagramLine, RiFacebookLine } from "react-icons/ri";
 import { id as text } from "@/i18n/id";
 import Image from "next/image";
+import { BsTiktok } from "react-icons/bs";
 
 const QUICK_LINKS = [
   { label: text.nav.home, href: "/" },
@@ -16,6 +17,7 @@ const QUICK_LINKS = [
 ];
 
 const KAWASAN_LINKS = [
+  
   { label: "BSD City", href: "/kawasan/bsd-city" },
   { label: "Gading Serpong", href: "/kawasan/gading-serpong" },
   { label: "Alam Sutera", href: "/kawasan/alam-sutera" },
@@ -50,7 +52,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram Esther Property"
-                className="p-2 rounded-btn bg-white/10 text-white hover:bg-remax-red transition-all duration-150"
+                className="p-2 rounded-btn bg-remax-blue text-white hover:bg-remax-red transition-all duration-150"
               >
                 <RiInstagramLine className="text-lg" />
               </a>
@@ -59,9 +61,18 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook Esther Property"
-                className="p-2 rounded-btn bg-white/10 text-white hover:bg-remax-red transition-all duration-150"
+                className="p-2 rounded-btn bg-remax-blue text-white hover:bg-remax-red transition-all duration-150"
               >
                 <RiFacebookLine className="text-lg" />
+              </a>
+              <a
+                href="https://tiktok.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TikTok Esther Property"
+                className="p-2 rounded-btn bg-remax-blue text-white hover:bg-remax-red transition-all duration-150"
+              >
+                <BsTiktok className="text-lg" />
               </a>
             </div>
           </div>
