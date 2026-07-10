@@ -165,7 +165,7 @@ export default async function KawasanPage({ params }) {
         variant="whatsapp"
         lang="id"
         customHeadline={`Tertarik Properti di ${kawasan.nama}?`}
-        customSub="Konsultasi gratis bersama Esther — temukan properti yang tepat sesuai kebutuhan Anda."
+        customSub="Konsultasi bersama Esther — temukan properti yang tepat sesuai kebutuhan Anda."
       />
     </>
   );

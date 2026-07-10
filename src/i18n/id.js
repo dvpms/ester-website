@@ -16,7 +16,7 @@ export const id = {
 
   cta: {
     whatsapp: "Hubungi via WhatsApp",
-    consult: "Konsultasi Gratis",
+    consult: "Konsultasi",
     brochure: "Minta Brosur",
     more: "Lihat Selengkapnya",
     bookSurvey: "Booking Survei",
