@@ -6,25 +6,22 @@
    Digunakan via utility class: bg-brand-gold, text-brand-navy, dll.
 ──────────────────────────────────────────────────────────────── */
 @theme {
-  /* ── Colors — Brand ───────────────────────────────────────── */
-  --color-brand-gold: #c9a84c;       /* Aksen utama, CTA, highlight */
-  --color-brand-gold-light: #f5e9c8; /* Background tint gold, badge */
-  --color-brand-navy: #0d1b2a;       /* Header, footer, teks gelap utama */
-  --color-brand-navy-light: #1a2e42; /* Hover state navy, dark section */
+  /* ── Colors — Brand RE/MAX ────────────────────────────────── */
+  --color-remax-blue: #003da5;       /* Header, footer, tombol primer, background CTA */
+  --color-remax-red: #da291c;        /* Aksen terbatas, badge Primary, CTA sekunder */
+  --color-blue-tint: #e6eef9;        /* Background badge Secondary, section alternatif */
+  --color-red-tint: #fbe9e7;         /* Background badge Primary */
 
   /* ── Colors — Neutral ─────────────────────────────────────── */
-  --color-neutral-950: #0a0a0a;
-  --color-neutral-900: #1a1a1a; /* Body text */
-  --color-neutral-700: #404040;
-  --color-neutral-500: #737373; /* Subtext, placeholder */
-  --color-neutral-300: #d4d4d4;
-  --color-neutral-100: #f5f5f5; /* Background section terang */
-  --color-neutral-50: #fafafa;  /* Background halaman default */
+  --color-neutral-900: #1a1a1a; /* Teks utama (heading, body) */
+  --color-neutral-600: #5f5e5a; /* Teks sekunder (caption, deskripsi singkat) */
+  --color-neutral-100: #f1efe8; /* Background netral non-brand */
+  --color-white: #ffffff;       /* Background dominan */
+  --color-border-c: #e0ded6;    /* Garis pembatas card, divider */
 
   /* ── Colors — Semantic ────────────────────────────────────── */
-  --color-success: #166534;
-  --color-warning: #92400e;
-  --color-error: #991b1b;
+  --color-success: #3b6d11;
+  --color-error: #b91c1c;
 
   /* ── Typography — Font Family ─────────────────────────────── */
   --font-sans: var(--font-inter), "Inter", sans-serif;               /* Body text, nav, caption, label */
@@ -57,79 +54,3 @@
 /* ─────────────────────────────────────────────────────────────
    Base Styles
 ──────────────────────────────────────────────────────────────── */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
-}
-
-body {
-  background-color: var(--color-neutral-50);
-  color: var(--color-neutral-900);
-  font-family: var(--font-sans);
-  font-size: var(--text-body);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* ── Headings ─────────────────────────────────────────────────
-   Gunakan font-serif untuk headline premium, font-sans untuk sub-heading
-──────────────────────────────────────────────────────────────── */
-h1,
-h2 {
-  font-family: var(--font-serif);
-  line-height: 1.2;
-  font-weight: 700;
-  color: var(--color-brand-navy);
-}
-
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-sans);
-  line-height: 1.3;
-  font-weight: 600;
-  color: var(--color-neutral-900);
-}
-
-/* ── Links ────────────────────────────────────────────────────
-   Pastikan focus-visible selalu terlihat (aksesibilitas)
-──────────────────────────────────────────────────────────────── */
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-a:focus-visible {
-  outline: 2px solid var(--color-brand-gold);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
-}
-
-/* ── Images ───────────────────────────────────────────────────
-   Semua gambar responsive secara default
-──────────────────────────────────────────────────────────────── */
-img,
-video {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* ── Focus Visible ────────────────────────────────────────────
-   Tombol dan elemen interaktif lain
-──────────────────────────────────────────────────────────────── */
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid var(--color-brand-gold);
-  outline-offset: 2px;
-}
