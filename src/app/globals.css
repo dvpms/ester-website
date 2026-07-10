@@ -1,26 +1,56 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ─────────────────────────────────────────────────────────────
+   Design Tokens — Esther Property
+   Semua token didefinisikan di sini (bukan tailwind.config.js)
+   Digunakan via utility class: bg-brand-gold, text-brand-navy, dll.
+──────────────────────────────────────────────────────────────── */
+@theme {
+  /* ── Colors — Brand RE/MAX ────────────────────────────────── */
+  --color-remax-blue: #003da5;       /* Header, footer, tombol primer, background CTA */
+  --color-remax-red: #da291c;        /* Aksen terbatas, badge Primary, CTA sekunder */
+  --color-blue-tint: #e6eef9;        /* Background badge Secondary, section alternatif */
+  --color-red-tint: #fbe9e7;         /* Background badge Primary */
+
+  /* ── Colors — Neutral ─────────────────────────────────────── */
+  --color-neutral-900: #1a1a1a; /* Teks utama (heading, body) */
+  --color-neutral-600: #5f5e5a; /* Teks sekunder (caption, deskripsi singkat) */
+  --color-neutral-100: #f1efe8; /* Background netral non-brand */
+  --color-white: #ffffff;       /* Background dominan */
+  --color-border-c: #e0ded6;    /* Garis pembatas card, divider */
+
+  /* ── Colors — Semantic ────────────────────────────────────── */
+  --color-success: #3b6d11;
+  --color-error: #b91c1c;
+
+  /* ── Typography — Font Family ─────────────────────────────── */
+  --font-sans: var(--font-inter), "Inter", sans-serif;               /* Body text, nav, caption, label */
+  --font-serif: var(--font-playfair), "Playfair Display", serif;    /* Hero headline, section title premium */
+
+  /* ── Typography — Font Size ───────────────────────────────── */
+  --text-display: 2.5rem;  /* 40px — hero headline */
+  --text-h1: 2rem;         /* 32px — page title */
+  --text-h2: 1.75rem;      /* 28px — section heading */
+  --text-h3: 1.125rem;     /* 18px — card title, sub-heading */
+  --text-body: 1rem;       /* 16px — body text */
+  --text-sm: 0.875rem;     /* 14px — caption, meta */
+  --text-xs: 0.75rem;      /* 12px — label kecil */
+
+  /* ── Spacing ──────────────────────────────────────────────── */
+  --spacing-section: 3rem; /* Padding antar section halaman */
+  --spacing-card: 1.5rem;  /* Padding dalam card */
+
+  /* ── Border Radius ────────────────────────────────────────── */
+  --radius-card: 0.75rem;  /* 12px */
+  --radius-btn: 0.5rem;    /* 8px */
+  --radius-sm: 0.25rem;    /* 4px */
+
+  /* ── Shadows ──────────────────────────────────────────────── */
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.08);
+  --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.14);
+  --shadow-filter: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+/* ─────────────────────────────────────────────────────────────
+   Base Styles
+──────────────────────────────────────────────────────────────── */

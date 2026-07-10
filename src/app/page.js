@@ -1,65 +1,135 @@
-import Image from "next/image";
+// src/app/page.js — Homepage
+// Merakit semua section: Hero → Kawasan → Listing → TrustStrip → Testimoni → CTA
+// generateMetadata: keyword "agent properti multi-kawasan terpercaya"
 
-export default function Home() {
+import { HeroHome } from '@/components/sections/HeroHome';
+import { KawasanGrid } from '@/components/sections/KawasanGrid';
+import { ListingGrid } from '@/components/sections/ListingGrid';
+import { TrustStrip } from '@/components/sections/TrustStrip';
+import { TestimoniGrid } from '@/components/sections/TestimoniGrid';
+import { CTABand } from '@/components/sections/CTABand';
+import { JsonLd, generateJsonLd } from '@/lib/seo';
+import { kawasanList } from '@/data/kawasan';
+import { listings } from '@/data/listings';
+import Link from 'next/link';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://estherproperty.com';
+
+export const metadata = {
+  title: 'Esther Property — Agent Properti Multi-Kawasan Terpercaya Tangerang Selatan',
+  description:
+    'Cari properti di BSD City, Gading Serpong, Alam Sutera & Bintaro bersama Esther — agen properti multi-kawasan terpercaya. Primary & secondary, dijual & disewakan.',
+  alternates: {
+    canonical: SITE_URL,
+    languages: { id: '/', en: '/en' },
+  },
+  openGraph: {
+    title: 'Esther Property — Agent Properti Multi-Kawasan Terpercaya',
+    description:
+      'Temukan properti impian Anda di Tangerang Selatan bersama Esther. BSD City, Gading Serpong, Alam Sutera, Bintaro.',
+    images: [{ url: '/images/og/homepage.jpg', width: 1200, height: 630 }],
+    locale: 'id_ID',
+    type: 'website',
+  },
+};
+
+/** Data testimoni mock — akan diintegrasikan ke data layer di fase berikutnya */
+const testimoniMock = [
+  {
+    id: 'testi-001',
+    namaKlien: 'Budi Santoso',
+    kawasanSlug: 'bsd-city',
+    komentar: 'Esther sangat profesional dan sabar menjelaskan semua opsi properti. Akhirnya kami berhasil mendapatkan rumah impian di BSD City dengan proses yang mudah dan cepat!',
+    komentarEn: 'Esther was very professional and patient in explaining all property options. We finally got our dream home in BSD City with an easy and fast process!',
+    rating: 5,
+    tanggal: '2026-05-10',
+  },
+  {
+    id: 'testi-002',
+    namaKlien: 'Diana Putri',
+    kawasanSlug: 'gading-serpong',
+    komentar: 'Pelayanan luar biasa! Esther membantu kami dari survei hingga serah terima kunci. Sangat rekomen untuk siapapun yang mau beli properti di Gading Serpong.',
+    komentarEn: 'Outstanding service! Esther helped us from survey to key handover. Highly recommended for anyone looking to buy property in Gading Serpong.',
+    rating: 5,
+    tanggal: '2026-04-20',
+  },
+  {
+    id: 'testi-003',
+    namaKlien: 'Ahmad Fauzi',
+    kawasanSlug: 'alam-sutera',
+    komentar: 'Saya baru pertama kali beli properti dan sempat bingung soal KPR. Esther menjelaskan dengan sangat jelas dan membantu negosiasi harga. Terima kasih!',
+    komentarEn: 'It was my first time buying property and I was confused about the mortgage. Esther explained everything clearly and helped with price negotiation. Thank you!',
+    rating: 5,
+    tanggal: '2026-06-01',
+  },
+];
+
+export default function HomePage() {
+  // Ambil hanya listing yang featured untuk homepage
+  const featuredListings = listings.filter((l) => l.featured);
+
+  // JSON-LD: RealEstateAgent + LocalBusiness
+  const realEstateAgentSchema = generateJsonLd('RealEstateAgent', {
+    description:
+      'Esther adalah agen properti multi-kawasan terpercaya di Tangerang Selatan, spesialis BSD City, Gading Serpong, Alam Sutera, dan Bintaro.',
+    image: `${SITE_URL}/images/og/homepage.jpg`,
+  });
+  const localBusinessSchema = generateJsonLd('LocalBusiness', {
+    kawasanDeskripsi: 'Layanan jual beli properti di BSD City, Gading Serpong, Alam Sutera, dan Bintaro.',
+  });
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      {/* ── Structured Data ─────────────────────────────────── */}
+      <JsonLd data={realEstateAgentSchema} />
+      <JsonLd data={localBusinessSchema} />
+
+      {/* ── Hero ────────────────────────────────────────────── */}
+      <HeroHome lang="id" />
+
+      {/* ── Kawasan Populer ─────────────────────────────────── */}
+      <section className="py-section bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-10 text-center">
+            <h2 className="font-serif text-h1 text-remax-blue font-bold">Kawasan Pilihan</h2>
+            <p className="font-sans text-body text-neutral-600 mt-3 max-w-xl mx-auto">
+              Pilih kawasan yang paling sesuai dengan gaya hidup dan kebutuhan investasi Anda.
+            </p>
+          </div>
+          <KawasanGrid kawasanList={kawasanList} lang="id" />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* ── Listing Unggulan ─────────────────────────────────── */}
+      <section className="py-section bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <h2 className="font-serif text-h1 text-remax-blue">Properti Unggulan</h2>
+            </div>
+            <Link
+              href="/properti"
+              className="font-sans text-sm font-semibold text-remax-red hover:underline shrink-0"
+            >
+              Lihat Semua Properti →
+            </Link>
+          </div>
+          <ListingGrid listings={featuredListings} lang="id" />
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* ── Testimoni ────────────────────────────────────────── */}
+      <section className="py-section bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-10 text-center">
+            <h2 className="font-serif text-h1 text-remax-blue">Apa Kata Mereka</h2>
+          </div>
+          <TestimoniGrid testimonials={testimoniMock} lang="id" />
+        </div>
+      </section>
+
+      {/* ── CTA Band ─────────────────────────────────────────── */}
+      <CTABand variant="whatsapp" lang="id" />
+    </>
   );
 }
