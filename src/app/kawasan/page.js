@@ -7,7 +7,7 @@ import { Breadcrumb } from '@/components/ui/Breadcrumb';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://estherproperty.com';
 
 export const metadata = {
-  title: 'Kawasan Properti Premium Tangerang Selatan | Esther Property',
+  title: 'Kawasan Properti Premium Tangerang Selatan | Esther REMAX',
   description: 'Jelajahi kawasan properti terbaik di Tangerang Selatan: BSD City, Gading Serpong, Alam Sutera, dan Bintaro. Temukan rumah impian Anda di lokasi strategis.',
   alternates: {
     canonical: `${SITE_URL}/kawasan`,

@@ -12,7 +12,7 @@ import Image from "next/image";
 const NAV_LINKS = [
   { key: "home", href: "/" },
   { key: "properties", href: "/properti" },
-  { key: "area", href: "/kawasan/bsd-city" },
+  { key: "area", href: "/kawasan" },
   { key: "blog", href: "/blog" },
   { key: "about", href: "/tentang" },
   { key: "contact", href: "/kontak" },
