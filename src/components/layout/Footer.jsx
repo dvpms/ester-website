@@ -35,7 +35,7 @@ export function Footer() {
               <Image
                 src="/logo/landscape2.png"
                 className="w-32 h-auto border-2 border-white/20 rounded-md"
-                alt="Esther Property"
+                alt="Esther REMAX"
                 width={120}
                 height={40}
               />
@@ -51,7 +51,7 @@ export function Footer() {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Instagram Esther Property"
+                aria-label="Instagram Esther REMAX"
                 className="p-2 rounded-btn bg-remax-blue text-white hover:bg-remax-red transition-all duration-150"
               >
                 <RiInstagramLine className="text-lg" />
@@ -60,7 +60,7 @@ export function Footer() {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Facebook Esther Property"
+                aria-label="Facebook Esther REMAX"
                 className="p-2 rounded-btn bg-remax-blue text-white hover:bg-remax-red transition-all duration-150"
               >
                 <RiFacebookLine className="text-lg" />
@@ -69,7 +69,7 @@ export function Footer() {
                 href="https://tiktok.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="TikTok Esther Property"
+                aria-label="TikTok Esther REMAX"
                 className="p-2 rounded-btn bg-remax-blue text-white hover:bg-remax-red transition-all duration-150"
               >
                 <BsTiktok className="text-lg" />

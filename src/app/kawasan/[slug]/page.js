@@ -7,7 +7,9 @@ import Image from 'next/image';
 import { HiMapPin, HiCheckCircle } from 'react-icons/hi2';
 import { kawasanList } from '@/data/kawasan';
 import { listings } from '@/data/listings';
+import { artikelList } from '@/data/artikel';
 import { ListingGrid } from '@/components/sections/ListingGrid';
+import { ArtikelGrid } from '@/components/sections/ArtikelGrid';
 import { CTABand } from '@/components/sections/CTABand';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { JsonLd, generateJsonLd } from '@/lib/seo';
@@ -25,18 +27,18 @@ export async function generateMetadata({ params }) {
   const kawasan = kawasanList.find((k) => k.slug === resolvedParams.slug);
 
   if (!kawasan) {
-    return { title: 'Kawasan Tidak Ditemukan | Esther Property' };
+    return { title: 'Kawasan Tidak Ditemukan | Esther REMAX' };
   }
 
   return {
-    title: `Properti ${kawasan.nama} — Dijual & Disewakan | Esther Property`,
-    description: `Cari rumah dijual di ${kawasan.nama} 2026. Harga properti ${kawasan.nama} terbaru, fasilitas lengkap & kawasan terpercaya bersama Esther Property.`,
+    title: `Properti ${kawasan.nama} — Dijual & Disewakan | Esther REMAX`,
+    description: `Cari rumah dijual di ${kawasan.nama} 2026. Harga properti ${kawasan.nama} terbaru, fasilitas lengkap & kawasan terpercaya bersama Esther REMAX.`,
     alternates: {
       canonical: `${SITE_URL}/kawasan/${kawasan.slug}`,
       languages: { id: `/kawasan/${kawasan.slug}`, en: `/en/kawasan/${kawasan.slug}` },
     },
     openGraph: {
-      title: `Properti di ${kawasan.nama} | Esther Property`,
+      title: `Properti di ${kawasan.nama} | Esther REMAX`,
       description: kawasan.deskripsi.slice(0, 160),
       images: [{ url: kawasan.fotoHero, width: 1200, height: 630 }],
       locale: 'id_ID',
@@ -56,6 +58,9 @@ export default async function KawasanPage({ params }) {
 
   // Filter listing yang berada di kawasan ini
   const kawasanListings = listings.filter((l) => l.kawasanId === kawasan.id);
+
+  // Filter artikel terkait
+  const kawasanArticles = artikelList.filter((a) => a.tagKawasan.includes(kawasan.slug));
 
   // JSON-LD schemas
   const localBusinessSchema = generateJsonLd('LocalBusiness', {
@@ -156,6 +161,15 @@ export default async function KawasanPage({ params }) {
               </h2>
             </div>
             <ListingGrid listings={kawasanListings} lang="id" />
+          </div>
+        </section>
+      )}
+
+      {/* ── Artikel Terkait ──────────────────────────────── */}
+      {kawasanArticles.length > 0 && (
+        <section className="py-section bg-neutral-50 border-t border-border-c">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <ArtikelGrid artikelList={kawasanArticles} title="Artikel Terkait" lang="id" />
           </div>
         </section>
       )}

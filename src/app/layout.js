@@ -22,14 +22,14 @@ const playfairDisplay = Playfair_Display({
 
 export const metadata = {
   title: {
-    template: '%s | Esther Property',
-    default: 'Esther Property — Spesialis Properti Kawasan Tangerang Selatan',
+    template: '%s | Esther REMAX',
+    default: 'Esther REMAX — Spesialis Properti Kawasan Tangerang Selatan',
   },
   description:
     'Agent properti terpercaya untuk BSD City, Gading Serpong, Alam Sutera, dan Bintaro. Properti primary & secondary, dijual dan disewakan.',
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://estherproperty.com'),
   openGraph: {
-    siteName: 'Esther Property',
+    siteName: 'Esther REMAX',
     locale: 'id_ID',
     type: 'website',
   },

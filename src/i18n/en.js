@@ -111,7 +111,7 @@ export const en = {
     quickLinks: "Quick Links",
     contact: "Contact Us",
     followUs: "Follow Us",
-    copyright: `© ${new Date().getFullYear()} Esther Property. All rights reserved.`,
+    copyright: `© ${new Date().getFullYear()} Esther REMAX. All rights reserved.`,
     disclaimer: "Prices and availability are subject to change. Contact us for the latest information.",
   },
 

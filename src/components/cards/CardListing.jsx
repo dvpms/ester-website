@@ -61,7 +61,7 @@ export function CardListing({ listing, lang = 'id' }) {
 
         <Link
           href={`/properti/${slug}`}
-          className="block font-sans text-h3 font-bold text-remax-blue hover:text-remax-red transition-colors duration-150 leading-tight focus-visible:outline-none focus-visible:underline"
+          className="block mb-auto font-sans text-h3 font-bold text-remax-blue hover:text-remax-red transition-colors duration-150 leading-tight focus-visible:outline-none focus-visible:underline"
         >
           {displayName}
         </Link>
@@ -94,7 +94,7 @@ export function CardListing({ listing, lang = 'id' }) {
           </div>
         )}
 
-        <div className="mt-auto pt-3 border-t border-border-c">
+        <div className="pt-3 border-t border-border-c">
           <p className="font-sans font-bold text-remax-red text-h3">
             {formatHarga(harga)}
             {transaksi === 'disewakan' && (
