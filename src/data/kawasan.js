@@ -1,7 +1,7 @@
 // @ts-check
 // src/data/kawasan.js
 //
-// Mock data untuk 4 kawasan utama yang dilayani Esther Property.
+// Mock data untuk 4 kawasan utama yang dilayani Esther REMAX.
 // Setiap kawasan memiliki deskripsi bilingual, fasilitas unggulan, dan koordinat.
 // Relasi: Listing.kawasanId → Kawasan.id
 

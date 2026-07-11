@@ -69,11 +69,11 @@ export function Header({ lang: langProp, onLangChange }) {
           <Link
             href="/"
             className="flex w-fit justify-center items-center leading-none focus-visible:outline-2 focus-visible:outline-remax-red focus-visible:outline-offset-2 rounded-sm"
-            aria-label="Esther Property — Beranda"
+            aria-label="Esther REMAX — Beranda"
           >
             <Image
               src="/logo/potrait.png"
-              alt="Logo Esther Property"
+              alt="Logo Esther REMAX"
               width={40}
               height={40}
               className="w-10 h-10 object-contain"

@@ -11,12 +11,14 @@ import { CTABand } from '@/components/sections/CTABand';
 import { JsonLd, generateJsonLd } from '@/lib/seo';
 import { kawasanList } from '@/data/kawasan';
 import { listings } from '@/data/listings';
+import { artikelList } from '@/data/artikel';
+import { ArtikelGrid } from '@/components/sections/ArtikelGrid';
 import Link from 'next/link';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://estherproperty.com';
 
 export const metadata = {
-  title: 'Esther Property — Agent Properti Multi-Kawasan Terpercaya Tangerang Selatan',
+  title: 'Esther REMAX — Agent Properti Multi-Kawasan Terpercaya Tangerang Selatan',
   description:
     'Cari properti di BSD City, Gading Serpong, Alam Sutera & Bintaro bersama Esther — agen properti multi-kawasan terpercaya. Primary & secondary, dijual & disewakan.',
   alternates: {
@@ -24,7 +26,7 @@ export const metadata = {
     languages: { id: '/', en: '/en' },
   },
   openGraph: {
-    title: 'Esther Property — Agent Properti Multi-Kawasan Terpercaya',
+    title: 'Esther REMAX — Agent Properti Multi-Kawasan Terpercaya',
     description:
       'Temukan properti impian Anda di Tangerang Selatan bersama Esther. BSD City, Gading Serpong, Alam Sutera, Bintaro.',
     images: [{ url: '/images/og/homepage.jpg', width: 1200, height: 630 }],
@@ -125,6 +127,24 @@ export default function HomePage() {
             <h2 className="font-serif text-h1 text-remax-blue">Apa Kata Mereka</h2>
           </div>
           <TestimoniGrid testimonials={testimoniMock} lang="id" />
+        </div>
+      </section>
+
+      {/* ── Artikel & Edukasi ────────────────────────────────── */}
+      <section className="py-section bg-neutral-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <h2 className="font-serif text-h1 text-remax-blue">Artikel & Panduan</h2>
+            </div>
+            <Link
+              href="/blog"
+              className="font-sans text-sm font-semibold text-remax-red hover:underline shrink-0"
+            >
+              Lihat Semua Artikel →
+            </Link>
+          </div>
+          <ArtikelGrid artikelList={artikelList.slice(0, 3)} lang="id" />
         </div>
       </section>
 

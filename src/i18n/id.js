@@ -9,7 +9,7 @@ export const id = {
   nav: {
     properties: "Properti",
     area: "Kawasan",
-    blog: "Blog",
+    blog: "Artikel",
     about: "Tentang",
     contact: "Kontak",
   },
@@ -111,7 +111,7 @@ export const id = {
     quickLinks: "Navigasi",
     contact: "Hubungi Kami",
     followUs: "Ikuti Kami",
-    copyright: `© ${new Date().getFullYear()} Esther Property. Hak cipta dilindungi.`,
+    copyright: `© ${new Date().getFullYear()} Esther REMAX. Hak cipta dilindungi.`,
   },
 
   kpr: {

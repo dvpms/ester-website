@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { HiHome, HiMagnifyingGlass } from 'react-icons/hi2';
 
 export const metadata = {
-  title: '404 — Halaman Tidak Ditemukan | Esther Property',
+  title: '404 — Halaman Tidak Ditemukan | Esther REMAX',
 };
 
 export default function NotFound() {

@@ -22,12 +22,14 @@ import {
 } from "react-icons/md";
 import { listings } from "@/data/listings";
 import { kawasanList } from "@/data/kawasan";
+import { artikelList } from "@/data/artikel";
 import { Badge } from "@/components/ui/Badge";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { FormKonsultasi } from "@/components/forms/FormKonsultasi";
 import { FormBrosur } from "@/components/forms/FormBrosur";
 import { CTABand } from "@/components/sections/CTABand";
 import { ListingGrid } from "@/components/sections/ListingGrid";
+import { ArtikelGrid } from "@/components/sections/ArtikelGrid";
 import { JsonLd, generateJsonLd } from "@/lib/seo";
 import { formatHarga, formatTanggal } from "@/lib/utils";
 import { id as text } from "@/i18n/id";
@@ -45,14 +47,14 @@ export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const listing = listings.find((l) => l.slug === resolvedParams.slug);
 
-  if (!listing) return { title: "Properti Tidak Ditemukan | Esther Property" };
+  if (!listing) return { title: "Properti Tidak Ditemukan | Esther REMAX" };
 
   return {
-    title: `${listing.nama} — ${formatHarga(listing.harga)} | Esther Property`,
+    title: `${listing.nama} — ${formatHarga(listing.harga)} | Esther REMAX`,
     description: `${listing.nama}: ${listing.jenisProperti} ${listing.transaksi} di ${listing.lokasiDetail}. ${listing.deskripsi.slice(0, 120)}`,
     alternates: { canonical: `${SITE_URL}/properti/${listing.slug}` },
     openGraph: {
-      title: `${listing.nama} | Esther Property`,
+      title: `${listing.nama} | Esther REMAX`,
       description: listing.deskripsi.slice(0, 160),
       images: [{ url: listing.galeri[0], width: 1200, height: 630 }],
       locale: "id_ID",
@@ -76,6 +78,11 @@ export default async function DetailListingPage({ params }) {
   const relatedListings = listings
     .filter((l) => l.kawasanId === listing.kawasanId && l.id !== listing.id)
     .slice(0, 3);
+
+  // Artikel terkait kawasan ini
+  const relatedArticles = kawasan 
+    ? artikelList.filter((a) => a.tagKawasan.includes(kawasan.slug)).slice(0, 3) 
+    : [];
 
   // JSON-LD schemas
   const listingSchema = generateJsonLd("RealEstateListing", {
@@ -333,7 +340,7 @@ export default async function DetailListingPage({ params }) {
 
           {/* ── Properti Terkait ──────────────────────────── */}
           {relatedListings.length > 0 && (
-            <section className="mt-16">
+            <section className="mt-16 border-t border-border-c pt-12">
               <h2 className="font-serif text-h2 text-remax-blue mb-8">
                 {text.common.relatedProperties}
                 {kawasan && (
@@ -346,6 +353,13 @@ export default async function DetailListingPage({ params }) {
                 )}
               </h2>
               <ListingGrid listings={relatedListings} lang="id" />
+            </section>
+          )}
+
+          {/* ── Artikel Terkait ──────────────────────────── */}
+          {relatedArticles.length > 0 && (
+            <section className="mt-16 border-t border-border-c pt-12">
+              <ArtikelGrid artikelList={relatedArticles} title="Bacaan Terkait" lang="id" />
             </section>
           )}
         </div>

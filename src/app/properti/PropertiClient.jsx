@@ -11,7 +11,7 @@ import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { listings } from '@/data/listings';
 import { kawasanList } from '@/data/kawasan';
 
-const INITIAL_FILTERS = { kawasan: '', jenis: '', segmen: '', transaksi: '' };
+const INITIAL_FILTERS = { kawasan: '', jenis: '', segmen: '', transaksi: '', harga: '', urutkan: '' };
 
 const BREADCRUMB_ITEMS = [
   { label: 'Beranda', href: '/' },
@@ -31,13 +31,32 @@ export function PropertiClient() {
 
   // Filter listing berdasarkan state aktif — hanya re-compute saat filter berubah
   const filteredListings = useMemo(() => {
-    return listings.filter((listing) => {
+    let result = listings.filter((listing) => {
       if (filters.kawasan && listing.kawasanId !== filters.kawasan) return false;
       if (filters.jenis && listing.jenisProperti !== filters.jenis) return false;
       if (filters.segmen && listing.segmen !== filters.segmen) return false;
       if (filters.transaksi && listing.transaksi !== filters.transaksi) return false;
+      
+      // Rentang Harga
+      if (filters.harga) {
+        if (filters.harga === 'under1m' && listing.harga >= 1000000000) return false;
+        if (filters.harga === '1m-3m' && (listing.harga < 1000000000 || listing.harga >= 3000000000)) return false;
+        if (filters.harga === '3m-5m' && (listing.harga < 3000000000 || listing.harga >= 5000000000)) return false;
+        if (filters.harga === 'over5m' && listing.harga < 5000000000) return false;
+      }
       return true;
     });
+
+    // Urutkan (Secara bawaan data.listings dianggap 'terbaru' di atas)
+    if (filters.urutkan === 'termurah') {
+      result.sort((a, b) => a.harga - b.harga);
+    } else if (filters.urutkan === 'termahal') {
+      result.sort((a, b) => b.harga - a.harga);
+    } else if (filters.urutkan === 'terlama') {
+      result.reverse();
+    }
+    
+    return result;
   }, [filters]);
 
   return (

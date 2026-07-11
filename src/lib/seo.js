@@ -5,11 +5,11 @@
 // Digunakan di setiap page.js untuk structured data.
 
 /**
- * Konfigurasi bisnis Esther Property — digunakan di banyak schema.
+ * Konfigurasi bisnis Esther REMAX — digunakan di banyak schema.
  * Nilai ini diambil dari env vars saat runtime; fallback ke placeholder untuk dev.
  */
 const BUSINESS_CONFIG = {
-  name: "Esther Property",
+  name: "Esther REMAX",
   agentName: "Esther",
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://estherproperty.com",
   whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "6281234567890",
