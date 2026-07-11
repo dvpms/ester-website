@@ -134,7 +134,7 @@ export default async function DetailListingPage({ params }) {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
             {/* ── Kolom Kiri: Galeri + Info ────────────────── */}
             <div className="lg:col-span-2 flex flex-col gap-6">
               {/* Galeri foto */}
@@ -142,7 +142,7 @@ export default async function DetailListingPage({ params }) {
                 {listing.galeri.map((src, index) => (
                   <div
                     key={src}
-                    className={`relative aspect-[4/3] overflow-hidden ${index === 0 && listing.galeri.length > 1 ? "sm:col-span-2 aspect-video" : ""}`}
+                    className={`relative overflow-hidden ${index === 0 && listing.galeri.length > 1 ? "aspect-video sm:col-span-2" : "aspect-[4/3]"}`}
                   >
                     <Image
                       src={src}
@@ -170,7 +170,7 @@ export default async function DetailListingPage({ params }) {
                   </Badge>
                 </div>
 
-                <h1 className="font-serif text-h1 text-remax-blue mb-2">
+                <h1 className="font-serif text-2xl sm:text-3xl md:text-h1 text-remax-blue mb-2 leading-tight">
                   {listing.nama}
                 </h1>
 
@@ -183,14 +183,14 @@ export default async function DetailListingPage({ params }) {
                       href={`/kawasan/${kawasan.slug}`}
                       className="text-remax-red hover:underline ml-1"
                     >
-                      · {kawasan.nama}
+                      {kawasan.nama}
                     </Link>
                   )}
                 </div>
 
                 {/* Harga */}
                 <div className="pb-4 border-b border-border-c mb-4">
-                  <p className="text-display text-remax-red font-bold">
+                  <p className="text-3xl sm:text-display text-remax-red font-bold">
                     {formatHarga(listing.harga)}
                     {listing.transaksi === "disewakan" && (
                       <span className="font-sans text-sm text-neutral-600 font-normal ml-1">

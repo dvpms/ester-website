@@ -32,7 +32,7 @@ export function HeroHome({ lang = "id" }) {
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 className="font-serif text-2xl md:text-[2.5rem] lg:text-display font-bold text-white leading-tight mb-6">
+        <h1 className="font-serif text-[2rem] md:text-[2.5rem] lg:text-display font-bold text-white leading-tight mb-6">
           {text.hero.headline}
           <span className="block mt-1">Tangerang Selatan</span>
         </h1>
