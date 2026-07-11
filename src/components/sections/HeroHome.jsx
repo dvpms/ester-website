@@ -22,13 +22,13 @@ export function HeroHome({ lang = "id" }) {
     >
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <Image
-          src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80"
+          src="https://images.unsplash.com/photo-1728721529009-bfaab6fcc8e6?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Properti mewah di Tangerang Selatan"
           fill
           priority
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-neutral-900/60" />
+        <div className="absolute inset-0 bg-neutral-900/30" />
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
