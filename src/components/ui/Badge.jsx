@@ -10,11 +10,11 @@
  * }} props
  */
 export function Badge({ children, variant = 'primary', className = '' }) {
-  const baseStyles = 'inline-flex items-center px-3 py-1 text-xs font-semibold font-sans rounded-sm uppercase tracking-wide';
+  const baseStyles = 'inline-flex items-center px-3 py-1 text-xs font-semibold font-sans rounded-full uppercase tracking-wide';
 
   const variantStyles = {
     // Segmen properti
-    primary: 'bg-red-tint text-remax-red border border-remax-red/20',
+    primary: 'bg-red-50 text-remax-red border border-remax-red/20',
     secondary: 'bg-blue-tint text-remax-blue border border-remax-blue/20',
 
     // Status properti
