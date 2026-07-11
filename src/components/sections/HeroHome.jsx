@@ -37,7 +37,7 @@ export function HeroHome({ lang = "id" }) {
           <span className="block mt-1">Tangerang Selatan</span>
         </h1>
 
-        <p className="font-sans text-xs md:text-body text-white/80 max-w-2xl mx-auto leading-relaxed mb-10">
+        <p className="font-sans text-sm sm:text-base md:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed mb-10">
           {text.hero.subheadline}
         </p>
 
