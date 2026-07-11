@@ -29,7 +29,7 @@ export function CardListing({ listing, lang = 'id' }) {
   const transaksiLabel = text.filter.transaction[transaksi] ?? transaksi;
 
   return (
-    <article className="group relative bg-white rounded-card shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden flex flex-col">
+    <article className="group relative bg-white rounded-card shadow-xl md:shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden flex flex-col">
       <Link
         href={`/properti/${slug}`}
         className="relative block overflow-hidden aspect-video shrink-0 focus-visible:outline-2 focus-visible:outline-remax-red"

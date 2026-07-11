@@ -6,6 +6,7 @@ import { RiInstagramLine, RiFacebookLine } from "react-icons/ri";
 import { id as text } from "@/i18n/id";
 import Image from "next/image";
 import { BsTiktok } from "react-icons/bs";
+import { MdEmail } from "react-icons/md";
 
 const QUICK_LINKS = [
   { label: text.nav.home, href: "/" },
@@ -55,15 +56,6 @@ export function Footer() {
                 className="p-2 rounded-btn bg-remax-blue text-white hover:bg-remax-red transition-all duration-150"
               >
                 <RiInstagramLine className="text-lg" />
-              </a>
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook Esther REMAX"
-                className="p-2 rounded-btn bg-remax-blue text-white hover:bg-remax-red transition-all duration-150"
-              >
-                <RiFacebookLine className="text-lg" />
               </a>
               <a
                 href="https://tiktok.com"
@@ -124,6 +116,15 @@ export function Footer() {
               <li className="flex items-start gap-3 text-sm text-white/80">
                 <HiMapPin className="shrink-0 text-white text-base mt-0.5" />
                 <span>Tangerang Selatan, Banten, Indonesia</span>
+              </li>
+              <li className="flex items-center gap-3 text-sm">
+                <MdEmail className="shrink-0 text-white text-base mt-0.5" />
+                <a
+                  href="mailto:esther@future.remax.co.id"
+                  className="text-white/80 hover:text-white transition-colors ml-1"
+                >
+                  esther@future.remax.co.id
+                </a>
               </li>
               <li className="flex items-center gap-3 text-sm">
                 <HiPhone className="shrink-0 text-white text-base" />
