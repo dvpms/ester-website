@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { id as textId } from '@/i18n/id';
 import { en as textEn } from '@/i18n/en';
+import { submitLead } from '@/app/actions/submitLead';
 
 /**
  * @param {{
@@ -47,7 +48,12 @@ export function FormBrosur({ listingSlug, lang = 'id', onSubmit }) {
         jenisForm: 'brosur',
       };
 
-      if (onSubmit) await onSubmit(leadData);
+      if (onSubmit) {
+        await onSubmit(leadData);
+      } else {
+        const res = await submitLead(leadData);
+        if (!res?.success) throw new Error(res?.error || 'Failed');
+      }
 
       setSubmitStatus('success');
       reset();

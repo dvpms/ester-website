@@ -6,14 +6,10 @@ import { RiWhatsappLine } from "react-icons/ri";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { id as textId } from "@/i18n/id";
 import { en as textEn } from "@/i18n/en";
-
-const WHATSAPP_NUMBER =
-  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "628XXXXXXXXXX";
-const WHATSAPP_MESSAGE = "Halo Esther, saya ingin konsultasi properti .";
+import { profile } from "@/data/profile";
 
 export function HeroHome({ lang = "id" }) {
   const text = lang === "en" ? textEn : textId;
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
   return (
     <section
@@ -42,10 +38,10 @@ export function HeroHome({ lang = "id" }) {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <a
-            href={whatsappUrl}
+            href={profile.socials.whatsapp}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 bg-remax-red text-white font-semibold font-sans px-8 py-4 rounded-btn shadow-card-hover hover:brightness-110 hover:scale-105 active:scale-100 transition-all duration-200 text-base"
+            className="inline-flex items-center gap-2.5 bg-remax-red text-white font-semibold font-sans px-8 py-4 rounded-full shadow-card-hover hover:brightness-110 hover:scale-105 active:scale-100 transition-all duration-200 text-base"
           >
             <RiWhatsappLine className="text-xl" />
             {text.cta.consult}
@@ -53,7 +49,7 @@ export function HeroHome({ lang = "id" }) {
 
           <Link
             href="/properti"
-            className="inline-flex items-center gap-2.5 bg-transparent text-white font-semibold font-sans px-8 py-4 rounded-btn border-2 border-white/30 hover:border-remax-red hover:text-remax-red transition-all duration-200 text-base"
+            className="inline-flex items-center gap-2.5 bg-transparent text-white font-semibold font-sans px-8 py-4 rounded-full border-2 border-white hover:border-remax-red hover:text-remax-red transition-all duration-200 text-base"
           >
             <HiMagnifyingGlass className="text-xl" />
             {lang === "en" ? "Browse Properties" : "Jelajah Properti"}

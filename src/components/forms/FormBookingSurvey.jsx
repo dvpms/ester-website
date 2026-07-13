@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/Button';
 import { kawasanList } from '@/data/kawasan';
 import { id as textId } from '@/i18n/id';
 import { en as textEn } from '@/i18n/en';
+import { submitLead } from '@/app/actions/submitLead';
 
 /** Dapatkan tanggal minimum survei (besok) dalam format YYYY-MM-DD */
 function getMinSurveyDate() {
@@ -63,7 +64,12 @@ export function FormBookingSurvey({ lang = 'id', onSubmit }) {
         catatan: data.catatan,
       };
 
-      if (onSubmit) await onSubmit(leadData);
+      if (onSubmit) {
+        await onSubmit(leadData);
+      } else {
+        const res = await submitLead(leadData);
+        if (!res?.success) throw new Error(res?.error || 'Failed');
+      }
 
       setSubmitStatus('success');
       reset();

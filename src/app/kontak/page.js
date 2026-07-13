@@ -1,5 +1,6 @@
 import { FormKonsultasi } from '@/components/forms/FormKonsultasi';
 import { CTABand } from '@/components/sections/CTABand';
+import { profile } from '@/data/profile';
 import { JsonLd, generateJsonLd } from '@/lib/seo';
 import { HiMapPin, HiPhone, HiEnvelope, HiClock } from 'react-icons/hi2';
 
@@ -14,14 +15,7 @@ export const metadata = {
   },
 };
 
-// Mock Server Action (karena instruksi spesifik "mockup untuk datanya, jangan buat api")
-async function mockSubmitLead(data) {
-  'use server';
-  // Simulate network delay to show loading state on client
-  await new Promise(r => setTimeout(r, 1500));
-  console.log('[MOCKUP] Lead form submitted to server:', data);
-  // Return success implicitly without doing actual DB/Email logic
-}
+
 
 export default function KontakPage() {
   const jsonLd = generateJsonLd('LocalBusiness', {
@@ -61,8 +55,8 @@ export default function KontakPage() {
                     <HiPhone className="text-remax-red text-lg" />
                   </div>
                   <h3 className="font-sans font-bold text-remax-blue text-sm">Telepon / WhatsApp</h3>
-                  <a href={`https://wa.me/${WA_NUMBER}`} target="_blank" rel="noopener noreferrer" className="font-sans text-body text-neutral-600 hover:text-remax-red transition-colors">
-                    +{WA_NUMBER}
+                  <a href={profile.socials.whatsapp} target="_blank" rel="noopener noreferrer" className="font-sans text-body text-neutral-600 hover:text-remax-red transition-colors">
+                    {profile.phone}
                   </a>
                 </div>
                 
@@ -71,8 +65,8 @@ export default function KontakPage() {
                     <HiEnvelope className="text-remax-red text-lg" />
                   </div>
                   <h3 className="font-sans font-bold text-remax-blue text-sm">Email</h3>
-                  <a href="mailto:hello@estherproperty.com" className="font-sans text-body text-neutral-600 hover:text-remax-red transition-colors">
-                    hello@estherproperty.com
+                  <a href={`mailto:${profile.email}`} className="font-sans text-body text-neutral-600 hover:text-remax-red transition-colors">
+                    {profile.email}
                   </a>
                 </div>
 
@@ -81,9 +75,11 @@ export default function KontakPage() {
                     <HiMapPin className="text-remax-red text-lg" />
                   </div>
                   <h3 className="font-sans font-bold text-remax-blue text-sm">Area Layanan</h3>
-                  <p className="font-sans text-body text-neutral-600">
-                    Tangerang Selatan (BSD, Gading Serpong, Alam Sutera, Bintaro)
-                  </p>
+                  {profile.kawasan.map((area, index) => (
+                    <p key={index} className="font-sans text-body text-neutral-600">
+                      {area}
+                    </p>
+                  ))}
                 </div>
 
                 <div className="flex flex-col gap-2 p-card rounded-card border border-border-c bg-neutral-50">
@@ -116,7 +112,7 @@ export default function KontakPage() {
               <p className="font-sans text-sm text-neutral-600 mb-6">
                 Isi formulir di bawah ini dan saya akan menghubungi Anda secepatnya.
               </p>
-              <FormKonsultasi onSubmit={mockSubmitLead} lang="id" />
+              <FormKonsultasi lang="id" />
             </div>
 
           </div>

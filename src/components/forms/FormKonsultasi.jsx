@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/Button';
 import { kawasanList } from '@/data/kawasan';
 import { id as textId } from '@/i18n/id';
 import { en as textEn } from '@/i18n/en';
+import { submitLead } from '@/app/actions/submitLead';
 
 /**
  * @param {{
@@ -54,6 +55,9 @@ export function FormKonsultasi({ listingSlug, lang = 'id', onSubmit }) {
 
       if (onSubmit) {
         await onSubmit(leadData);
+      } else {
+        const res = await submitLead(leadData);
+        if (!res?.success) throw new Error(res?.error || 'Failed');
       }
 
       setSubmitStatus('success');

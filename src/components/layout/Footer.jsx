@@ -7,18 +7,18 @@ import { id as text } from "@/i18n/id";
 import Image from "next/image";
 import { BsTiktok } from "react-icons/bs";
 import { MdEmail } from "react-icons/md";
+import { profile } from "@/data/profile";
 
 const QUICK_LINKS = [
   { label: text.nav.home, href: "/" },
   { label: text.nav.properties, href: "/properti" },
-  { label: text.nav.area, href: "/kawasan/bsd-city" },
+  { label: text.nav.area, href: "/kawasan" },
   { label: text.nav.blog, href: "/blog" },
   { label: text.nav.about, href: "/tentang" },
   { label: text.nav.contact, href: "/kontak" },
 ];
 
 const KAWASAN_LINKS = [
-  
   { label: "BSD City", href: "/kawasan/bsd-city" },
   { label: "Gading Serpong", href: "/kawasan/gading-serpong" },
   { label: "Alam Sutera", href: "/kawasan/alam-sutera" },
@@ -49,7 +49,7 @@ export function Footer() {
             </p>
             <div className="flex gap-3">
               <a
-                href="https://instagram.com"
+                href={profile.socials.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram Esther REMAX"
@@ -58,7 +58,7 @@ export function Footer() {
                 <RiInstagramLine className="text-lg" />
               </a>
               <a
-                href="https://tiktok.com"
+                href={profile.socials.tiktok}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="TikTok Esther REMAX"
@@ -115,26 +115,32 @@ export function Footer() {
             <ul className="flex flex-col gap-3">
               <li className="flex items-start gap-3 text-sm text-white/80">
                 <HiMapPin className="shrink-0 text-white text-base mt-0.5" />
-                <span>Tangerang Selatan, Banten, Indonesia</span>
+                <a
+                  href="https://maps.google.com/?q=Latinos+business+district,+C10+No.10,+Rm.+Buntu,+Kec.+Serpong,+Kota+Tangerang+Selatan,+Banten"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                 {profile.address}
+                </a>
               </li>
               <li className="flex items-center gap-3 text-sm">
                 <MdEmail className="shrink-0 text-white text-base mt-0.5" />
                 <a
-                  href="mailto:esther@future.remax.co.id"
+                  href={"mailto:" + profile.email}
                   className="text-white/80 hover:text-white transition-colors ml-1"
                 >
-                  esther@future.remax.co.id
+                  {profile.email}
                 </a>
               </li>
               <li className="flex items-center gap-3 text-sm">
                 <HiPhone className="shrink-0 text-white text-base" />
                 <a
-                  href="https://wa.me/628XXXXXXXXXX"
+                  href={profile.socials.whatsapp}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-white/80 hover:text-white transition-colors"
                 >
-                  +62 8XX-XXXX-XXXX
+                  {profile.phone}
                 </a>
               </li>
             </ul>

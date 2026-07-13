@@ -181,7 +181,7 @@ export default async function DetailListingPage({ params }) {
                   {kawasan && (
                     <Link
                       href={`/kawasan/${kawasan.slug}`}
-                      className="text-remax-red hover:underline ml-1"
+                      className="text-remax-red hover:underline ml-1 bg-red-tint/80 px-1 rounded-md font-sans"
                     >
                       {kawasan.nama}
                     </Link>

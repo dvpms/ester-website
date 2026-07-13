@@ -13,6 +13,7 @@ import { kawasanList } from '@/data/kawasan';
 import { listings } from '@/data/listings';
 import { artikelList } from '@/data/artikel';
 import { ArtikelGrid } from '@/components/sections/ArtikelGrid';
+import {testimonials as testimoniMock} from '@/data/testimonials';
 import Link from 'next/link';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://estherproperty.com';
@@ -34,37 +35,6 @@ export const metadata = {
     type: 'website',
   },
 };
-
-/** Data testimoni mock — akan diintegrasikan ke data layer di fase berikutnya */
-const testimoniMock = [
-  {
-    id: 'testi-001',
-    namaKlien: 'Budi Santoso',
-    kawasanSlug: 'bsd-city',
-    komentar: 'Esther sangat profesional dan sabar menjelaskan semua opsi properti. Akhirnya kami berhasil mendapatkan rumah impian di BSD City dengan proses yang mudah dan cepat!',
-    komentarEn: 'Esther was very professional and patient in explaining all property options. We finally got our dream home in BSD City with an easy and fast process!',
-    rating: 5,
-    tanggal: '2026-05-10',
-  },
-  {
-    id: 'testi-002',
-    namaKlien: 'Diana Putri',
-    kawasanSlug: 'gading-serpong',
-    komentar: 'Pelayanan luar biasa! Esther membantu kami dari survei hingga serah terima kunci. Sangat rekomen untuk siapapun yang mau beli properti di Gading Serpong.',
-    komentarEn: 'Outstanding service! Esther helped us from survey to key handover. Highly recommended for anyone looking to buy property in Gading Serpong.',
-    rating: 5,
-    tanggal: '2026-04-20',
-  },
-  {
-    id: 'testi-003',
-    namaKlien: 'Ahmad Fauzi',
-    kawasanSlug: 'alam-sutera',
-    komentar: 'Saya baru pertama kali beli properti dan sempat bingung soal KPR. Esther menjelaskan dengan sangat jelas dan membantu negosiasi harga. Terima kasih!',
-    komentarEn: 'It was my first time buying property and I was confused about the mortgage. Esther explained everything clearly and helped with price negotiation. Thank you!',
-    rating: 5,
-    tanggal: '2026-06-01',
-  },
-];
 
 export default function HomePage() {
   // Ambil hanya listing yang featured untuk homepage
