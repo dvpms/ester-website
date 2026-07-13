@@ -13,6 +13,19 @@ const AGENT_PROFILE = {
 };
 
 /**
+ * Escapes HTML characters in a string to prevent HTML Injection.
+ */
+function escapeHtml(unsafe) {
+  if (typeof unsafe !== 'string') return unsafe || '-';
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+/**
  * Membungkus konten HTML dengan header dan footer standar REMAX.
  */
 function wrapEmail(title, content) {
@@ -152,13 +165,13 @@ export function getLeadNotificationHtml(data) {
     
     <h2 style="color: #00458C; font-size: 18px; margin-bottom: 10px;">Informasi Lead</h2>
     <table style="width: 100%; border-collapse: collapse;">
-      <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee; width: 40%;"><strong>Nama</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${data.nama || "-"}</td></tr>
-      <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Email</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${data.email || "-"}</td></tr>
-      <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Nomor Telepon</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${data.telepon || "-"}</td></tr>
-      <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Jenis Form</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${data.jenisForm || "-"}</td></tr>
-      <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Listing</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${data.listingSlug || "-"}</td></tr>
-      <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Kawasan / Pesan</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${data.pesan || data.preferensi?.kawasan || "-"}</td></tr>
-      <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Tanggal Janji</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${data.tanggalSurvei || "-"}</td></tr>
+      <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee; width: 40%;"><strong>Nama</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${escapeHtml(data.nama)}</td></tr>
+      <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Email</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${escapeHtml(data.email)}</td></tr>
+      <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Nomor Telepon</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${escapeHtml(data.telepon)}</td></tr>
+      <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Jenis Form</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${escapeHtml(data.jenisForm)}</td></tr>
+      <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Listing</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${escapeHtml(data.listingSlug)}</td></tr>
+      <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Kawasan / Pesan</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${escapeHtml(data.pesan || data.preferensi?.kawasan)}</td></tr>
+      <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Tanggal Janji</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${escapeHtml(data.tanggalSurvei)}</td></tr>
       <tr><td style="padding: 8px 0;"><strong>Waktu Masuk</strong></td><td style="padding: 8px 0;">${waktuMasuk}</td></tr>
     </table>
     

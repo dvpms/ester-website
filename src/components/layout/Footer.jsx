@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { HiMapPin, HiPhone } from "react-icons/hi2";
-import { RiInstagramLine, RiFacebookLine } from "react-icons/ri";
+import { RiInstagramLine} from "react-icons/ri";
 import { id as text } from "@/i18n/id";
 import Image from "next/image";
 import { BsTiktok } from "react-icons/bs";
