@@ -190,7 +190,7 @@ export default async function DetailListingPage({ params }) {
 
                 {/* Harga */}
                 <div className="pb-4 border-b border-border-c mb-4">
-                  <p className="text-3xl sm:text-display text-remax-red font-bold">
+                  <p className="text-3xl xl:text-mid-display text-remax-red font-bold">
                     {formatHarga(listing.harga)}
                     {listing.transaksi === "disewakan" && (
                       <span className="font-sans text-sm text-neutral-600 font-normal ml-1">
