@@ -23,16 +23,21 @@ export async function submitLead(leadData) {
 
     // 1. Simpan ke Google Sheets (jika dikonfigurasi)
     if (GOOGLE_SHEETS_URL) {
+      console.log('[DEBUG] Mengirim data ke Google Sheets:', GOOGLE_SHEETS_URL);
       try {
-        await fetch(GOOGLE_SHEETS_URL, {
+        const sheetResponse = await fetch(GOOGLE_SHEETS_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(leadData),
         });
+        console.log('[DEBUG] Status Response dari Google Sheets:', sheetResponse.status);
+        const textResponse = await sheetResponse.text();
+        console.log('[DEBUG] Body Response:', textResponse);
       } catch (sheetErr) {
-        console.error('Google Sheets logging failed:', sheetErr);
-        // Kita tidak memberhentikan fungsi jika Google Sheets gagal, email tetap harus dikirim.
+        console.error('[ERROR] Google Sheets logging failed:', sheetErr);
       }
+    } else {
+      console.warn('[WARN] GOOGLE_SHEETS_URL tidak ditemukan di .env.local');
     }
 
     // 2. Kirim Notifikasi via Nodemailer
