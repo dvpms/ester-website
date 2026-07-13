@@ -321,7 +321,7 @@ export default async function DetailListingPage({ params }) {
               <div className="bg-white rounded-card shadow-card p-card">
                 <ul className="flex flex-col gap-2">
                   {[
-                    "Konsultasi 100% gratis",
+                    "Konsultasi properti gratis",
                     "Data Anda terjaga kerahasiaannya",
                     "Respons dalam 24 jam",
                   ].map((item) => (

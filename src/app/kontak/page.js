@@ -7,7 +7,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://estherproperty.com
 const WA_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '6281234567890'; // Use fallback if env is missing
 
 export const metadata = {
-  title: 'Hubungi Esther — Konsultasi Properti Gratis',
+  title: 'Hubungi Esther — Konsultasi Properti ',
   description: 'Punya pertanyaan seputar jual, beli, atau sewa properti di Tangerang Selatan? Hubungi Esther sekarang untuk mendapatkan solusi terbaik.',
   alternates: {
     canonical: `${SITE_URL}/kontak`,

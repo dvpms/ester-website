@@ -12,10 +12,10 @@ export function CTABand({ variant = 'whatsapp', lang = 'id', customHeadline, cus
   const text = lang === 'en' ? textEn : textId;
 
   const headline = customHeadline ?? (lang === 'en' ? 'Ready to Find Your Dream Property?' : 'Siap Menemukan Properti Impian Anda?');
-  const sub = customSub ?? (lang === 'en' ? 'Consult for free with Esther — no obligations.' : 'Konsultasi gratis bersama Esther — tanpa syarat apapun.');
+  const sub = customSub ?? (lang === 'en' ? 'Consult for free with Esther — no obligations.' : 'Konsultasi  bersama Esther — tanpa syarat apapun.');
 
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    lang === 'en' ? 'Hello Esther, I want a free property consultation.' : 'Halo Esther, saya ingin konsultasi properti gratis.'
+    lang === 'en' ? 'Hello Esther, I want a free property consultation.' : 'Halo Esther, saya ingin konsultasi properti .'
   )}`;
 
   return (

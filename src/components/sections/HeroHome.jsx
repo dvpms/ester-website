@@ -9,7 +9,7 @@ import { en as textEn } from "@/i18n/en";
 
 const WHATSAPP_NUMBER =
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "628XXXXXXXXXX";
-const WHATSAPP_MESSAGE = "Halo Esther, saya ingin konsultasi properti gratis.";
+const WHATSAPP_MESSAGE = "Halo Esther, saya ingin konsultasi properti .";
 
 export function HeroHome({ lang = "id" }) {
   const text = lang === "en" ? textEn : textId;
