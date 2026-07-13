@@ -166,7 +166,7 @@ PT Alam Sutera Realty Tbk (ASRI) adalah perusahaan publik dengan track record ya
 
 ---
 
-*Tertarik investasi di Alam Sutera? Konsultasikan pilihan properti Anda dengan Esther secara gratis.*`,
+*Tertarik investasi di Alam Sutera? Konsultasikan pilihan properti Anda dengan Esther .*`,
     kontenEn: `# 5 Reasons Why Alam Sutera Remains the Best Property Investment Choice
 
 ## 1. Higher Education Ecosystem

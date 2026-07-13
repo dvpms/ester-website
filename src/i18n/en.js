@@ -10,13 +10,13 @@ export const en = {
     properties: "Properties",
     area: "Areas",
     blog: "Articles",
-    about: "About Me",
+    about: "About",
     contact: "Contact",
   },
 
   cta: {
     whatsapp: "Chat on WhatsApp",
-    consult: "Free Consultation",
+    consult: "Consultation",
     brochure: "Request Brochure",
     more: "View More",
     bookSurvey: "Book a Survey",

@@ -8,9 +8,9 @@ import { HiBars3, HiXMark, HiGlobeAlt } from "react-icons/hi2";
 import { id as textId } from "@/i18n/id";
 import { en as textEn } from "@/i18n/en";
 import Image from "next/image";
+import { profile } from "@/data/profile";
 
 const NAV_LINKS = [
-  { key: "home", href: "/" },
   { key: "properties", href: "/properti" },
   { key: "area", href: "/kawasan" },
   { key: "blog", href: "/blog" },
@@ -62,7 +62,7 @@ export function Header({ lang: langProp, onLangChange }) {
         isScrolled
           ? "bg-white/95 py-5"
           : "bg-white py-5",
-      ].join(" ")}
+      ].join(" ") + " rounded-b-4xl shadow-md"}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
@@ -110,7 +110,7 @@ export function Header({ lang: langProp, onLangChange }) {
             </button>
 
             <Link
-              href="https://wa.me/628XXXXXXXXXX"
+              href={profile.socials.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-remax-red text-white text-sm font-semibold px-5 py-2 rounded-btn hover:brightness-110 transition-all duration-200 shadow-card hover:shadow-card-hover focus-visible:outline-2 focus-visible:outline-remax-red focus-visible:outline-offset-2"

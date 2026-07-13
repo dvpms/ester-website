@@ -3,42 +3,10 @@ import { TestimoniGrid } from "@/components/sections/TestimoniGrid";
 import { CTABand } from "@/components/sections/CTABand";
 import { JsonLd, generateJsonLd } from "@/lib/seo";
 import { HiCheckBadge } from "react-icons/hi2";
+import { testimonials as mockTestimonials } from "@/data/testimonials";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://estherproperty.com";
-
-const mockTestimonials = [
-  {
-    id: "t1",
-    namaKlien: "Budi Santoso",
-    rating: 5,
-    komentar:
-      "Esther sangat profesional dan membantu saya menemukan rumah impian di BSD City dengan harga terbaik. Proses KPR juga dibantu sampai tuntas!",
-    komentarEn:
-      "Esther is very professional and helped me find my dream home in BSD City at the best price. The mortgage process was also assisted until completion!",
-    tanggal: "2025-11-12",
-  },
-  {
-    id: "t2",
-    namaKlien: "Sarah Wijaya",
-    rating: 5,
-    komentar:
-      "Sangat responsif dan jujur mengenai kelebihan dan kekurangan suatu properti. Saya merekomendasikan Esther untuk siapa pun yang mencari properti di Gading Serpong.",
-    komentarEn:
-      "Very responsive and honest about the pros and cons of a property. I recommend Esther to anyone looking for property in Gading Serpong.",
-    tanggal: "2026-02-05",
-  },
-  {
-    id: "t3",
-    namaKlien: "Michael Chandra",
-    rating: 4,
-    komentar:
-      "Proses jual beli ruko saya di Bintaro berjalan lancar. Negosiasi yang dilakukan sangat menguntungkan kedua belah pihak.",
-    komentarEn:
-      "The buying and selling process of my shophouse in Bintaro went smoothly. The negotiations were very beneficial for both parties.",
-    tanggal: "2026-05-20",
-  },
-];
 
 export const metadata = {
   title: "Tentang Esther — Agen Properti RE/MAX Terpercaya",
@@ -73,7 +41,7 @@ export default function TentangPage() {
               <div className="absolute inset-0 bg-remax-blue rounded-tr-[4rem] rounded-bl-[4rem] translate-x-4 translate-y-4" />
               <div className="relative w-full h-full rounded-tr-[4rem] rounded-bl-[4rem] overflow-hidden border-4 border-white shadow-xl">
                 <Image
-                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&q=80"
+                  src="/images/esther-profile.jpeg"
                   alt="Esther - Agen Properti Profesional"
                   fill
                   priority
@@ -95,7 +63,7 @@ export default function TentangPage() {
                 Halo, saya Esther. <br />
               </h1>
               <p className="font-sans text-body text-neutral-600 mb-6">
-                "Membantu Anda menemukan properti impian".
+                &quot;Membantu Anda menemukan properti impian&quot;.
               </p>
               <div className="font-sans text-body text-neutral-900 space-y-4 leading-relaxed">
                 <p>

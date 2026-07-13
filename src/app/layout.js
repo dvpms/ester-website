@@ -1,40 +1,43 @@
 // src/app/layout.js
 // Root layout — font Inter + Playfair Display, Header, Footer, WhatsAppButton global.
 
-import { Inter, Playfair_Display } from 'next/font/google';
-import './globals.css';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { WhatsAppButton } from '@/components/layout/WhatsAppButton';
+import { Inter, Playfair_Display } from "next/font/google";
+import "./globals.css";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
 });
 
 const playfairDisplay = Playfair_Display({
-  subsets: ['latin'],
-  variable: '--font-playfair',
-  display: 'swap',
-  weight: ['400', '600', '700', '800'],
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  display: "swap",
+  weight: ["400", "600", "700", "800"],
 });
 
 export const metadata = {
   title: {
-    template: '%s | Esther REMAX',
-    default: 'Esther REMAX — Spesialis Properti Kawasan Tangerang Selatan',
+    template: "%s | Esther REMAX",
+    default: "Esther REMAX — Spesialis Properti Kawasan Tangerang Selatan",
   },
   description:
-    'Agent properti terpercaya untuk BSD City, Gading Serpong, Alam Sutera, dan Bintaro. Properti primary & secondary, dijual dan disewakan.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://estherproperty.com'),
+    "Agent properti terpercaya untuk BSD City, Gading Serpong, Alam Sutera, dan Bintaro. Properti primary & secondary, dijual dan disewakan.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://estherproperty.com",
+  ),
   openGraph: {
-    siteName: 'Esther REMAX',
-    locale: 'id_ID',
-    type: 'website',
+    siteName: "Esther REMAX",
+    locale: "id_ID",
+    type: "website",
   },
   twitter: {
-    card: 'summary_large_image',
+    card: "summary_large_image",
   },
 };
 
@@ -51,14 +54,13 @@ export default function RootLayout({ children }) {
         {/* Header sticky — pt pada main mengkompensasi tinggi header */}
         <Header />
 
-        <main className="pt-[72px]">
-          {children}
-        </main>
+        <main className="pt-[72px]">{children}</main>
 
         <Footer />
 
         {/* Floating WhatsApp CTA — selalu visible di semua halaman */}
         <WhatsAppButton />
+        <Analytics />
       </body>
     </html>
   );

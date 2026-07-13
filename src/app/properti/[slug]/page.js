@@ -181,7 +181,7 @@ export default async function DetailListingPage({ params }) {
                   {kawasan && (
                     <Link
                       href={`/kawasan/${kawasan.slug}`}
-                      className="text-remax-red hover:underline ml-1"
+                      className="text-remax-red hover:underline ml-1 bg-red-tint/80 px-1 rounded-md font-sans"
                     >
                       {kawasan.nama}
                     </Link>
@@ -321,7 +321,7 @@ export default async function DetailListingPage({ params }) {
               <div className="bg-white rounded-card shadow-card p-card">
                 <ul className="flex flex-col gap-2">
                   {[
-                    "Konsultasi 100% gratis",
+                    "Konsultasi properti gratis",
                     "Data Anda terjaga kerahasiaannya",
                     "Respons dalam 24 jam",
                   ].map((item) => (

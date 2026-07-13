@@ -5,11 +5,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { RiWhatsappLine } from 'react-icons/ri';
 import { useState, useEffect } from 'react';
+import { profile } from '@/data/profile';
 
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '628XXXXXXXXXX';
 
 export function WhatsAppButton({
-  phoneNumber = WHATSAPP_NUMBER,
   prefilledMessage = 'Halo Esther, saya tertarik dengan properti yang Anda tawarkan. Bisa dibantu?',
 }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -19,7 +18,7 @@ export function WhatsAppButton({
     return () => clearTimeout(timer);
   }, []);
 
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(prefilledMessage)}`;
+  const whatsappUrl = `${profile.socials.whatsapp}?text=${encodeURIComponent(prefilledMessage)}`;
 
   return (
     <AnimatePresence>

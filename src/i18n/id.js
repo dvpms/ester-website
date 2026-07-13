@@ -107,9 +107,9 @@ export const id = {
   },
 
   footer: {
-    tagline: "Spesialis properti kawasan Tangerang Selatan.",
+    tagline: "Spesialis properti kawasan Tangerang.",
     quickLinks: "Navigasi",
-    contact: "Hubungi Kami",
+    contact: "Kontak",
     followUs: "Ikuti Kami",
     copyright: `© ${new Date().getFullYear()} Esther REMAX. Hak cipta dilindungi.`,
   },

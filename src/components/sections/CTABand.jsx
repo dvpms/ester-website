@@ -5,17 +5,17 @@ import { RiWhatsappLine } from 'react-icons/ri';
 import { HiPhone } from 'react-icons/hi2';
 import { id as textId } from '@/i18n/id';
 import { en as textEn } from '@/i18n/en';
+import { profile } from '@/data/profile';
 
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '628XXXXXXXXXX';
 
 export function CTABand({ variant = 'whatsapp', lang = 'id', customHeadline, customSub }) {
   const text = lang === 'en' ? textEn : textId;
 
   const headline = customHeadline ?? (lang === 'en' ? 'Ready to Find Your Dream Property?' : 'Siap Menemukan Properti Impian Anda?');
-  const sub = customSub ?? (lang === 'en' ? 'Consult for free with Esther — no obligations.' : 'Konsultasi gratis bersama Esther — tanpa syarat apapun.');
+  const sub = customSub ?? (lang === 'en' ? 'Consult for free with Esther — no obligations.' : 'Konsultasi  bersama Esther — tanpa syarat apapun.');
 
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    lang === 'en' ? 'Hello Esther, I want a free property consultation.' : 'Halo Esther, saya ingin konsultasi properti gratis.'
+  const whatsappUrl = `${profile.socials.whatsapp}?text=${encodeURIComponent(
+    lang === 'en' ? 'Hello Esther, I want a free property consultation.' : 'Halo Esther, saya ingin konsultasi properti .'
   )}`;
 
   return (
