@@ -29,6 +29,7 @@
 
   /* ── Typography — Font Size ───────────────────────────────── */
   --text-display: 5rem;  /* 80px — hero headline */
+  --text-mid-display: 3rem; /* 56px — hero headline (mobile) */
   --text-h1: 2rem;         /* 32px — page title */
   --text-h2: 1.75rem;      /* 28px — section heading */
   --text-h3: 1.125rem;     /* 18px — card title, sub-heading */
