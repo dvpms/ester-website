@@ -9,6 +9,29 @@ import { en as textEn } from '@/i18n/en';
 
 /** @typedef {{ kawasan: string, jenis: string, segmen: string, transaksi: string, harga: string, urutkan: string }} Filters */
 
+const selectBaseClass = [
+  'w-full px-3 py-2.5 text-sm font-sans bg-white',
+  'border border-neutral-600 rounded-btn text-neutral-900',
+  'hover:border-remax-red focus:outline-none focus:ring-2 focus:ring-remax-red focus:border-remax-red',
+  'transition-all duration-150 cursor-pointer appearance-none',
+  'bg-[url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23737373\' stroke-width=\'2\'%3E%3Cpath d=\'m6 9 6 6 6-6\'/%3E%3C/svg%3E")] bg-no-repeat bg-[right_0.75rem_center] bg-[length:14px]',
+  'pr-10',
+].join(' ');
+
+function FilterSelect({ id, value, onChange, options, defaultLabel }) {
+  return (
+    <div>
+      <label htmlFor={id} className="sr-only">{defaultLabel}</label>
+      <select id={id} value={value} onChange={onChange} className={selectBaseClass}>
+        <option value="">{defaultLabel}</option>
+        {Object.entries(options).map(([val, label]) => (
+          <option key={val} value={val}>{label}</option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
 export function FilterBar({ filters, onFilterChange, onReset, kawasanList, lang = 'id' }) {
   const [isOpen, setIsOpen] = useState(false);
   
@@ -18,16 +41,6 @@ export function FilterBar({ filters, onFilterChange, onReset, kawasanList, lang 
   const comboboxRef = useRef(null);
 
   const text = lang === 'en' ? textEn : textId;
-
-  const selectBaseClass = [
-    'w-full px-3 py-2.5 text-sm font-sans bg-white',
-    'border border-neutral-600 rounded-btn text-neutral-900',
-    'hover:border-remax-red focus:outline-none focus:ring-2 focus:ring-remax-red focus:border-remax-red',
-    'transition-all duration-150 cursor-pointer appearance-none',
-    'bg-[url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23737373\' stroke-width=\'2\'%3E%3Cpath d=\'m6 9 6 6 6-6\'/%3E%3C/svg%3E")] bg-no-repeat bg-[right_0.75rem_center] bg-[length:14px]',
-    'pr-10',
-  ].join(' ');
-
   const hasActiveFilter = Object.values(filters).some(Boolean);
 
   // Sync combobox search text with external filter changes (e.g., reset)
@@ -127,52 +140,54 @@ export function FilterBar({ filters, onFilterChange, onReset, kawasanList, lang 
                 )}
               </div>
 
-              <div>
-                <label htmlFor="filter-jenis" className="sr-only">{text.filter.allType}</label>
-                <select id="filter-jenis" value={filters.jenis} onChange={(e) => onFilterChange('jenis', e.target.value)} className={selectBaseClass}>
-                  <option value="">{text.filter.allType}</option>
-                  {Object.entries(text.filter.type).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-                </select>
-              </div>
+              <FilterSelect
+                id="filter-jenis"
+                value={filters.jenis}
+                onChange={(e) => onFilterChange('jenis', e.target.value)}
+                defaultLabel={text.filter.allType}
+                options={text.filter.type}
+              />
 
-              <div>
-                <label htmlFor="filter-segmen" className="sr-only">{text.filter.allSegment}</label>
-                <select id="filter-segmen" value={filters.segmen} onChange={(e) => onFilterChange('segmen', e.target.value)} className={selectBaseClass}>
-                  <option value="">{text.filter.allSegment}</option>
-                  {Object.entries(text.filter.segment).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-                </select>
-              </div>
+              <FilterSelect
+                id="filter-segmen"
+                value={filters.segmen}
+                onChange={(e) => onFilterChange('segmen', e.target.value)}
+                defaultLabel={text.filter.allSegment}
+                options={text.filter.segment}
+              />
 
-              <div>
-                <label htmlFor="filter-transaksi" className="sr-only">{text.filter.allTransaction}</label>
-                <select id="filter-transaksi" value={filters.transaksi} onChange={(e) => onFilterChange('transaksi', e.target.value)} className={selectBaseClass}>
-                  <option value="">{text.filter.allTransaction}</option>
-                  {Object.entries(text.filter.transaction).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-                </select>
-              </div>
+              <FilterSelect
+                id="filter-transaksi"
+                value={filters.transaksi}
+                onChange={(e) => onFilterChange('transaksi', e.target.value)}
+                defaultLabel={text.filter.allTransaction}
+                options={text.filter.transaction}
+              />
 
-              {/* Filter Harga */}
-              <div>
-                <label htmlFor="filter-harga" className="sr-only">Rentang Harga</label>
-                <select id="filter-harga" value={filters.harga} onChange={(e) => onFilterChange('harga', e.target.value)} className={selectBaseClass}>
-                  <option value="">Semua Harga</option>
-                  <option value="under1m">&lt; Rp 1 Miliar</option>
-                  <option value="1m-3m">Rp 1 M - Rp 3 M</option>
-                  <option value="3m-5m">Rp 3 M - Rp 5 M</option>
-                  <option value="over5m">&gt; Rp 5 Miliar</option>
-                </select>
-              </div>
+              <FilterSelect
+                id="filter-harga"
+                value={filters.harga}
+                onChange={(e) => onFilterChange('harga', e.target.value)}
+                defaultLabel="Semua Harga"
+                options={{
+                  'under1m': '< Rp 1 Miliar',
+                  '1m-3m': 'Rp 1 M - Rp 3 M',
+                  '3m-5m': 'Rp 3 M - Rp 5 M',
+                  'over5m': '> Rp 5 Miliar'
+                }}
+              />
 
-              {/* Filter Urutkan */}
-              <div>
-                <label htmlFor="filter-urutkan" className="sr-only">Urutkan</label>
-                <select id="filter-urutkan" value={filters.urutkan} onChange={(e) => onFilterChange('urutkan', e.target.value)} className={selectBaseClass}>
-                  <option value="">Urutkan: Terbaru</option>
-                  <option value="terlama">Urutkan: Terlama</option>
-                  <option value="termurah">Urutkan: Termurah</option>
-                  <option value="termahal">Urutkan: Termahal</option>
-                </select>
-              </div>
+              <FilterSelect
+                id="filter-urutkan"
+                value={filters.urutkan}
+                onChange={(e) => onFilterChange('urutkan', e.target.value)}
+                defaultLabel="Urutkan: Terbaru"
+                options={{
+                  'terlama': 'Urutkan: Terlama',
+                  'termurah': 'Urutkan: Termurah',
+                  'termahal': 'Urutkan: Termahal'
+                }}
+              />
 
             </div>
 

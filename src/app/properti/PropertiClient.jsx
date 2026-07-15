@@ -18,6 +18,15 @@ const BREADCRUMB_ITEMS = [
   { label: 'Properti', href: '/properti' },
 ];
 
+function matchPriceFilter(hargaProperti, filterHarga) {
+  if (!filterHarga) return true;
+  if (filterHarga === 'under1m') return hargaProperti < 1000000000;
+  if (filterHarga === '1m-3m') return hargaProperti >= 1000000000 && hargaProperti < 3000000000;
+  if (filterHarga === '3m-5m') return hargaProperti >= 3000000000 && hargaProperti < 5000000000;
+  if (filterHarga === 'over5m') return hargaProperti >= 5000000000;
+  return true;
+}
+
 export function PropertiClient() {
   const [filters, setFilters] = useState(INITIAL_FILTERS);
 
@@ -37,13 +46,7 @@ export function PropertiClient() {
       if (filters.segmen && listing.segmen !== filters.segmen) return false;
       if (filters.transaksi && listing.transaksi !== filters.transaksi) return false;
       
-      // Rentang Harga
-      if (filters.harga) {
-        if (filters.harga === 'under1m' && listing.harga >= 1000000000) return false;
-        if (filters.harga === '1m-3m' && (listing.harga < 1000000000 || listing.harga >= 3000000000)) return false;
-        if (filters.harga === '3m-5m' && (listing.harga < 3000000000 || listing.harga >= 5000000000)) return false;
-        if (filters.harga === 'over5m' && listing.harga < 5000000000) return false;
-      }
+      if (!matchPriceFilter(listing.harga, filters.harga)) return false;
       return true;
     });
 
