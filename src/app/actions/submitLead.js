@@ -19,7 +19,7 @@ export async function submitLead(leadData) {
     }
     
     const subject = `[Lead Baru] ${leadData.jenisForm || 'Website'} — ${leadData.nama || 'Tanpa Nama'}`;
-    const htmlTemplate = getLeadNotificationHtml(leadData);
+    const htmlTemplate = await getLeadNotificationHtml(leadData);
 
     // 1. Simpan ke Google Sheets (jika dikonfigurasi)
     if (GOOGLE_SHEETS_URL) {
