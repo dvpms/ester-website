@@ -25,6 +25,7 @@ import { kawasanList } from "@/data/kawasan";
 import { artikelList } from "@/data/artikel";
 import { Badge } from "@/components/ui/Badge";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { GalleryLightbox } from "@/components/ui/GalleryLightbox";
 import { FormKonsultasi } from "@/components/forms/FormKonsultasi";
 import { FormBrosur } from "@/components/forms/FormBrosur";
 import { CTABand } from "@/components/sections/CTABand";
@@ -80,8 +81,8 @@ export default async function DetailListingPage({ params }) {
     .slice(0, 3);
 
   // Artikel terkait kawasan ini
-  const relatedArticles = kawasan 
-    ? artikelList.filter((a) => a.tagKawasan.includes(kawasan.slug)).slice(0, 3) 
+  const relatedArticles = kawasan
+    ? artikelList.filter((a) => a.tagKawasan.includes(kawasan.slug)).slice(0, 3)
     : [];
 
   // JSON-LD schemas
@@ -138,23 +139,7 @@ export default async function DetailListingPage({ params }) {
             {/* ── Kolom Kiri: Galeri + Info ────────────────── */}
             <div className="lg:col-span-2 flex flex-col gap-6">
               {/* Galeri foto */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 rounded-card overflow-hidden">
-                {listing.galeri.map((src, index) => (
-                  <div
-                    key={src}
-                    className={`relative overflow-hidden ${index === 0 && listing.galeri.length > 1 ? "aspect-video sm:col-span-2" : "aspect-[4/3]"}`}
-                  >
-                    <Image
-                      src={src}
-                      alt={`Foto ${listing.nama} — gambar ${index + 1}`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 50vw"
-                      className="object-cover"
-                      priority={index === 0}
-                    />
-                  </div>
-                ))}
-              </div>
+              <GalleryLightbox images={listing.galeri} nama={listing.nama} />
 
               {/* Badges + Nama */}
               <div className="bg-white rounded-card shadow-card p-card">
@@ -269,9 +254,10 @@ export default async function DetailListingPage({ params }) {
                   <h2 className="font-sans text-base font-bold text-remax-blue mb-3">
                     Deskripsi Properti
                   </h2>
-                  <p className="font-sans text-sm text-neutral-900 leading-relaxed">
-                    {listing.deskripsi}
-                  </p>
+                  <div
+                    className="rich-text"
+                    dangerouslySetInnerHTML={{ __html: listing.deskripsi }}
+                  />
                 </div>
               </div>
 
@@ -281,14 +267,14 @@ export default async function DetailListingPage({ params }) {
                   <BiMapPin className="text-remax-red text-base" />
                   Lokasi
                 </h2>
-                <div className="rounded-btn overflow-hidden aspect-video bg-neutral-100 flex items-center justify-center">
-                  {kawasan ? (
+                <div className="rounded-btn overflow-hidden aspect-video bg-neutral-100 flex items-center justify-center mb-4">
+                  {(listing.koordinat || kawasan) ? (
                     <iframe
                       title={`Peta lokasi ${listing.nama}`}
                       width="100%"
                       height="100%"
                       frameBorder="0"
-                      src={`https://maps.google.com/maps?q=${kawasan.koordinat.lat},${kawasan.koordinat.lng}&z=15&output=embed`}
+                      src={`https://maps.google.com/maps?q=${listing.koordinat?.lat || kawasan?.koordinat?.lat},${listing.koordinat?.lng || kawasan?.koordinat?.lng}&z=15&output=embed`}
                       allowFullScreen
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
@@ -299,6 +285,16 @@ export default async function DetailListingPage({ params }) {
                     </p>
                   )}
                 </div>
+                {listing.tautanMaps && (
+                  <a 
+                    href={listing.tautanMaps} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="inline-flex items-center justify-center w-full px-4 py-3 bg-neutral-100 hover:bg-neutral-200 transition-colors text-remax-blue font-sans font-semibold text-sm rounded-btn"
+                  >
+                    Buka di Google Maps
+                  </a>
+                )}
               </div>
             </div>
 
@@ -359,7 +355,11 @@ export default async function DetailListingPage({ params }) {
           {/* ── Artikel Terkait ──────────────────────────── */}
           {relatedArticles.length > 0 && (
             <section className="mt-16 border-t border-border-c pt-12">
-              <ArtikelGrid artikelList={relatedArticles} title="Bacaan Terkait" lang="id" />
+              <ArtikelGrid
+                artikelList={relatedArticles}
+                title="Bacaan Terkait"
+                lang="id"
+              />
             </section>
           )}
         </div>
