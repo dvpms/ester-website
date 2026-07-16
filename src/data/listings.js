@@ -16,11 +16,8 @@ export const listings = [
     kawasanSlug: "bsd-city",
     harga: 2500000000,
     lokasiDetail: "Neo Catalonia, Nusa Loka, BSD City",
-    koordinat: {
-      lat: -6.311311,
-      lng: 106.685324
-    },
-    tautanMaps: "https://maps.app.goo.gl/m1Z4oGq12ou3dhzb6",
+    koordinat: undefined,
+    tautanMaps: undefined,
     spesifikasi: {
       lt: 125,
       lb: 200,

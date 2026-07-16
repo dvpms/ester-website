@@ -287,7 +287,7 @@ export default async function DetailListingPage({ params }) {
                 </div>
                 {listing.tautanMaps && (
                   <a 
-                    href={listing.tautanMaps} 
+                    href={listing?.tautanMaps} 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="inline-flex items-center justify-center w-full px-4 py-3 bg-neutral-100 hover:bg-neutral-200 transition-colors text-remax-blue font-sans font-semibold text-sm rounded-btn"
