@@ -37,6 +37,8 @@
  * @property {number} harga                       - Harga dalam Rupiah (integer)
  * @property {string} lokasiDetail                - Deskripsi lokasi spesifik (mis. "Cluster X, BSD City")
  * @property {Object} spesifikasi                 - Spesifikasi fisik properti
+ * @property {{ lat: number, lng: number }} [koordinat] - Koordinat GPS spesifik properti (jika ada, akan menimpa koordinat kawasan di iframe)
+ * @property {string} [tautanMaps]                - Tautan/URL 'Share' Google Maps untuk tombol pengarah
  * @property {number} [spesifikasi.lt]            - Luas tanah dalam m²
  * @property {number} [spesifikasi.lb]            - Luas bangunan dalam m²
  * @property {number} [spesifikasi.kamarTidur]    - Jumlah kamar tidur

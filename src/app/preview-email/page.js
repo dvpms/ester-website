@@ -62,12 +62,12 @@ export default async function PreviewEmailPage({ searchParams }) {
 
   // Render semua template berdasarkan jenis
   const templates = {
-    '1': { title: '1. Notifikasi Lead Baru (Ke Agent)', html: getLeadNotificationHtml(mockLeadData) },
-    '2': { title: '2. Konfirmasi Pesan Diterima (Ke Klien)', html: getContactConfirmationHtml(mockLeadData) },
-    '3': { title: '3. Konfirmasi Janji Temu (Ke Klien)', html: getSurveyConfirmationHtml(mockLeadData) },
-    '4': { title: '4. Pengiriman Brosur (Ke Klien)', html: getBrochureHtml(mockLeadData, mockListingDetails) },
-    '5': { title: '5. Reminder Janji Temu (Ke Klien)', html: getSurveyReminderHtml(mockLeadData) },
-    '6': { title: '6. Broadcast / Newsletter', html: getBroadcastHtml(mockProperties, mockArticles) },
+    '1': { title: '1. Notifikasi Lead Baru (Ke Agent)', html: await getLeadNotificationHtml(mockLeadData) },
+    '2': { title: '2. Konfirmasi Pesan Diterima (Ke Klien)', html: await getContactConfirmationHtml(mockLeadData) },
+    '3': { title: '3. Konfirmasi Janji Temu (Ke Klien)', html: await getSurveyConfirmationHtml(mockLeadData) },
+    '4': { title: '4. Pengiriman Brosur (Ke Klien)', html: await getBrochureHtml(mockLeadData, mockListingDetails) },
+    '5': { title: '5. Reminder Janji Temu (Ke Klien)', html: await getSurveyReminderHtml(mockLeadData) },
+    '6': { title: '6. Broadcast / Newsletter', html: await getBroadcastHtml(mockProperties, mockArticles) },
   };
 
   return (
