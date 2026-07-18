@@ -94,6 +94,20 @@ export default async function DetailListingPage({ params }) {
     gambar: listing.galeri[0],
     url: `${SITE_URL}/properti/${listing.slug}`,
   });
+  
+  const productSchema = generateJsonLd("Product", {
+    name: listing.nama,
+    description: listing.deskripsi,
+    image: listing.galeri[0],
+    offers: {
+      "@type": "Offer",
+      url: `${SITE_URL}/properti/${listing.slug}`,
+      priceCurrency: "IDR",
+      price: listing.harga,
+      availability: "https://schema.org/InStock",
+      itemCondition: listing.segmen === 'primary' ? "https://schema.org/NewCondition" : "https://schema.org/UsedCondition",
+    }
+  });
   const breadcrumbSchema = generateJsonLd("BreadcrumbList", {
     items: [
       { label: "Beranda", href: "/" },
@@ -119,6 +133,7 @@ export default async function DetailListingPage({ params }) {
   return (
     <>
       <JsonLd data={listingSchema} />
+      <JsonLd data={productSchema} />
       <JsonLd data={breadcrumbSchema} />
 
       <div className="bg-white min-h-screen">
