@@ -4,6 +4,9 @@
 
 import { CardArtikel } from '@/components/cards/CardArtikel';
 
+import { StaggerContainer } from '@/components/animations/StaggerContainer';
+import { StaggerItem } from '@/components/animations/StaggerItem';
+
 /**
  * @param {{
  *   artikelList: import('@/lib/types').Artikel[],
@@ -19,11 +22,13 @@ export function ArtikelGrid({ artikelList, lang = 'id', title }) {
       {title && (
         <h2 className="font-serif text-h2 text-remax-blue mb-8">{title}</h2>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {artikelList.map((artikel) => (
-          <CardArtikel key={artikel.id} artikel={artikel} lang={lang} />
+          <StaggerItem key={artikel.id}>
+            <CardArtikel artikel={artikel} lang={lang} />
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerContainer>
     </section>
   );
 }

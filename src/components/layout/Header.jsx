@@ -57,7 +57,7 @@ export function Header({ lang: langProp, onLangChange }) {
   return (
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 rounded-b-4xl shadow-md ${
-        isScrolled ? "bg-white/95 py-5" : "bg-white py-5"
+        isScrolled ? "bg-white/80 backdrop-blur-md py-4" : "bg-white py-5"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

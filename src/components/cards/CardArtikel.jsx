@@ -7,6 +7,8 @@ import { formatTanggal } from '@/lib/utils';
 import { id as textId } from '@/i18n/id';
 import { en as textEn } from '@/i18n/en';
 
+import { InteractiveCard } from '@/components/animations/InteractiveCard';
+
 /**
  * @param {{
  *   artikel: import('@/lib/types').Artikel,
@@ -22,7 +24,7 @@ export function CardArtikel({ artikel, lang = 'id' }) {
   const tanggalFormatted = formatTanggal(tanggalPublish, lang);
 
   return (
-    <article className="group bg-white rounded-card shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden flex flex-col">
+    <InteractiveCard elementType="article" className="group bg-white rounded-card shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden flex flex-col h-full">
       <Link
         href={`/blog/${slug}`}
         className="relative block aspect-video overflow-hidden shrink-0 focus-visible:outline-2 focus-visible:outline-remax-red"
@@ -77,6 +79,6 @@ export function CardArtikel({ artikel, lang = 'id' }) {
           </Link>
         </div>
       </div>
-    </article>
+    </InteractiveCard>
   );
 }

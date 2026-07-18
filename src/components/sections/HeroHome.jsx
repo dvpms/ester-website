@@ -6,6 +6,8 @@ import { RiWhatsappLine } from "react-icons/ri";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { id as textId } from "@/i18n/id";
 import { en as textEn } from "@/i18n/en";
+import { StaggerContainer } from "@/components/animations/StaggerContainer";
+import { StaggerItem } from "@/components/animations/StaggerItem";
 import { profile } from "@/data/profile";
 
 export function HeroHome({ lang = "id" }) {
@@ -27,35 +29,41 @@ export function HeroHome({ lang = "id" }) {
         <div className="absolute inset-0 bg-neutral-900/30" />
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 className="font-sans text-[2rem] md:text-[2.5rem] lg:text-display font-bold text-white leading-tight mb-6">
-          {text.hero.headline}
-        </h1>
+      <StaggerContainer className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <StaggerItem>
+          <h1 className="font-sans text-[2rem] md:text-[2.5rem] lg:text-display font-bold text-white leading-tight mb-6">
+            {text.hero.headline}
+          </h1>
+        </StaggerItem>
 
-        <p className="font-sans text-sm sm:text-base md:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed mb-10">
-          {text.hero.subheadline}
-        </p>
+        <StaggerItem>
+          <p className="font-sans text-sm sm:text-base md:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed mb-10">
+            {text.hero.subheadline}
+          </p>
+        </StaggerItem>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a
-            href={profile.socials.whatsapp}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 bg-remax-red text-white font-semibold font-sans px-8 py-4 rounded-full shadow-card-hover hover:brightness-110 hover:scale-105 active:scale-100 transition-all duration-200 text-base"
-          >
-            <RiWhatsappLine className="text-xl" />
-            {text.cta.consult}
-          </a>
+        <StaggerItem>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a
+              href={profile.socials.whatsapp}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2.5 bg-remax-red text-white font-semibold font-sans px-8 py-4 rounded-full shadow-card-hover hover:brightness-110 hover:scale-105 active:scale-100 transition-all duration-200 text-base"
+            >
+              <RiWhatsappLine className="text-xl" />
+              {text.cta.consult}
+            </a>
 
-          <Link
-            href="/properti"
-            className="inline-flex items-center gap-2.5 bg-transparent text-white font-semibold font-sans px-8 py-4 rounded-full border-2 border-white hover:border-remax-red hover:text-remax-red transition-all duration-200 text-base"
-          >
-            <HiMagnifyingGlass className="text-xl" />
-            {lang === "en" ? "Browse Properties" : "Jelajah Properti"}
-          </Link>
-        </div>
-      </div>
+            <Link
+              href="/properti"
+              className="inline-flex items-center gap-2.5 bg-transparent text-white font-semibold font-sans px-8 py-4 rounded-full border-2 border-white hover:border-remax-red hover:text-remax-red transition-all duration-200 text-base"
+            >
+              <HiMagnifyingGlass className="text-xl" />
+              {lang === "en" ? "Browse Properties" : "Jelajah Properti"}
+            </Link>
+          </div>
+        </StaggerItem>
+      </StaggerContainer>
     </section>
   );
 }

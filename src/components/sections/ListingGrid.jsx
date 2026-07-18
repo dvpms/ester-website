@@ -6,6 +6,9 @@ import { CardListing } from '@/components/cards/CardListing';
 import { id as textId } from '@/i18n/id';
 import { en as textEn } from '@/i18n/en';
 
+import { StaggerContainer } from '@/components/animations/StaggerContainer';
+import { StaggerItem } from '@/components/animations/StaggerItem';
+
 /**
  * @param {{
  *   listings: import('@/lib/types').Listing[],
@@ -29,11 +32,13 @@ export function ListingGrid({ listings, lang = 'id', title }) {
       {title && (
         <h2 className="font-serif text-h2 text-remax-blue mb-8">{title}</h2>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {listings.map((listing) => (
-          <CardListing key={listing.id} listing={listing} lang={lang} />
+          <StaggerItem key={listing.id}>
+            <CardListing listing={listing} lang={lang} />
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerContainer>
     </section>
   );
 }
