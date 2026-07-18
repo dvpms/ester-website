@@ -4,6 +4,9 @@
 
 import { CardKawasan } from '@/components/cards/CardKawasan';
 
+import { StaggerContainer } from '@/components/animations/StaggerContainer';
+import { StaggerItem } from '@/components/animations/StaggerItem';
+
 /**
  * @param {{
  *   kawasanList: import('@/lib/types').Kawasan[],
@@ -19,11 +22,13 @@ export function KawasanGrid({ kawasanList, lang = 'id', title }) {
       {title && (
         <h2 className="font-serif text-h2 text-remax-blue mb-8">{title}</h2>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {kawasanList.map((kawasan) => (
-          <CardKawasan key={kawasan.id} kawasan={kawasan} lang={lang} />
+          <StaggerItem key={kawasan.id}>
+            <CardKawasan kawasan={kawasan} lang={lang} />
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerContainer>
     </section>
   );
 }

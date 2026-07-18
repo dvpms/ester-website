@@ -8,6 +8,8 @@ import { en as textEn } from '@/i18n/en';
 import { profile } from '@/data/profile';
 
 
+import { ScrollReveal } from '@/components/animations/ScrollReveal';
+
 export function CTABand({ variant = 'whatsapp', lang = 'id', customHeadline, customSub }) {
   const text = lang === 'en' ? textEn : textId;
 
@@ -25,7 +27,7 @@ export function CTABand({ variant = 'whatsapp', lang = 'id', customHeadline, cus
         <div className="absolute -bottom-16 -left-10 w-48 h-48 bg-white/5 rounded-full" />
       </div>
 
-      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <ScrollReveal className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="font-serif text-h1 font-bold text-white mb-4">{headline}</h2>
         <p className="font-sans text-body text-white/80 mb-10 max-w-xl mx-auto">{sub}</p>
 
@@ -58,7 +60,7 @@ export function CTABand({ variant = 'whatsapp', lang = 'id', customHeadline, cus
             </Link>
           )}
         </div>
-      </div>
+      </ScrollReveal>
     </section>
   );
 }

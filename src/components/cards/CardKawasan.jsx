@@ -6,6 +6,8 @@ import { HiArrowRight } from 'react-icons/hi2';
 import { id as textId } from '@/i18n/id';
 import { en as textEn } from '@/i18n/en';
 
+import { InteractiveCard } from '@/components/animations/InteractiveCard';
+
 /**
  * @param {{
  *   kawasan: import('@/lib/types').Kawasan,
@@ -20,7 +22,7 @@ export function CardKawasan({ kawasan, lang = 'id' }) {
   const fasilitasList = lang === 'en' ? fasilitasUnggulanEn : fasilitasUnggulan;
 
   return (
-    <article className="group relative bg-white rounded-card overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 flex flex-col">
+    <InteractiveCard elementType="article" className="group relative bg-white rounded-card overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 flex flex-col h-full">
       <Link
         href={`/kawasan/${slug}`}
         className="relative block aspect-video overflow-hidden shrink-0 focus-visible:outline-2 focus-visible:outline-remax-red"
@@ -63,6 +65,6 @@ export function CardKawasan({ kawasan, lang = 'id' }) {
           </Link>
         </div>
       </div>
-    </article>
+    </InteractiveCard>
   );
 }

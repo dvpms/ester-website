@@ -9,6 +9,8 @@ import { formatHarga } from '@/lib/utils';
 import { id as textId } from '@/i18n/id';
 import { en as textEn } from '@/i18n/en';
 
+import { InteractiveCard } from '@/components/animations/InteractiveCard';
+
 /**
  * @param {{
  *   listing: import('@/lib/types').Listing,
@@ -29,7 +31,7 @@ export function CardListing({ listing, lang = 'id' }) {
   const transaksiLabel = text.filter.transaction[transaksi] ?? transaksi;
 
   return (
-    <article className="group relative bg-white rounded-card shadow-xl md:shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden flex flex-col">
+    <InteractiveCard elementType="article" className="group relative bg-white rounded-card shadow-xl md:shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden flex flex-col h-full">
       <Link
         href={`/properti/${slug}`}
         className="relative block overflow-hidden aspect-video shrink-0 focus-visible:outline-2 focus-visible:outline-remax-red"
@@ -103,6 +105,6 @@ export function CardListing({ listing, lang = 'id' }) {
           </p>
         </div>
       </div>
-    </article>
+    </InteractiveCard>
   );
 }

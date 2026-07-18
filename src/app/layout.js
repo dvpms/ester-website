@@ -41,6 +41,8 @@ export const metadata = {
   },
 };
 
+import { PageTransitionWrapper } from "@/components/animations/PageTransitionWrapper";
+
 /**
  * Root layout — membungkus semua halaman dengan Header, Footer, dan WhatsAppButton.
  * Header dan WhatsAppButton adalah Client Components; Footer adalah Server Component.
@@ -54,7 +56,11 @@ export default function RootLayout({ children }) {
         {/* Header sticky — pt pada main mengkompensasi tinggi header */}
         <Header />
 
-        <main className="pt-[72px]">{children}</main>
+        <main className="pt-[72px]">
+          <PageTransitionWrapper>
+            {children}
+          </PageTransitionWrapper>
+        </main>
 
         <Footer />
 
