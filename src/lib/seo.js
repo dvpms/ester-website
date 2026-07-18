@@ -19,7 +19,7 @@ const BUSINESS_CONFIG = {
 /**
  * Generate Schema.org JSON-LD object sesuai tipe halaman.
  *
- * @param {'RealEstateAgent'|'LocalBusiness'|'RealEstateListing'|'Article'|'BreadcrumbList'|'ItemList'} type
+ * @param {'RealEstateAgent'|'LocalBusiness'|'RealEstateListing'|'Article'|'BreadcrumbList'|'ItemList'|'Product'} type
  * @param {Object} data - Data spesifik untuk schema tersebut
  * @returns {Object} JSON-LD object siap di-stringify
  */
@@ -37,6 +37,8 @@ export function generateJsonLd(type, data) {
       return buildBreadcrumbListSchema(data);
     case "ItemList":
       return buildItemListSchema(data);
+    case "Product":
+      return buildProductSchema(data);
     default:
       throw new Error(`generateJsonLd: tipe schema "${type}" tidak dikenali`);
   }
@@ -177,6 +179,23 @@ function buildItemListSchema(data) {
       name: item.nama,
       url: `${BUSINESS_CONFIG.siteUrl}${item.url}`,
     })),
+  };
+}
+
+/**
+ * Schema Product — untuk halaman Detail Listing tambahan.
+ *
+ * @param {{ name: string, description: string, image: string, offers: any }} data
+ * @returns {Object}
+ */
+function buildProductSchema(data) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: data.name,
+    description: data.description,
+    image: data.image,
+    offers: data.offers,
   };
 }
 
