@@ -26,7 +26,7 @@ export const en = {
 
   hero: {
     headline: "Find Your Dream Property",
-    subheadline: "Multi-area property specialist in South Tangerang — BSD City, Gading Serpong, Alam Sutera, and Bintaro.",
+    subheadline: "Property specialist in South Tangerang — BSD City, Gading Serpong, Alam Sutera, and Bintaro.",
     searchPlaceholder: "Search area or property name...",
     badge: "Trusted since 2015",
   },
@@ -107,7 +107,7 @@ export const en = {
   },
 
   footer: {
-    tagline: "Multi-area property specialist in South Tangerang.",
+    tagline: "Property specialist in South Tangerang.",
     quickLinks: "Quick Links",
     contact: "Contact Us",
     followUs: "Follow Us",

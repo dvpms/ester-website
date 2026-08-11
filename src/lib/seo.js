@@ -58,7 +58,7 @@ function buildRealEstateAgentSchema(data) {
     agent: BUSINESS_CONFIG.agentName,
     url: BUSINESS_CONFIG.siteUrl,
     telephone: `+${BUSINESS_CONFIG.whatsappNumber}`,
-    description: data.description || "Agen properti multi-kawasan terpercaya di Tangerang Selatan.",
+    description: data.description || "Agen properti terpercaya di kawasan Tangerang Selatan.",
     image: data.image || `${BUSINESS_CONFIG.siteUrl}/images/og/homepage.jpg`,
     areaServed: BUSINESS_CONFIG.areaServed.map((area) => ({
       "@type": "City",
