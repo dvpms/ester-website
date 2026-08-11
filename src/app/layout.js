@@ -2,6 +2,7 @@
 // Root layout — font Inter + Playfair Display, Header, Footer, WhatsAppButton global.
 
 import { Inter, Playfair_Display } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -52,6 +53,23 @@ import { PageTransitionWrapper } from "@/components/animations/PageTransitionWra
 export default function RootLayout({ children }) {
   return (
     <html lang="id" className={`${inter.variable} ${playfairDisplay.variable}`}>
+      <head>
+        {/* Google tag (gtag.js) */}
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-1P0NHW67GW"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-1P0NHW67GW');
+          `}
+        </Script>
+      </head>
       <body className="bg-white text-neutral-900 font-sans antialiased">
         {/* Header sticky — pt pada main mengkompensasi tinggi header */}
         <Header />
