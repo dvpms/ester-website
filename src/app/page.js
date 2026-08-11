@@ -1,6 +1,6 @@
 // src/app/page.js — Homepage
 // Merakit semua section: Hero → Kawasan → Listing → TrustStrip → Testimoni → CTA
-// generateMetadata: keyword "agent properti multi-kawasan terpercaya"
+// generateMetadata: keyword "agent properti terpercaya"
 
 import { HeroHome } from '@/components/sections/HeroHome';
 import { KawasanGrid } from '@/components/sections/KawasanGrid';
@@ -13,21 +13,21 @@ import { kawasanList } from '@/data/kawasan';
 import { listings } from '@/data/listings';
 import { artikelList } from '@/data/artikel';
 import { ArtikelGrid } from '@/components/sections/ArtikelGrid';
-import {testimonials as testimoniMock} from '@/data/testimonials';
+import { testimonials as testimoniMock } from '@/data/testimonials';
 import Link from 'next/link';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://estherproperty.com';
 
 export const metadata = {
-  title: 'Esther REMAX — Agent Properti Multi-Kawasan Terpercaya Tangerang Selatan',
+  title: 'Esther REMAX — Agent Properti Terpercaya Tangerang Selatan',
   description:
-    'Cari properti di BSD City, Gading Serpong, Alam Sutera & Bintaro bersama Esther — agen properti multi-kawasan terpercaya. Primary & secondary, dijual & disewakan.',
+    'Cari properti di BSD City, Gading Serpong, Alam Sutera & Bintaro bersama Esther — agen properti terpercaya. Primary & secondary, dijual & disewakan.',
   alternates: {
     canonical: SITE_URL,
     languages: { id: '/', en: '/en' },
   },
   openGraph: {
-    title: 'Esther REMAX — Agent Properti Multi-Kawasan Terpercaya',
+    title: 'Esther REMAX — Agent Properti Terpercaya',
     description:
       'Temukan properti impian Anda di Tangerang Selatan bersama Esther. BSD City, Gading Serpong, Alam Sutera, Bintaro.',
     images: [{ url: '/images/og/homepage.jpg', width: 1200, height: 630 }],
@@ -43,7 +43,7 @@ export default function HomePage() {
   // JSON-LD: RealEstateAgent + LocalBusiness
   const realEstateAgentSchema = generateJsonLd('RealEstateAgent', {
     description:
-      'Esther adalah agen properti multi-kawasan terpercaya di Tangerang Selatan, spesialis BSD City, Gading Serpong, Alam Sutera, dan Bintaro.',
+      'Esther adalah agen properti terpercaya di Tangerang Selatan, spesialis BSD City, Gading Serpong, Alam Sutera, dan Bintaro.',
     image: `${SITE_URL}/images/og/homepage.jpg`,
   });
   const localBusinessSchema = generateJsonLd('LocalBusiness', {
