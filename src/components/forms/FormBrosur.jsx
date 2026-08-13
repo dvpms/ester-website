@@ -126,7 +126,11 @@ export function FormBrosur({ listingSlug, lang = 'id', onSubmit }) {
       {submitStatus === 'success' && (
         <div className="flex items-start gap-2 p-3 bg-green-50 border border-green-200 rounded-btn text-success text-sm font-sans">
           <HiCheckCircle className="shrink-0 mt-0.5 text-base" />
-          {text.form.successMessage}
+          <span>
+            {lang === 'en'
+              ? 'Thank you! The property brochure has been sent to your email.'
+              : 'Terima kasih! Brosur properti telah dikirimkan ke email Anda.'}
+          </span>
         </div>
       )}
       {submitStatus === 'error' && (
