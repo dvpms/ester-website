@@ -2,74 +2,71 @@ import { BiBed, BiBath, BiCompass, BiArea } from 'react-icons/bi';
 import { MdOutlineSquareFoot } from 'react-icons/md';
 import { BsLayers } from 'react-icons/bs';
 
+/**
+ * 6-column specification cards strip for brochure layout.
+ * 
+ * @param {{ spesifikasi: import('@/lib/types').SpesifikasiProperti }} props
+ */
 export function BrochureSpecs({ spesifikasi }) {
+  const specItems = [
+    {
+      icon: BiArea,
+      label: 'LUAS TANAH',
+      value: spesifikasi?.lt ? `${spesifikasi.lt} m²` : '-',
+      isLarge: true,
+    },
+    {
+      icon: MdOutlineSquareFoot,
+      label: 'LUAS BANGUNAN',
+      value: spesifikasi?.lb ? `${spesifikasi.lb} m²` : '-',
+      isLarge: true,
+    },
+    {
+      icon: BiBed,
+      label: 'KAMAR TIDUR',
+      value: spesifikasi?.kamarTidur || '-',
+      isLarge: true,
+    },
+    {
+      icon: BiBath,
+      label: 'KAMAR MANDI',
+      value: spesifikasi?.kamarMandi || '-',
+      isLarge: true,
+    },
+    {
+      icon: BsLayers,
+      label: 'LANTAI',
+      value: spesifikasi?.lantai ? `${spesifikasi.lantai} LANTAI` : '2 LANTAI',
+      isLarge: false,
+    },
+    {
+      icon: BiCompass,
+      label: 'HADAP',
+      value: (spesifikasi?.hadap || 'SELATAN').toUpperCase(),
+      isLarge: false,
+    },
+  ];
+
   return (
     <div className="bg-white rounded-2xl border border-slate-300 shadow-md py-4 px-3 grid grid-cols-6 divide-x divide-slate-200 text-center items-center my-3">
-      {/* LT */}
-      <div className="px-2 flex flex-col items-center">
-        <BiArea className="text-3xl text-[#003DA5] mb-1" />
-        <span className="text-[10.5px] font-extrabold text-slate-500 uppercase tracking-tight">
-          LUAS TANAH
-        </span>
-        <span className="text-lg font-black text-slate-900 mt-0.5">
-          {spesifikasi?.lt || '-'} m²
-        </span>
-      </div>
-
-      {/* LB */}
-      <div className="px-2 flex flex-col items-center">
-        <MdOutlineSquareFoot className="text-3xl text-[#003DA5] mb-1" />
-        <span className="text-[10.5px] font-extrabold text-slate-500 uppercase tracking-tight">
-          LUAS BANGUNAN
-        </span>
-        <span className="text-lg font-black text-slate-900 mt-0.5">
-          {spesifikasi?.lb || '-'} m²
-        </span>
-      </div>
-
-      {/* KT */}
-      <div className="px-2 flex flex-col items-center">
-        <BiBed className="text-3xl text-[#003DA5] mb-1" />
-        <span className="text-[10.5px] font-extrabold text-slate-500 uppercase tracking-tight">
-          KAMAR TIDUR
-        </span>
-        <span className="text-lg font-black text-slate-900 mt-0.5">
-          {spesifikasi?.kamarTidur || '-'}
-        </span>
-      </div>
-
-      {/* KM */}
-      <div className="px-2 flex flex-col items-center">
-        <BiBath className="text-3xl text-[#003DA5] mb-1" />
-        <span className="text-[10.5px] font-extrabold text-slate-500 uppercase tracking-tight">
-          KAMAR MANDI
-        </span>
-        <span className="text-lg font-black text-slate-900 mt-0.5">
-          {spesifikasi?.kamarMandi || '-'}
-        </span>
-      </div>
-
-      {/* LANTAI */}
-      <div className="px-2 flex flex-col items-center">
-        <BsLayers className="text-3xl text-[#003DA5] mb-1" />
-        <span className="text-[10.5px] font-extrabold text-slate-500 uppercase tracking-tight">
-          LANTAI
-        </span>
-        <span className="text-sm font-black text-slate-900 mt-0.5 uppercase">
-          {spesifikasi?.lantai ? `${spesifikasi.lantai} LANTAI` : '2 LANTAI'}
-        </span>
-      </div>
-
-      {/* HADAP */}
-      <div className="px-2 flex flex-col items-center">
-        <BiCompass className="text-3xl text-[#003DA5] mb-1" />
-        <span className="text-[10.5px] font-extrabold text-slate-500 uppercase tracking-tight">
-          HADAP
-        </span>
-        <span className="text-sm font-black text-slate-900 mt-0.5 uppercase">
-          {spesifikasi?.hadap || 'SELATAN'}
-        </span>
-      </div>
+      {specItems.map((item, idx) => {
+        const IconComponent = item.icon;
+        return (
+          <div key={idx} className="px-2 flex flex-col items-center">
+            <IconComponent className="text-3xl text-[#003DA5] mb-1" />
+            <span className="text-[10.5px] font-extrabold text-slate-500 uppercase tracking-tight">
+              {item.label}
+            </span>
+            <span
+              className={`font-black text-slate-900 mt-0.5 ${
+                item.isLarge ? 'text-lg' : 'text-sm uppercase'
+              }`}
+            >
+              {item.value}
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }

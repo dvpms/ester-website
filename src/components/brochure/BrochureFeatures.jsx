@@ -16,13 +16,32 @@ const DEFAULT_BONUS = [
   'Water heater',
 ];
 
+/**
+ * 3-column features, bonus interior items, and technical info card.
+ * 
+ * @param {{ listing: import('@/lib/types').Listing }} props
+ */
 export function BrochureFeatures({ listing }) {
   const fiturList = listing?.fiturUnggulan?.length ? listing.fiturUnggulan : DEFAULT_FITUR;
   const bonusList = listing?.bonusInterior?.length ? listing.bonusInterior : DEFAULT_BONUS;
 
-  const sertifikat = listing?.spesifikasi?.sertifikat || 'SHM (Hak Milik)';
-  const listrik = listing?.spesifikasi?.listrik || '2200 Watt';
-  const air = listing?.spesifikasi?.air || 'PAM';
+  const technicalDetails = [
+    {
+      icon: CgNotes,
+      label: 'SERTIFIKAT',
+      value: listing?.spesifikasi?.sertifikat || 'SHM (Hak Milik)',
+    },
+    {
+      icon: FaBoltLightning,
+      label: 'LISTRIK',
+      value: listing?.spesifikasi?.listrik || '2200 Watt',
+    },
+    {
+      icon: FaWater,
+      label: 'AIR',
+      value: listing?.spesifikasi?.air || 'PAM',
+    },
+  ];
 
   return (
     <div className="grid grid-cols-12 gap-3 my-2 text-slate-800">
@@ -58,48 +77,25 @@ export function BrochureFeatures({ listing }) {
 
       {/* Informasi Teknis (Col 3) */}
       <div className="col-span-3 bg-blue-50/60 rounded-xl p-3 border border-blue-100/80 flex flex-col justify-between">
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-6 h-6 rounded-md bg-blue-100 text-[#003DA5] flex items-center justify-center shrink-0">
-              <CgNotes />
-            </div>
-            <div>
-              <span className="text-[9px] font-bold text-slate-400 uppercase block leading-none">
-                SERTIFIKAT
-              </span>
-              <span className="text-[11px] font-extrabold text-slate-900">
-                {sertifikat}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-6 h-6 rounded-md bg-blue-100 text-[#003DA5] flex items-center justify-center shrink-0">
-              <FaBoltLightning />
-            </div>
-            <div>
-              <span className="text-[9px] font-bold text-slate-400 uppercase block leading-none">
-                LISTRIK
-              </span>
-              <span className="text-[11px] font-extrabold text-slate-900">
-                {listrik}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-blue-100 text-[#003DA5] flex items-center justify-center shrink-0">
-              <FaWater />
-            </div>
-            <div>
-              <span className="text-[9px] font-bold text-slate-400 uppercase block leading-none">
-                AIR
-              </span>
-              <span className="text-[11px] font-extrabold text-slate-900">
-                {air}
-              </span>
-            </div>
-          </div>
+        <div className="space-y-2">
+          {technicalDetails.map((tech, idx) => {
+            const TechIcon = tech.icon;
+            return (
+              <div key={idx} className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-md bg-blue-100 text-[#003DA5] flex items-center justify-center shrink-0">
+                  <TechIcon />
+                </div>
+                <div>
+                  <span className="text-[9px] font-bold text-slate-400 uppercase block leading-none">
+                    {tech.label}
+                  </span>
+                  <span className="text-[11px] font-extrabold text-slate-900">
+                    {tech.value}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

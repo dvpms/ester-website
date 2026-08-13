@@ -8,8 +8,12 @@ const DEFAULT_GALLERY = [
   'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=400',
 ];
 
+/**
+ * 5-photo interior/facility gallery row for brochure layout.
+ * 
+ * @param {{ galeri?: string[] }} props
+ */
 export function BrochureGallery({ galeri = [] }) {
-  // Ambil hingga 5 foto galeri (fallback ke default jika kosong)
   const images = Array.from({ length: 5 }, (_, idx) => galeri?.[idx] || DEFAULT_GALLERY[idx]);
 
   return (

@@ -1,25 +1,13 @@
 import Image from 'next/image';
 import { HiMapPin } from 'react-icons/hi2';
 import { BiBuildingHouse } from 'react-icons/bi';
+import { formatHarga } from '@/lib/utils';
 
-function formatHargaBrosur(harga) {
-  if (!harga) return 'Rp -';
-  if (harga >= 1000000000) {
-    const val = (harga / 1000000000).toLocaleString('id-ID', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
-    });
-    return `Rp ${val} M`;
-  }
-  if (harga >= 1000000) {
-    const val = (harga / 1000000).toLocaleString('id-ID', {
-      maximumFractionDigits: 0,
-    });
-    return `Rp ${val} Jt`;
-  }
-  return `Rp ${harga}`;
-}
-
+/**
+ * Renders the full-bleed top-right hero property image and status badge.
+ * 
+ * @param {{ listing: import('@/lib/types').Listing }} props
+ */
 export function BrochureHeroBackground({ listing }) {
   const coverImage =
     listing?.galeri?.[0] ||
@@ -59,6 +47,11 @@ export function BrochureHeroBackground({ listing }) {
   );
 }
 
+/**
+ * Renders the top logo branding, property title, specifications tag, location, and anchored price badge.
+ * 
+ * @param {{ listing: import('@/lib/types').Listing }} props
+ */
 export function BrochureHeaderInfo({ listing }) {
   if (!listing) return null;
 
@@ -89,12 +82,10 @@ export function BrochureHeaderInfo({ listing }) {
 
       {/* Left Content Area: Title, Address, Description */}
       <div className="max-w-[44%]">
-        {/* Property Main Title */}
         <h2 className="text-3xl font-black text-[#001D4A] leading-[1.12] tracking-tight line-clamp-2">
           {displayTitle}
         </h2>
 
-        {/* Subtitle / Floor Tag */}
         <div className="flex items-center gap-2 my-2">
           <span className="h-[2px] w-6 bg-[#E11B22]"></span>
           <span className="text-sm font-black text-[#E11B22] uppercase tracking-wide">
@@ -103,25 +94,22 @@ export function BrochureHeaderInfo({ listing }) {
           <span className="h-[2px] w-6 bg-[#E11B22]"></span>
         </div>
 
-        <p className="text-sm font-bold text-[#003DA5] uppercase tracking-wider mb-1.5">
+        <p className="text-xs font-bold text-[#003DA5] uppercase tracking-wider mb-1.5">
           DI {listing.kawasanId?.replace('-', ' ')?.toUpperCase() || 'BSD CITY'}
         </p>
 
-        {/* Address */}
         <div className="flex items-start gap-1.5 text-sm text-slate-700 font-semibold mb-1.5">
           <HiMapPin className="text-[#003DA5] text-base shrink-0 mt-0.5" />
           <span className="line-clamp-1">{listing.lokasiDetail}</span>
         </div>
 
-        {/* Short Summary Description */}
         <p className="text-sm text-slate-600 leading-relaxed line-clamp-2">
           Hunian mewah siap huni dengan desain modern dan lingkungan nyaman di {listing.kawasanId?.replace('-', ' ') || 'BSD City'}.
         </p>
       </div>
 
-      {/* ANCHORED / FIXED POSITION PRICE BADGE (NEVER SHIFTS) */}
+      {/* Anchored Price Badge (Position Locked) */}
       <div className="absolute bottom-0 left-0 w-full max-w-[330px] z-20">
-        {/* Red Accent Slice */}
         <div
           className="absolute inset-0 bg-[#E11B22] rounded-tr-xl"
           style={{
@@ -130,7 +118,6 @@ export function BrochureHeaderInfo({ listing }) {
           }}
         />
 
-        {/* Blue Main Badge Body */}
         <div
           className="relative bg-[#003DA5] text-white px-6 py-4 shadow-xl"
           style={{
@@ -141,7 +128,7 @@ export function BrochureHeaderInfo({ listing }) {
             HARGA
           </span>
           <span className="text-4xl font-black tracking-tight leading-none text-white block">
-            {formatHargaBrosur(listing.harga)}
+            {formatHarga(listing.harga)}
           </span>
         </div>
       </div>

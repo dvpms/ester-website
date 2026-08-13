@@ -3,9 +3,15 @@ import { BsInstagram, BsWhatsapp } from 'react-icons/bs';
 import { CiGlobe } from 'react-icons/ci';
 import { profile } from '@/data/profile';
 
+/**
+ * Bottom contact card banner with agent information and social links.
+ */
 export function BrochureFooter() {
   return (
-    <footer className="mt-2 bg-[#003DA5] text-white rounded-2xl p-4 shadow-md flex items-center justify-between gap-3 relative overflow-hidden">
+    <div
+      id="brochure-footer"
+      className="mt-2 bg-[#003DA5] text-white rounded-2xl p-4 shadow-md flex items-center justify-between gap-3 relative overflow-hidden shrink-0"
+    >
       {/* Left Contact Info */}
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 rounded-full bg-white text-[#E11B22] flex items-center justify-center shrink-0 shadow-md">
@@ -41,7 +47,7 @@ export function BrochureFooter() {
       </div>
 
       {/* Right Accent Red Corner */}
-      <div className="absolute right-0 bottom-0 w-0 h-0 border-r-[24px] border-r-[#E11B22] border-t-[24px] border-t-transparent"></div>
-    </footer>
+      <div className="absolute right-0 bottom-0 w-0 h-0 border-r-[24px] border-r-[#E11B22] border-t-[24px] border-t-transparent" />
+    </div>
   );
 }
