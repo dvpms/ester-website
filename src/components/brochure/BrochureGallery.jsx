@@ -10,11 +10,14 @@ const DEFAULT_GALLERY = [
 
 /**
  * 5-photo interior/facility gallery row for brochure layout.
+ * Skips the first image (index 0) because it is already used in BrochureHero.
  * 
  * @param {{ galeri?: string[] }} props
  */
 export function BrochureGallery({ galeri = [] }) {
-  const images = Array.from({ length: 5 }, (_, idx) => galeri?.[idx] || DEFAULT_GALLERY[idx]);
+  // Ambil 5 foto interior mulai dari index 1 (karena index 0 dipakai sebagai hero cover)
+  const interiorImages = galeri.length > 1 ? galeri.slice(1, 6) : galeri.slice(0, 5);
+  const images = Array.from({ length: 5 }, (_, idx) => interiorImages[idx] || DEFAULT_GALLERY[idx]);
 
   return (
     <div className="my-1.5">

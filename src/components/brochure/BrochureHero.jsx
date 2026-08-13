@@ -104,7 +104,7 @@ export function BrochureHeaderInfo({ listing }) {
         </div>
 
         <p className="text-sm text-slate-600 leading-relaxed line-clamp-2">
-          Hunian mewah siap huni dengan desain modern dan lingkungan nyaman di {listing.kawasanId?.replace('-', ' ') || 'BSD City'}.
+          Hunian mewah dengan desain modern dan lingkungan nyaman di {listing.kawasanId?.replace('-', ' ') || 'BSD City'}.
         </p>
       </div>
 

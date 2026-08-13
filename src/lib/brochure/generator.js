@@ -1,6 +1,11 @@
 import puppeteer from 'puppeteer';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 
+// In-memory cache with TTL & in-flight promise deduplication
+const pdfCache = new Map();
+const inFlightPromises = new Map();
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
 /**
  * Resolves the base URL dynamically for Puppeteer page navigation.
  * 
@@ -46,25 +51,19 @@ async function launchBrowser() {
 }
 
 /**
- * Generates a 100% pixel-perfect A4 PDF brochure using Puppeteer (Headless Chrome)
- * and uploads it to Cloudinary.
+ * Core PDF generation routine.
  * 
- * @param {import('@/lib/types').Listing} listing - Property listing data
- * @param {Object} [options]
- * @param {boolean} [options.upload=true] - Whether to upload to Cloudinary
+ * @param {import('@/lib/types').Listing} listing
+ * @param {Object} options
  * @returns {Promise<{ pdfBytes: Uint8Array, cloudinaryUrl?: string }>}
  */
-export async function generateBrochurePdf(listing, options = { upload: true }) {
-  if (!listing) {
-    throw new Error('generateBrochurePdf: Listing data is required');
-  }
-
+async function executePdfGeneration(listing, options) {
   const browser = await launchBrowser();
 
   try {
     const page = await browser.newPage();
 
-    // Set viewport to exact A4 pixel aspect ratio (794 x 1123 px with 2x device scale for 300 DPI high-definition)
+    // Set viewport to exact A4 pixel aspect ratio (794 x 1123 px with 2x device scale for 300 DPI)
     await page.setViewport({
       width: 794,
       height: 1123,
@@ -133,5 +132,53 @@ export async function generateBrochurePdf(listing, options = { upload: true }) {
     if (browser) {
       await browser.close();
     }
+  }
+}
+
+/**
+ * Generates an A4 PDF brochure for a listing with in-memory caching and request deduplication.
+ * 
+ * @param {import('@/lib/types').Listing} listing - Property listing data
+ * @param {Object} [options]
+ * @param {boolean} [options.upload=true] - Whether to upload to Cloudinary
+ * @param {boolean} [options.forceFresh=false] - Bypass cache
+ * @returns {Promise<{ pdfBytes: Uint8Array, cloudinaryUrl?: string }>}
+ */
+export async function generateBrochurePdf(listing, options = { upload: true, forceFresh: false }) {
+  if (!listing) {
+    throw new Error('generateBrochurePdf: Listing data is required');
+  }
+
+  const cacheKey = `${listing.slug}-${options.upload ? 'uploaded' : 'buffer'}`;
+
+  // 1. Return cached result if valid and not forcing fresh
+  if (!options.forceFresh) {
+    const cached = pdfCache.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+      return {
+        pdfBytes: cached.pdfBytes,
+        cloudinaryUrl: cached.cloudinaryUrl,
+      };
+    }
+  }
+
+  // 2. Deduplicate concurrent in-flight requests (prevents double browser launch)
+  if (inFlightPromises.has(cacheKey)) {
+    return await inFlightPromises.get(cacheKey);
+  }
+
+  // 3. Launch generation and share promise
+  const generationPromise = executePdfGeneration(listing, options);
+  inFlightPromises.set(cacheKey, generationPromise);
+
+  try {
+    const result = await generationPromise;
+    pdfCache.set(cacheKey, {
+      ...result,
+      timestamp: Date.now(),
+    });
+    return result;
+  } finally {
+    inFlightPromises.delete(cacheKey);
   }
 }
