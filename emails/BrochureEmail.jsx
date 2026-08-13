@@ -2,9 +2,9 @@ import React from 'react';
 import { Button, Text } from 'react-email';
 import Layout from './components/Layout';
 import { profile } from '@/data/profile';
+import { formatWhatsAppUrl, getCloudinaryAttachmentUrl } from '@/lib/utils';
 
 export default function BrochureEmail({ nama = "Klien", listingSlug = "-", listingDetails = {} }) {
-  const cleanPhone = profile.phone.replace(/\D/g, "").replace(/^0/, "62");
   const l = listingDetails || {};
   const propertiName = l.nama || listingSlug;
 
@@ -26,14 +26,8 @@ export default function BrochureEmail({ nama = "Klien", listingSlug = "-", listi
     `Saya tertarik dan ingin berkonsultasi lebih lanjut mengenai properti ini.`,
   ].filter(Boolean);
 
-  const greetingText = encodeURIComponent(messageLines.join("\n"));
-  const waUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${greetingText}`;
-
-  const downloadUrl = l.brosurUrl
-    ? (l.brosurUrl.includes('cloudinary.com') && l.brosurUrl.includes('/upload/') && !l.brosurUrl.includes('fl_attachment')
-        ? l.brosurUrl.replace('/upload/', '/upload/fl_attachment/')
-        : l.brosurUrl)
-    : null;
+  const waUrl = formatWhatsAppUrl(profile.phone, messageLines.join("\n"));
+  const downloadUrl = getCloudinaryAttachmentUrl(l.brosurUrl);
 
   return (
     <Layout title="Brosur Properti Siap Diunduh">
@@ -79,11 +73,13 @@ export default function BrochureEmail({ nama = "Klien", listingSlug = "-", listi
         </Text>
       </div>
       
-      <div className="my-[30px]">
-        <Button href={waUrl} className="bg-[#25D366] text-white px-6 py-3 no-underline rounded inline-block font-bold">
-          Chat Konsultan via WhatsApp
-        </Button>
-      </div>
+      {waUrl && (
+        <div className="my-[30px]">
+          <Button href={waUrl} className="bg-[#25D366] text-white px-6 py-3 no-underline rounded inline-block font-bold">
+            Chat Konsultan via WhatsApp
+          </Button>
+        </div>
+      )}
       
       <Text className="text-[15px] text-[#555] leading-relaxed m-0 mb-2.5">Salam,</Text>
       <Text className="text-[15px] text-[#555] leading-relaxed m-0 mb-2.5">

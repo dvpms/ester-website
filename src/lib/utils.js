@@ -108,3 +108,41 @@ export function formatTanggal(isoDate, lang = "id") {
     day: "numeric",
   });
 }
+
+/**
+ * Normalisasi nomor telepon dan buat tautan universal WhatsApp resmi (api.whatsapp.com/send).
+ * Kompatibel dengan semua platform (iOS/Apple Mail & Android).
+ *
+ * @param {string|null|undefined} phone - Nomor telepon mentah (e.g. "0851-7756-0191" atau "+62 812...")
+ * @param {string} [messageText=""] - Pesan awal yang otomatis terisi
+ * @returns {string|null} URL WhatsApp lengkap atau null jika nomor tidak valid
+ */
+export function formatWhatsAppUrl(phone, messageText = "") {
+  if (!phone || phone === "-") return null;
+
+  const cleanDigits = phone.replace(/\D/g, "");
+  if (!cleanDigits) return null;
+
+  const internationalPhone = cleanDigits.startsWith("0")
+    ? "62" + cleanDigits.slice(1)
+    : cleanDigits.startsWith("62")
+      ? cleanDigits
+      : "62" + cleanDigits;
+
+  const encodedText = messageText ? `&text=${encodeURIComponent(messageText)}` : "";
+  return `https://api.whatsapp.com/send?phone=${internationalPhone}${encodedText}`;
+}
+
+/**
+ * Sisipkan flag `fl_attachment` pada Cloudinary URL untuk memaksa browser mobile melakukan download langsung.
+ *
+ * @param {string|null|undefined} url - URL Cloudinary berkas
+ * @returns {string|null} URL dengan transformasi fl_attachment
+ */
+export function getCloudinaryAttachmentUrl(url) {
+  if (!url) return null;
+  if (url.includes("cloudinary.com") && url.includes("/upload/") && !url.includes("fl_attachment")) {
+    return url.replace("/upload/", "/upload/fl_attachment/");
+  }
+  return url;
+}

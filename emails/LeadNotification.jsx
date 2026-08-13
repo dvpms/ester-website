@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Hr, Link, Text } from 'react-email';
 import Layout from './components/Layout';
 import { listings } from '@/data/listings';
+import { formatWhatsAppUrl, getCloudinaryAttachmentUrl } from '@/lib/utils';
 
 export default function LeadNotification({
   nama = "-",
@@ -14,16 +15,7 @@ export default function LeadNotification({
   brosurUrl,
 }) {
   const waktuMasuk = new Date().toLocaleString("id-ID");
-  const cleanPhone = telepon && telepon !== "-" ? telepon.replace(/\D/g, "") : "";
-  const formattedPhone = cleanPhone.startsWith("0")
-    ? "62" + cleanPhone.slice(1)
-    : cleanPhone.startsWith("62")
-      ? cleanPhone
-      : cleanPhone
-        ? "62" + cleanPhone
-        : "";
-
-  const displayTelepon = formattedPhone ? `+${formattedPhone}` : "-";
+  const displayTelepon = telepon && telepon !== "-" ? telepon : "-";
 
   const isValidSlug = listingSlug && listingSlug !== "-" && listingSlug !== "$undefined";
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://estherproperti.com";
@@ -32,13 +24,7 @@ export default function LeadNotification({
   // Cari data listing dan brosurUrl jika belum diteruskan
   const matchedListing = isValidSlug ? listings.find((l) => l.slug === listingSlug) : null;
   const currentBrosurUrl = brosurUrl || matchedListing?.brosurUrl || "";
-
-  // Download URL dengan fl_attachment untuk kemudahan agen mengunduh file gambar brosur langsung
-  const downloadBrosurUrl = currentBrosurUrl
-    ? (currentBrosurUrl.includes('cloudinary.com') && currentBrosurUrl.includes('/upload/') && !currentBrosurUrl.includes('fl_attachment')
-        ? currentBrosurUrl.replace('/upload/', '/upload/fl_attachment/')
-        : currentBrosurUrl)
-    : null;
+  const downloadBrosurUrl = getCloudinaryAttachmentUrl(currentBrosurUrl);
 
   // Dynamic Greeting Text TANPA link brosur (karena agen mengirim gambar brosur langsung)
   const clientName = nama && nama !== '-' ? nama : '';
@@ -77,10 +63,7 @@ export default function LeadNotification({
     ].filter(Boolean);
   }
 
-  const messageRaw = messageLines.join('\n');
-  const greetingText = encodeURIComponent(messageRaw);
-  const waUrl = formattedPhone ? `https://api.whatsapp.com/send?phone=${formattedPhone}&text=${greetingText}` : null;
-
+  const waUrl = formatWhatsAppUrl(telepon, messageLines.join('\n'));
   const kawasan = preferensi?.kawasan || "-";
   const pesanTeks = pesan && pesan !== "-" ? pesan : "-";
 
@@ -117,7 +100,7 @@ export default function LeadNotification({
               <td className="py-2 border-b border-[#eee] w-[40%]"><strong>Gambar Brosur</strong></td>
               <td className="py-2 border-b border-[#eee]">
                 <Link href={downloadBrosurUrl} className="text-[#E11B22] font-bold underline">
-                  Unduh Brosur
+                  Unduh Gambar Brosur HD
                 </Link>
               </td>
             </tr>
@@ -133,10 +116,10 @@ export default function LeadNotification({
         {downloadBrosurUrl && (
           <div className="mb-3">
             <Button href={downloadBrosurUrl} className="bg-[#003DA5] text-white px-6 py-3 no-underline rounded inline-block font-bold">
-              Unduh Brosur
+              📥 Unduh Gambar Brosur Agen
             </Button>
             <Text className="text-xs text-neutral-500 m-0 mt-1.5">
-              Klik untuk mengunduh brosur dan kirimkan langsung sebagai foto/gambar ke WhatsApp klien.
+              Klik untuk mengunduh gambar brosur HD dan kirimkan langsung sebagai foto/gambar ke WhatsApp klien.
             </Text>
           </div>
         )}
@@ -144,7 +127,7 @@ export default function LeadNotification({
         {waUrl && (
           <div className="mt-3">
             <Button href={waUrl} className="bg-[#25D366] text-white px-6 py-3 no-underline rounded inline-block font-bold">
-              Chat WhatsApp Klien
+              💬 Chat WhatsApp Klien
             </Button>
           </div>
         )}
