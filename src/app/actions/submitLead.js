@@ -43,10 +43,15 @@ async function dispatchEmails(leadData) {
   if (!EMAIL_RECEIVER) return;
 
   const emailTasks = [];
+  const listing = leadData.listingSlug ? listings.find((l) => l.slug === leadData.listingSlug) : null;
+  const enrichedLeadData = {
+    ...leadData,
+    brosurUrl: listing?.brosurUrl,
+  };
 
-  // 1. Email Notifikasi ke Agen
+  // 1. Email Notifikasi ke Agen (dilengkapi link download brosur jika ada)
   const agentSubject = `[Lead Baru] ${leadData.jenisForm || 'Website'} — ${leadData.nama || 'Tanpa Nama'}`;
-  const agentTask = getLeadNotificationHtml(leadData)
+  const agentTask = getLeadNotificationHtml(enrichedLeadData)
     .then((html) =>
       sendEmail({
         to: EMAIL_RECEIVER,
@@ -58,29 +63,25 @@ async function dispatchEmails(leadData) {
   emailTasks.push(agentTask);
 
   // 2. Email Brosur ke Klien (jika form brosur dan email klien tersedia)
-  if (leadData.jenisForm === 'brosur' && leadData.email) {
-    const listing = listings.find((l) => l.slug === leadData.listingSlug);
+  if (leadData.jenisForm === 'brosur' && leadData.email && listing) {
+    const listingDetails = {
+      nama: listing.nama,
+      lokasi: listing.lokasiDetail,
+      jenis: listing.jenisProperti,
+      harga: formatHarga(listing.harga),
+      brosurUrl: listing.brosurUrl,
+    };
 
-    if (listing) {
-      const listingDetails = {
-        nama: listing.nama,
-        lokasi: listing.lokasiDetail,
-        jenis: listing.jenisProperti,
-        harga: formatHarga(listing.harga),
-        brosurUrl: listing.brosurUrl,
-      };
-
-      const clientTask = getBrochureHtml(leadData, listingDetails)
-        .then((clientHtml) =>
-          sendEmail({
-            to: leadData.email,
-            subject: `[Brosur Properti] ${listing.nama} — Esther REMAX`,
-            html: clientHtml,
-          })
-        )
-        .catch((err) => console.error('[ERROR] Client brochure email delivery failed:', err));
-      emailTasks.push(clientTask);
-    }
+    const clientTask = getBrochureHtml(leadData, listingDetails)
+      .then((clientHtml) =>
+        sendEmail({
+          to: leadData.email,
+          subject: `[Brosur Properti] ${listing.nama} — Esther REMAX`,
+          html: clientHtml,
+        })
+      )
+      .catch((err) => console.error('[ERROR] Client brochure email delivery failed:', err));
+    emailTasks.push(clientTask);
   }
 
   await Promise.allSettled(emailTasks);
