@@ -2,7 +2,7 @@ import puppeteer from 'puppeteer';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 
 // In-memory cache with TTL & in-flight promise deduplication
-const pdfCache = new Map();
+const imageCache = new Map();
 const inFlightPromises = new Map();
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -51,19 +51,19 @@ async function launchBrowser() {
 }
 
 /**
- * Core PDF generation routine.
+ * Core high-definition brochure image screenshot routine (1588 x 2246 px).
  * 
  * @param {import('@/lib/types').Listing} listing
  * @param {Object} options
- * @returns {Promise<{ pdfBytes: Uint8Array, cloudinaryUrl?: string }>}
+ * @returns {Promise<{ imageBytes: Uint8Array, cloudinaryUrl?: string }>}
  */
-async function executePdfGeneration(listing, options) {
+async function executeImageGeneration(listing, options) {
   const browser = await launchBrowser();
 
   try {
     const page = await browser.newPage();
 
-    // Set viewport to exact A4 pixel aspect ratio (794 x 1123 px with 2x device scale for 300 DPI)
+    // Set viewport to exact A4 pixel aspect ratio (794 x 1123 px with 2x scale for 1588x2246 px Ultra HD image)
     await page.setViewport({
       width: 794,
       height: 1123,
@@ -102,30 +102,32 @@ async function executePdfGeneration(listing, options) {
     // Wait a brief moment for all images and fonts to settle
     await new Promise((r) => setTimeout(r, 600));
 
-    // Generate standard A4 PDF with full backgrounds and zero margins
-    const pdfBuffer = await page.pdf({
-      width: '794px',
-      height: '1123px',
-      printBackground: true,
-      margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' },
-      preferCSSPageSize: true,
-    });
+    // Capture pixel-perfect high-res screenshot
+    const container = await page.$('#brochure-container');
+    const screenshotBuffer = container
+      ? await container.screenshot({ type: 'jpeg', quality: 95 })
+      : await page.screenshot({
+          type: 'jpeg',
+          quality: 95,
+          clip: { x: 0, y: 0, width: 794, height: 1123 },
+        });
 
-    const pdfBytes = new Uint8Array(pdfBuffer);
+    const imageBytes = new Uint8Array(screenshotBuffer);
 
     let cloudinaryUrl;
     if (options.upload) {
-      const uploadResult = await uploadToCloudinary(Buffer.from(pdfBytes), {
+      const uploadResult = await uploadToCloudinary(Buffer.from(imageBytes), {
         public_id: `brosur-${listing.slug}`,
-        resource_type: 'raw',
-        format: 'pdf',
+        resource_type: 'image',
+        format: 'jpg',
         overwrite: true,
       });
       cloudinaryUrl = uploadResult.secure_url;
     }
 
     return {
-      pdfBytes,
+      imageBytes,
+      pdfBytes: imageBytes, // backward compatibility
       cloudinaryUrl,
     };
   } finally {
@@ -136,44 +138,45 @@ async function executePdfGeneration(listing, options) {
 }
 
 /**
- * Generates an A4 PDF brochure for a listing with in-memory caching and request deduplication.
+ * Generates an HD JPEG brochure image for a listing with in-memory caching and request deduplication.
  * 
  * @param {import('@/lib/types').Listing} listing - Property listing data
  * @param {Object} [options]
  * @param {boolean} [options.upload=true] - Whether to upload to Cloudinary
  * @param {boolean} [options.forceFresh=false] - Bypass cache
- * @returns {Promise<{ pdfBytes: Uint8Array, cloudinaryUrl?: string }>}
+ * @returns {Promise<{ imageBytes: Uint8Array, pdfBytes: Uint8Array, cloudinaryUrl?: string }>}
  */
-export async function generateBrochurePdf(listing, options = { upload: true, forceFresh: false }) {
+export async function generateBrochureImage(listing, options = { upload: true, forceFresh: false }) {
   if (!listing) {
-    throw new Error('generateBrochurePdf: Listing data is required');
+    throw new Error('generateBrochureImage: Listing data is required');
   }
 
   const cacheKey = `${listing.slug}-${options.upload ? 'uploaded' : 'buffer'}`;
 
   // 1. Return cached result if valid and not forcing fresh
   if (!options.forceFresh) {
-    const cached = pdfCache.get(cacheKey);
+    const cached = imageCache.get(cacheKey);
     if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
       return {
-        pdfBytes: cached.pdfBytes,
+        imageBytes: cached.imageBytes,
+        pdfBytes: cached.imageBytes,
         cloudinaryUrl: cached.cloudinaryUrl,
       };
     }
   }
 
-  // 2. Deduplicate concurrent in-flight requests (prevents double browser launch)
+  // 2. Deduplicate concurrent in-flight requests
   if (inFlightPromises.has(cacheKey)) {
     return await inFlightPromises.get(cacheKey);
   }
 
   // 3. Launch generation and share promise
-  const generationPromise = executePdfGeneration(listing, options);
+  const generationPromise = executeImageGeneration(listing, options);
   inFlightPromises.set(cacheKey, generationPromise);
 
   try {
     const result = await generationPromise;
-    pdfCache.set(cacheKey, {
+    imageCache.set(cacheKey, {
       ...result,
       timestamp: Date.now(),
     });
@@ -182,3 +185,6 @@ export async function generateBrochurePdf(listing, options = { upload: true, for
     inFlightPromises.delete(cacheKey);
   }
 }
+
+// Alias for backward compatibility
+export const generateBrochurePdf = generateBrochureImage;

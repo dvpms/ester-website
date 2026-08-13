@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { listings } from '@/data/listings';
-import { generateBrochurePdf } from '@/lib/brochure/generator';
+import { generateBrochureImage } from '@/lib/brochure/generator';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,23 +41,23 @@ export async function GET(request) {
       );
     }
 
-    // Jika download=true, kirim langsung sebagai response stream
+    // Jika download=true, kirim langsung sebagai response image/jpeg stream
     if (isDownload) {
-      const { pdfBytes } = await generateBrochurePdf(listing, {
+      const { imageBytes } = await generateBrochureImage(listing, {
         upload: false,
         forceFresh: isFresh,
       });
-      return new NextResponse(pdfBytes, {
+      return new NextResponse(imageBytes, {
         status: 200,
         headers: {
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': `inline; filename="brosur-${listing.slug}.pdf"`,
+          'Content-Type': 'image/jpeg',
+          'Content-Disposition': `inline; filename="brosur-${listing.slug}.jpg"`,
         },
       });
     }
 
-    // Generate dan upload ke Cloudinary
-    const { cloudinaryUrl } = await generateBrochurePdf(listing, {
+    // Generate dan upload ke Cloudinary sebagai image (JPG)
+    const { cloudinaryUrl } = await generateBrochureImage(listing, {
       upload: true,
       forceFresh: isFresh,
     });
@@ -68,14 +68,14 @@ export async function GET(request) {
       slug: listing.slug,
       nama: listing.nama,
       cloudinaryUrl,
-      message: 'Brosur berhasil dibuat dan diunggah ke Cloudinary',
+      message: 'Gambar brosur berhasil dibuat dan diunggah ke Cloudinary',
     });
   } catch (error) {
-    console.error('Error generating brochure:', error);
+    console.error('Error generating brochure image:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error.message || 'Gagal membuat brosur PDF',
+        error: error.message || 'Gagal membuat gambar brosur',
       },
       { status: 500 }
     );
@@ -101,7 +101,7 @@ export async function POST(request) {
       );
     }
 
-    const { cloudinaryUrl } = await generateBrochurePdf(listing, {
+    const { cloudinaryUrl } = await generateBrochureImage(listing, {
       upload: true,
       forceFresh: isFresh,
     });
@@ -110,14 +110,14 @@ export async function POST(request) {
       success: true,
       slug: listing.slug,
       cloudinaryUrl,
-      message: 'Brosur berhasil dibuat dan diunggah ke Cloudinary',
+      message: 'Gambar brosur berhasil dibuat dan diunggah ke Cloudinary',
     });
   } catch (error) {
     console.error('Error in POST /api/brochure/generate:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error.message || 'Gagal memproses brosur',
+        error: error.message || 'Gagal memproses gambar brosur',
       },
       { status: 500 }
     );

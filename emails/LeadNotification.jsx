@@ -33,14 +33,14 @@ export default function LeadNotification({
   const matchedListing = isValidSlug ? listings.find((l) => l.slug === listingSlug) : null;
   const currentBrosurUrl = brosurUrl || matchedListing?.brosurUrl || "";
 
-  // Download URL dengan fl_attachment untuk kemudahan agen mengunduh file brosur PDF langsung
+  // Download URL dengan fl_attachment untuk kemudahan agen mengunduh file gambar brosur langsung
   const downloadBrosurUrl = currentBrosurUrl
     ? (currentBrosurUrl.includes('cloudinary.com') && currentBrosurUrl.includes('/upload/') && !currentBrosurUrl.includes('fl_attachment')
         ? currentBrosurUrl.replace('/upload/', '/upload/fl_attachment/')
         : currentBrosurUrl)
     : null;
 
-  // Dynamic Greeting Text TANPA link brosur (karena agen mengirim file brosur secara manual)
+  // Dynamic Greeting Text TANPA link brosur (karena agen mengirim gambar brosur langsung)
   const clientName = nama && nama !== '-' ? nama : '';
   const clientGreeting = clientName ? `Halo Bapak/Ibu *${clientName}*` : 'Halo Bapak/Ibu';
   const propertiTitle = matchedListing?.nama ? `*${matchedListing.nama}*` : '';
@@ -55,6 +55,7 @@ export default function LeadNotification({
       propertiTitle ? `🏡 ${propertiTitle}` : '',
       listingUrl ? `🔗 Detail: ${listingUrl}` : '',
       '',
+      `Ada yang bisa saya bantu informasikan lebih lanjut mengenai properti ini?`,
     ].filter(Boolean);
   } else if (jenisForm === 'brosur') {
     messageLines = [
@@ -64,7 +65,7 @@ export default function LeadNotification({
       propertiTitle ? `🏡 ${propertiTitle}` : '',
       listingUrl ? `🔗 Detail: ${listingUrl}` : '',
       '',
-      `Berikut saya lampirkan file brosur propertinya. Jika ada yang ingin ditanyakan atau ingin survei lokasi, saya siap membantu! 😊`,
+      `Berikut saya lampirkan gambar brosur propertinya. Jika ada yang ingin ditanyakan atau ingin survei lokasi, saya siap membantu! 😊`,
     ].filter(Boolean);
   } else {
     messageLines = [
@@ -113,10 +114,10 @@ export default function LeadNotification({
           </tr>
           {downloadBrosurUrl && (
             <tr>
-              <td className="py-2 border-b border-[#eee] w-[40%]"><strong>Brosur Properti</strong></td>
+              <td className="py-2 border-b border-[#eee] w-[40%]"><strong>Gambar Brosur</strong></td>
               <td className="py-2 border-b border-[#eee]">
                 <Link href={downloadBrosurUrl} className="text-[#E11B22] font-bold underline">
-                  Unduh File Brosur PDF
+                  Unduh Brosur
                 </Link>
               </td>
             </tr>
@@ -132,10 +133,10 @@ export default function LeadNotification({
         {downloadBrosurUrl && (
           <div className="mb-3">
             <Button href={downloadBrosurUrl} className="bg-[#003DA5] text-white px-6 py-3 no-underline rounded inline-block font-bold">
-              Unduh Brosur PDF Agen
+              Unduh Brosur
             </Button>
             <Text className="text-xs text-neutral-500 m-0 mt-1.5">
-              Klik untuk mengunduh brosur PDF dan kirimkan langsung sebagai dokumen ke WhatsApp klien.
+              Klik untuk mengunduh brosur dan kirimkan langsung sebagai foto/gambar ke WhatsApp klien.
             </Text>
           </div>
         )}
