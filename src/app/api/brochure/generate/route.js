@@ -18,7 +18,7 @@ function findListing(slug, id) {
 }
 
 /**
- * GET /api/brochure/generate?slug=...&download=true|false
+ * GET /api/brochure/generate?slug=...&download=true|false&fresh=true|false
  */
 export async function GET(request) {
   try {
@@ -26,6 +26,7 @@ export async function GET(request) {
     const slug = searchParams.get('slug');
     const id = searchParams.get('id');
     const isDownload = searchParams.get('download') === 'true';
+    const isFresh = searchParams.get('fresh') === 'true';
 
     const listing = findListing(slug, id);
 
@@ -40,9 +41,12 @@ export async function GET(request) {
       );
     }
 
-    // Jika download=true, generate PDF dan kirim langsung sebagai response stream
+    // Jika download=true, kirim langsung sebagai response stream
     if (isDownload) {
-      const { pdfBytes } = await generateBrochurePdf(listing, { upload: false });
+      const { pdfBytes } = await generateBrochurePdf(listing, {
+        upload: false,
+        forceFresh: isFresh,
+      });
       return new NextResponse(pdfBytes, {
         status: 200,
         headers: {
@@ -53,7 +57,10 @@ export async function GET(request) {
     }
 
     // Generate dan upload ke Cloudinary
-    const { cloudinaryUrl } = await generateBrochurePdf(listing, { upload: true });
+    const { cloudinaryUrl } = await generateBrochurePdf(listing, {
+      upload: true,
+      forceFresh: isFresh,
+    });
 
     return NextResponse.json({
       success: true,
@@ -83,6 +90,7 @@ export async function POST(request) {
     const body = await request.json();
     const slug = body?.slug;
     const customListing = body?.listing;
+    const isFresh = body?.fresh === true;
 
     const listing = customListing || findListing(slug, body?.id);
 
@@ -93,7 +101,10 @@ export async function POST(request) {
       );
     }
 
-    const { cloudinaryUrl } = await generateBrochurePdf(listing, { upload: true });
+    const { cloudinaryUrl } = await generateBrochurePdf(listing, {
+      upload: true,
+      forceFresh: isFresh,
+    });
 
     return NextResponse.json({
       success: true,
