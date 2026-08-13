@@ -89,7 +89,7 @@ export function FormKonsultasi({ listingSlug, lang = 'id', onSubmit }) {
       <Input
         id="konsultasi-nama"
         label={text.form.nama}
-        placeholder="Nama Lengkap Anda"
+        placeholder="Nama Anda"
         error={errors.nama?.message}
         {...register('nama', {
           required: text.form.required,

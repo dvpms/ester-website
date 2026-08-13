@@ -61,7 +61,7 @@ export const id = {
   },
 
   form: {
-    nama: "Nama Lengkap",
+    nama: "Nama",
     email: "Alamat Email",
     telepon: "Nomor Telepon",
     pesan: "Pesan / Pertanyaan",

@@ -83,7 +83,7 @@ export function FormBrosur({ listingSlug, lang = 'id', onSubmit }) {
       <Input
         id="brosur-nama"
         label={text.form.nama}
-        placeholder="Nama Lengkap"
+        placeholder="Nama"
         error={errors.nama?.message}
         {...register('nama', {
           required: text.form.required,
