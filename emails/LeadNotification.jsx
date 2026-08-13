@@ -22,7 +22,10 @@ export default function LeadNotification({
         : "";
 
   const displayTelepon = formattedPhone ? `+${formattedPhone}` : "-";
-  const waUrl = formattedPhone ? `https://wa.me/${formattedPhone}` : "#";
+  
+  // Menggunakan api.whatsapp.com/send untuk kompatibilitas penuh di iOS (iPhone/Apple Mail) & Android
+  const greetingText = encodeURIComponent(`Halo ${nama !== '-' ? nama : ''}, saya Esther dari REMAX Future terkait pesan Anda di website.`);
+  const waUrl = formattedPhone ? `https://api.whatsapp.com/send?phone=${formattedPhone}&text=${greetingText}` : null;
 
   const isValidSlug = listingSlug && listingSlug !== "-" && listingSlug !== "$undefined";
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://estherproperti.com";
@@ -65,11 +68,14 @@ export default function LeadNotification({
         </tbody>
       </table>
 
-      <Hr className="border-t border-[#eee] my-5" />
-
-      <Button href={waUrl} className="bg-[#25D366] text-white px-6 py-3 no-underline rounded inline-block font-bold">
-        Chat WhatsApp Sekarang
-      </Button>
+      {waUrl && (
+        <>
+          <Hr className="border-t border-[#eee] my-5" />
+          <Button href={waUrl} className="bg-[#25D366] text-white px-6 py-3 no-underline rounded inline-block font-bold">
+            Chat WhatsApp Sekarang
+          </Button>
+        </>
+      )}
 
       <Hr className="border-t border-[#eee] my-5" />
       <Text className="italic text-[#666] m-0 text-sm">
@@ -78,4 +84,3 @@ export default function LeadNotification({
     </Layout>
   );
 }
-
