@@ -44,13 +44,12 @@ export function FilterBar({ filters, onFilterChange, onReset, kawasanList, lang 
   const hasActiveFilter = Object.values(filters).some(Boolean);
 
   // Sync combobox search text with external filter changes (e.g., reset)
-  useEffect(() => {
-    if (!filters.kawasan) setKawasanSearch('');
-    else {
-      const selected = kawasanList.find(k => k.id === filters.kawasan);
-      if (selected) setKawasanSearch(selected.nama);
-    }
-  }, [filters.kawasan, kawasanList]);
+  const [prevKawasan, setPrevKawasan] = useState(filters.kawasan);
+  if (filters.kawasan !== prevKawasan) {
+    setPrevKawasan(filters.kawasan);
+    const selected = kawasanList.find(k => k.id === filters.kawasan);
+    setKawasanSearch(selected ? selected.nama : '');
+  }
 
   // Handle click outside combobox
   useEffect(() => {
