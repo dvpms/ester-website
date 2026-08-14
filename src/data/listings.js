@@ -23,7 +23,7 @@ export const listings = [
       lt: 125,
       lb: 200,
       kamarTidur: "4 (3+1)",
-      kamarMandi: "3",
+      kamarMandi: "3 (2+1)",
       lantai: 2,
       hadap: "Selatan",
       listrik: "4400 Watt",
@@ -55,7 +55,7 @@ export const listings = [
       '<p>Temukan rumah hook 2 lantai full furnished yang mewah di <strong>Neo Catalonia, Nusa Loka BSD City</strong>.</p><p>Hunian premium siap huni ini menghadap ke selatan, menawarkan sirkulasi udara optimal dengan luas bangunan 200 m². Memiliki 3+1 kamar tidur yang mencakup walk-in closet pada kamar utama, serta dilengkapi laundry room, gudang, dan balkon sangat luas untuk bersantai.</p><p>Sertifikat SHM, listrik 4400 Watt, air PAM.</p><p>Hubungi Esther Property sekarang untuk jadwalkan kunjungan ke lokasi!</p>',
     deskripsiEn:
       "<p>Discover a luxurious fully furnished 2-story corner house in <strong>Neo Catalonia, Nusa Loka BSD City</strong>.</p><p>This premium move-in ready south-facing home offers optimal air circulation with a 200 sqm building area. It features 3+1 bedrooms including a walk-in closet in the master bedroom, plus a laundry room, storage, and a very spacious relaxing balcony.</p><p>Freehold title (SHM), 4400W electricity, PAM water. Contact Esther Property now to schedule a site visit!</p>",
-    brosurUrl: undefined,
+    brosurUrl: "https://res.cloudinary.com/dnmhna2fc/image/upload/v1786682850/brosur-rumah-hook-full-furnished-neo-catalonia-bsd_gcp5i8.jpg",
     featured: true,
   },
   {
@@ -63,7 +63,7 @@ export const listings = [
     slug: "rumah-2-lantai-hadap-taman-the-green-vineyard-bsd",
     nama: "Rumah 2 Lantai Hadap Taman di The Green Vineyard BSD City",
     namaEn: "2-Story Park-Facing House at The Green Vineyard BSD City",
-    judulBrosur: "Rumah Hadap Taman Asri",
+    judulBrosur: "Rumah di The Green Vineyard BSD City ",
     segmen: "secondary",
     jenisProperti: "rumah",
     transaksi: "dijual",
@@ -109,7 +109,7 @@ export const listings = [
       '<p>Temukan rumah 2 lantai siap huni yang asri dan menghadap langsung ke taman di <strong>The Green Vineyard, BSD City</strong>.</p><p>Berdiri di lahan seluas 120 m² (lebar 8 x 15 m) dengan luas bangunan ±200 m², hunian hadap utara ini sangat ideal untuk keluarga modern. Properti ini sudah dilengkapi dengan dak balkon dan menyediakan 3 kamar tidur, 2+1 kamar mandi, serta garasi/carport berkapasitas 2 mobil.</p><p>Status kepemilikan SHM, dengan daya listrik 2.200 Watt.</p><p>Hubungi Esther Property sekarang untuk menjadwalkan survei ke lokasi!</p>',
     deskripsiEn:
       "<p>Discover a beautiful move-in ready 2-story house facing the park at <strong>The Green Vineyard, BSD City</strong>.</p><p>Built on a 120 sqm plot (8 x 15 m) with a building area of ±200 sqm, this north-facing home is perfect for a modern family. Freehold title (SHM) with 2,200 Watt electricity.</p>",
-    brosurUrl: undefined,
+    brosurUrl: "https://res.cloudinary.com/dnmhna2fc/image/upload/brosur-rumah-2-lantai-hadap-taman-the-green-vineyard-bsd_uacvro.jpg",
     featured: true,
   },
   {
@@ -130,10 +130,10 @@ export const listings = [
     spesifikasi: {
       lt: 98,
       lb: 116,
-      kamarTidur: "4 (4+1)",
-      kamarMandi: "3 (3+1)",
+      kamarTidur: "5 (4+1)",
+      kamarMandi: "4 (3+1)",
       lantai: 2,
-      hadap: "Timur",
+      hadap: "-",
       listrik: "2200 Watt",
       air: "PAM",
       sertifikat: "PPJB / HGB",
@@ -162,7 +162,7 @@ export const listings = [
       '<p>Dapatkan kesempatan memiliki rumah baru dari Sinarmas Land di <strong>Cluster Vireya, BSD City</strong>. Lokasi hunian ini super strategis, hanya selangkah menuju Pintu Tol BSD dan Stasiun KRL Rawa Buntu, sangat memudahkan mobilitas harian Anda.</p>',
     deskripsiEn:
       "<p>Seize the opportunity to own a brand new home by Sinarmas Land in <strong>Vireya Cluster, BSD City</strong>. This super strategic location is just steps away from the BSD Toll Gate and Rawa Buntu Train Station.</p>",
-    brosurUrl: undefined,
+    brosurUrl: "https://res.cloudinary.com/dnmhna2fc/image/upload/brosur-rumah-baru-cluster-vireya-bsd-dekat-tol_txvn1l.jpg",
     featured: true,
   },
   {
@@ -170,7 +170,7 @@ export const listings = [
     slug: "rumah-mewah-cluster-eonna-bsd-dekat-eastvara-mall",
     nama: "Rumah Mewah di Cluster Eonna BSD Dekat Eastvara Mall",
     namaEn: "Luxury House at Eonna Cluster BSD Near Eastvara Mall",
-    judulBrosur: "Mansion Mewah Cluster Eonna",
+    judulBrosur: "Rumah Mewah Cluster Eonna",
     segmen: "primary",
     jenisProperti: "rumah",
     transaksi: "dijual",
@@ -183,13 +183,13 @@ export const listings = [
     spesifikasi: {
       lt: 220,
       lb: 325,
-      kamarTidur: "5 (5+1)",
-      kamarMandi: "5 (5+2+1)",
+      kamarTidur: "6 (5+1)",
+      kamarMandi: "8 (5+2+1)",
       lantai: 3,
-      hadap: "Selatan",
-      listrik: "7700 Watt",
-      air: "PAM",
-      sertifikat: "PPJB / HGB",
+      hadap: "-",
+      listrik: "-",
+      air: "-",
+      sertifikat: "-",
     },
     fiturUnggulan: [
       "Hanya 1 Menit menuju Eastvara Mall BSD",
@@ -216,7 +216,7 @@ export const listings = [
       '<p>Temukan kemewahan sejati di rumah premium <strong>Cluster Eonna, BSD City</strong>. Dengan lokasi emas yang hanya berjarak 1 menit menuju Eastvara Mall, hunian megah ini menawarkan kenyamanan dan gaya hidup kelas atas untuk keluarga Anda.</p>',
     deskripsiEn:
       "<p>Discover true luxury in this premium house at <strong>Eonna Cluster, BSD City</strong>. Located just 1 minute away from Eastvara Mall.</p>",
-    brosurUrl: undefined,
+    brosurUrl: "https://res.cloudinary.com/dnmhna2fc/image/upload/brosur-rumah-mewah-cluster-eonna-bsd-dekat-eastvara-mall_qyhzzv.jpg",
     featured: true,
   },
 ];

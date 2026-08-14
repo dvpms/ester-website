@@ -41,7 +41,7 @@ export async function GET(request) {
       );
     }
 
-    // Jika download=true, kirim langsung sebagai response image/jpeg stream
+    // Jika download=true, kirim langsung sebagai attachment file download stream
     if (isDownload) {
       const { imageBytes } = await generateBrochureImage(listing, {
         upload: false,
@@ -51,7 +51,7 @@ export async function GET(request) {
         status: 200,
         headers: {
           'Content-Type': 'image/jpeg',
-          'Content-Disposition': `inline; filename="brosur-${listing.slug}.jpg"`,
+          'Content-Disposition': `attachment; filename="brosur-${listing.slug}.jpg"`,
         },
       });
     }

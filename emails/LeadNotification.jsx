@@ -88,7 +88,7 @@ export default function LeadNotification({
             <td className="py-2 border-b border-[#eee]">
               {listingUrl ? (
                 <Link href={listingUrl} className="text-[#00458C] underline">
-                  {listingUrl}
+                  {matchedListing?.nama || "Link Listing"}
                 </Link>
               ) : (
                 "-"
@@ -100,7 +100,7 @@ export default function LeadNotification({
               <td className="py-2 border-b border-[#eee] w-[40%]"><strong>Gambar Brosur</strong></td>
               <td className="py-2 border-b border-[#eee]">
                 <Link href={downloadBrosurUrl} className="text-[#E11B22] font-bold underline">
-                  Unduh Gambar Brosur HD
+                  Unduh Brosur
                 </Link>
               </td>
             </tr>
@@ -116,7 +116,7 @@ export default function LeadNotification({
         {downloadBrosurUrl && (
           <div className="mb-3">
             <Button href={downloadBrosurUrl} className="bg-[#003DA5] text-white px-6 py-3 no-underline rounded inline-block font-bold">
-              📥 Unduh Gambar Brosur Agen
+              Unduh Brosur
             </Button>
             <Text className="text-xs text-neutral-500 m-0 mt-1.5">
               Klik untuk mengunduh gambar brosur HD dan kirimkan langsung sebagai foto/gambar ke WhatsApp klien.
@@ -127,7 +127,7 @@ export default function LeadNotification({
         {waUrl && (
           <div className="mt-3">
             <Button href={waUrl} className="bg-[#25D366] text-white px-6 py-3 no-underline rounded inline-block font-bold">
-              💬 Chat WhatsApp Klien
+              Chat WhatsApp Klien
             </Button>
           </div>
         )}
