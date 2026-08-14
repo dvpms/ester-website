@@ -61,7 +61,7 @@ export const id = {
   },
 
   form: {
-    nama: "Nama Lengkap",
+    nama: "Nama",
     email: "Alamat Email",
     telepon: "Nomor Telepon",
     pesan: "Pesan / Pertanyaan",
@@ -73,7 +73,7 @@ export const id = {
     emailInvalid: "Format email tidak valid",
     phonePlaceholder: "Contoh: 08123456789",
     messagePlaceholder: "Ceritakan kebutuhan properti Anda...",
-    successMessage: "Pesan berhasil dikirim! Esther akan menghubungi Anda segera.",
+    successMessage: "Pesan berhasil dikirim! Esther akan segera menghubungi Anda.",
     errorMessage: "Terjadi kesalahan. Silakan coba lagi atau hubungi via WhatsApp.",
     privacy: "",
   },

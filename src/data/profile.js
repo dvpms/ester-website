@@ -5,12 +5,12 @@ export const profile = {
   phone: "0851-7756-0191",
   image: "https://res.cloudinary.com/dnmhna2fc/image/upload/q_auto/v1784085848/esther-profile_xnfhpz.jpg",
   address: " Latinos business district, C10 No.10, Rw. Buntu, Kec. Serpong, Kota Tangerang Selatan, Banten",
-  email: "esterhamora@gmail.com",
-  websiteUrl: "esther-future.remax.co.id",
+  email: "esther@estherproperti.com",
+  websiteUrl: "estherproperti.com",
   socials: {
     whatsapp: "https://wa.me/6285177560191",
     instagram: "https://www.instagram.com/esther.remaxfuture/",
     tiktok: "https://www.tiktok.com/@esther.properti",
   },
-  kawasan: [ "BSD City", "Gading Serpong", "Alam Sutera", "Bintaro" ],
+  kawasan: ["BSD City", "Gading Serpong", "Alam Sutera", "Bintaro"],
 };

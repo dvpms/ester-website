@@ -2,7 +2,7 @@
 
 // src/components/forms/FormBrosur.jsx
 // Form request brosur properti spesifik.
-// listingSlug dikirim sebagai hidden field ke Server Action.
+// Email bersifat opsional — jika diisi, brosur akan dikirimkan ke email klien.
 
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
@@ -24,6 +24,7 @@ export function FormBrosur({ listingSlug, lang = 'id', onSubmit }) {
   const text = lang === 'en' ? textEn : textId;
   const [submitStatus, setSubmitStatus] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasProvidedEmail, setHasProvidedEmail] = useState(false);
 
   const {
     register,
@@ -37,12 +38,14 @@ export function FormBrosur({ listingSlug, lang = 'id', onSubmit }) {
 
     setIsSubmitting(true);
     setSubmitStatus(null);
+    const emailEntered = Boolean(data.email && data.email.trim());
+    setHasProvidedEmail(emailEntered);
 
     try {
       /** @type {import('@/lib/types').LeadSubmission} */
       const leadData = {
         nama: data.nama,
-        email: data.email,
+        email: emailEntered ? data.email.trim() : undefined,
         telepon: data.telepon,
         listingSlug,
         jenisForm: 'brosur',
@@ -83,24 +86,11 @@ export function FormBrosur({ listingSlug, lang = 'id', onSubmit }) {
       <Input
         id="brosur-nama"
         label={text.form.nama}
-        placeholder="Nama Lengkap"
+        placeholder="Nama"
         error={errors.nama?.message}
         {...register('nama', {
           required: text.form.required,
           minLength: { value: 2, message: 'Nama minimal 2 karakter' },
-        })}
-      />
-
-      {/* Email */}
-      <Input
-        id="brosur-email"
-        type="email"
-        label={text.form.email}
-        placeholder="email@contoh.com"
-        error={errors.email?.message}
-        {...register('email', {
-          required: text.form.required,
-          pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: text.form.emailInvalid },
         })}
       />
 
@@ -117,6 +107,24 @@ export function FormBrosur({ listingSlug, lang = 'id', onSubmit }) {
         })}
       />
 
+      {/* Email (Opsional) */}
+      <Input
+        id="brosur-email"
+        type="email"
+        label={`${text.form.email} (${lang === 'en' ? 'Optional' : 'Opsional'})`}
+        placeholder="email@contoh.com"
+        error={errors.email?.message}
+        {...register('email', {
+          validate: (val) => {
+            if (!val || val.trim() === '') return true;
+            return (
+              /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim()) ||
+              text.form.emailInvalid
+            );
+          },
+        })}
+      />
+
       <p className="text-xs text-neutral-600 font-sans">{text.form.privacy}</p>
 
       <Button type="submit" variant="primary" size="md" fullWidth disabled={isSubmitting}>
@@ -126,7 +134,15 @@ export function FormBrosur({ listingSlug, lang = 'id', onSubmit }) {
       {submitStatus === 'success' && (
         <div className="flex items-start gap-2 p-3 bg-green-50 border border-green-200 rounded-btn text-success text-sm font-sans">
           <HiCheckCircle className="shrink-0 mt-0.5 text-base" />
-          {text.form.successMessage}
+          <span>
+            {hasProvidedEmail
+              ? (lang === 'en'
+                  ? 'Thank you! The property brochure has been sent to your email.'
+                  : 'Terima kasih! Brosur properti telah dikirimkan ke email Anda.')
+              : (lang === 'en'
+                  ? 'Thank you! Your brochure request has been received. Esther will contact you soon.'
+                  : 'Terima kasih! Permintaan brosur Anda telah diterima. Esther akan segera menghubungi Anda.')}
+          </span>
         </div>
       )}
       {submitStatus === 'error' && (

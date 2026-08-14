@@ -99,7 +99,7 @@ export function FormBookingSurvey({ lang = 'id', onSubmit }) {
       <Input
         id="survey-nama"
         label={text.form.nama}
-        placeholder="Nama Lengkap"
+        placeholder="Nama"
         error={errors.nama?.message}
         {...register('nama', {
           required: text.form.required,

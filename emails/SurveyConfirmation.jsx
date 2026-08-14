@@ -9,7 +9,8 @@ export default function SurveyConfirmation({
   preferensi = {}, 
   catatan = "" 
 }) {
-  const waUrl = `https://wa.me/${profile.phone.replace(/\D/g, "")}`;
+  const cleanPhone = profile.phone.replace(/\D/g, "").replace(/^0/, "62");
+  const waUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}`;
   const topik = preferensi?.kawasan || "Survei Properti";
 
   return (

@@ -18,8 +18,8 @@ const NAV_LINKS = [
   { key: "contact", href: "/kontak" },
 ];
 
-export function Header({ lang: langProp, onLangChange }) {
-  const [lang, setLang] = useState(langProp || "id");
+export function Header({ lang: langProp = "id", onLangChange }) {
+  const [lang, setLang] = useState(langProp);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -27,11 +27,12 @@ export function Header({ lang: langProp, onLangChange }) {
 
   useEffect(() => {
     const saved = localStorage.getItem("ester-lang");
-    if (saved === "id" || saved === "en") {
+    if ((saved === "id" || saved === "en") && saved !== langProp) {
       setLang(saved);
       onLangChange?.(saved);
     }
-  }, [onLangChange]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);

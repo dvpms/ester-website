@@ -4,7 +4,8 @@ import Layout from './components/Layout';
 import { profile } from '@/data/profile';
 
 export default function ContactConfirmation({ nama = "Klien" }) {
-  const waUrl = `https://wa.me/${profile.phone.replace(/\D/g, "")}`;
+  const cleanPhone = profile.phone.replace(/\D/g, "").replace(/^0/, "62");
+  const waUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}`;
 
   return (
     <Layout title="Terima Kasih Telah Menghubungi Kami">
