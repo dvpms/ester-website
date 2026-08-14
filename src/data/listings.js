@@ -285,9 +285,6 @@ export const listings = [
       "https://res.cloudinary.com/dnmhna2fc/image/upload/q_auto/f_auto/1786695533842_ikvh4k.jpg",
       "https://res.cloudinary.com/dnmhna2fc/image/upload/q_auto/f_auto/1786695533882_vvqe7b.jpg",
       "https://res.cloudinary.com/dnmhna2fc/image/upload/q_auto/f_auto/1786695533899_afriwj.jpg"
-
-
-
     ],
     status: "tersedia",
     deskripsi:
