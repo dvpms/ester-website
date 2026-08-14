@@ -89,7 +89,7 @@ export function BrochureHeaderInfo({ listing }) {
         <div className="flex items-center gap-2 my-2">
           <span className="h-[2px] w-6 bg-[#E11B22]"></span>
           <span className="text-sm font-black text-[#E11B22] uppercase tracking-wide">
-            {listing.spesifikasi?.lantai ? `${listing.spesifikasi.lantai} LANTAI` : '2 LANTAI'}
+            {listing.spesifikasi?.lantai ? `${listing.spesifikasi.lantai} LANTAI` : '-'}
           </span>
           <span className="h-[2px] w-6 bg-[#E11B22]"></span>
         </div>
