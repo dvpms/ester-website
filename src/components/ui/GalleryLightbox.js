@@ -204,18 +204,16 @@ function ThumbnailSlider({ images, altPrefix, activeIndex, onSelect }) {
 }
 
 export function GalleryLightbox({ images, nama }) {
+  const [prevFirstImage, setPrevFirstImage] = useState(images?.[0]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState(-1);
 
   // Reset activeIndex dan lightbox saat navigasi ke listing/properti lain
-  const prevFirstImage = useRef(images?.[0]);
-  useEffect(() => {
-    if (images?.[0] !== prevFirstImage.current) {
-      prevFirstImage.current = images?.[0];
-      setActiveIndex(0);
-      setLightboxIndex(-1);
-    }
-  }, [images]);
+  if (images?.[0] !== prevFirstImage) {
+    setPrevFirstImage(images?.[0]);
+    setActiveIndex(0);
+    setLightboxIndex(-1);
+  }
 
   if (!images?.length) return null;
 
