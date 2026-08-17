@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/Button';
 import { id as textId } from '@/i18n/id';
 import { en as textEn } from '@/i18n/en';
 import { submitLead } from '@/app/actions/submitLead';
+import { trackLeadConversion } from '@/lib/gtag';
 
 /**
  * @param {{
@@ -59,6 +60,7 @@ export function FormBrosur({ listingSlug, lang = 'id', onSubmit }) {
       }
 
       setSubmitStatus('success');
+      trackLeadConversion();
       reset();
     } catch {
       setSubmitStatus('error');
