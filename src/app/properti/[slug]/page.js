@@ -285,7 +285,7 @@ export default async function DetailListingPage({ params }) {
                     className="inline-flex items-center justify-center gap-2 px-4 py-3.5 bg-blue-tint hover:bg-remax-blue hover:text-white text-remax-blue font-sans font-bold text-sm rounded-btn border border-remax-blue/30 transition-all duration-200 hover:scale-[1.02] text-center"
                   >
                     <BiDownload className="text-lg shrink-0" />
-                    <span>Minta E-Brosur & Denah (PDF)</span>
+                    <span>Minta Brosur & Denah (PDF)</span>
                   </a>
                 </div>
 
