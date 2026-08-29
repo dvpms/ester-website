@@ -14,7 +14,9 @@ import {
   BiTag,
   BiArrowBack,
   BiCheckCircle,
+  BiDownload,
 } from "react-icons/bi";
+import { RiWhatsappLine } from "react-icons/ri";
 import {
   MdOutlineBathtub,
   MdOutlineSquareFoot,
@@ -264,6 +266,29 @@ export default async function DetailListingPage({ params }) {
                   </div>
                 )}
 
+                {/* ── Quick Action CTA Buttons (Mobile & Desktop) ──────────────── */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pb-6 border-b border-border-c mb-6">
+                  <a
+                    href={`https://wa.me/6285177560191?text=${encodeURIComponent(
+                      `Halo Bu Esther, saya tertarik dengan ${listing.nama} di website. Boleh minta info promo & jadwal survey lokasi?`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-3.5 bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-sans font-bold text-sm rounded-btn shadow-card transition-all duration-200 hover:scale-[1.02] text-center"
+                  >
+                    <RiWhatsappLine className="text-xl shrink-0" />
+                    <span>Chat WhatsApp Bu Esther</span>
+                  </a>
+
+                  <a
+                    href="#form-brosur"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-3.5 bg-blue-tint hover:bg-remax-blue hover:text-white text-remax-blue font-sans font-bold text-sm rounded-btn border border-remax-blue/30 transition-all duration-200 hover:scale-[1.02] text-center"
+                  >
+                    <BiDownload className="text-lg shrink-0" />
+                    <span>Minta Brosur & Denah (PDF)</span>
+                  </a>
+                </div>
+
                 {/* Deskripsi */}
                 <div>
                   <h2 className="font-sans text-base font-bold text-remax-blue mb-3">
@@ -316,7 +341,7 @@ export default async function DetailListingPage({ params }) {
             {/* ── Kolom Kanan: Form Sidebar ─────────────────── */}
             <aside className="flex flex-col gap-6 lg:sticky lg:top-28 lg:self-start">
               {/* Form Konsultasi */}
-              <div className="bg-white rounded-card shadow-card p-card">
+              <div id="form-tanya" className="bg-white rounded-card shadow-card p-card scroll-mt-24">
                 <h2 className="font-sans text-base font-bold text-remax-blue mb-4">
                   Tanyakan Properti Ini
                 </h2>
@@ -324,7 +349,7 @@ export default async function DetailListingPage({ params }) {
               </div>
 
               {/* Form Brosur */}
-              <div className="bg-red-tint rounded-card p-card border border-remax-red/30">
+              <div id="form-brosur" className="bg-red-tint rounded-card p-card border border-remax-red/30 scroll-mt-24">
                 <FormBrosur listingSlug={listing.slug} lang="id" />
               </div>
 
