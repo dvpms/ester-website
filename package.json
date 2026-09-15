@@ -9,16 +9,22 @@
     "email:dev": "email dev --port 3001",
     "lint": "eslint"
   },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.11.2",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@vercel/analytics": "^2.0.1",
+    "bcryptjs": "^3.0.3",
     "cloudinary": "^2.10.0",
     "dotenv": "^17.4.2",
     "framer-motion": "^12.38.0",
     "install": "^0.13.0",
     "lucide-react": "^1.16.0",
     "next": "16.1.6",
+    "next-auth": "5.0.0-beta.31",
     "nodemailer": "^8.0.7",
     "pg": "^8.20.0",
     "puppeteer": "^25.6.0",
@@ -38,6 +44,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "prisma": "^7.8.0",
-    "tailwindcss": "^4"
+    "tailwindcss": "^4",
+    "tsx": "^4.21.0"
   }
 }

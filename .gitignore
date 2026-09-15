@@ -43,3 +43,8 @@ next-env.d.ts
 /prisma/generated
 
 .agents/
+src/app/preview-brosur/page.js
+src/app/preview-brosur/print/page.js
+ester-website.code-workspace
+
+/generated

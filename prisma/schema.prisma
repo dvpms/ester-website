@@ -1,20 +1,160 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
-generator client {
-  provider = "prisma-client"
-  output   = "./generated/prisma/client"
-}
+// prisma/schema.prisma
+// Prisma Schema untuk Esther Property CMS (Neon Serverless Postgres)
 
 datasource db {
   provider = "postgresql"
 }
 
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+// ── 1. NextAuth.js v5 Models ──────────────────────────────────
 model User {
-  id  Int    @id @default(autoincrement())
-  name String?
-  email String @unique
-  createdAt DateTime @default(now())
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  passwordHash  String?
+  role          String    @default("admin")
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?  @db.Text
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+// ── 2. Kawasan (Hub SEO) ──────────────────────────────────────
+model Kawasan {
+  id                 String    @id // slug unik (misal: "bsd-city")
+  slug               String    @unique
+  nama               String
+  namaEn             String
+  deskripsi          String    @db.Text
+  deskripsiEn        String    @db.Text
+  fotoHero           String
+  fasilitasUnggulan   Json      // array of strings
+  fasilitasUnggulanEn Json      // array of strings
+  lat                Float?
+  lng                Float?
+  listings           Listing[]
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+// ── 3. Listing Properti ───────────────────────────────────────
+model Listing {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  nama           String
+  namaEn         String
+  judulBrosur    String?
+  segmen         String   // primary | secondary
+  jenisProperti  String   // rumah | ruko | kavling | apartemen
+  transaksi      String   // dijual | disewakan
+  kawasanId      String
+  kawasan        Kawasan  @relation(fields: [kawasanId], references: [id], onDelete: Restrict)
+  kawasanSlug    String
+  harga          BigInt   // Angka harga Rupiah
+  lokasiDetail   String
+  spesifikasi    Json     // { lt, lb, kamarTidur, kamarMandi, lantai, hadap, listrik, air, sertifikat }
+  fiturUnggulan  Json     // array of strings
+  bonusInterior  Json?    // array of strings
+  lat            Float?
+  lng            Float?
+  tautanMaps     String?
+  
+  // Manajemen Foto & Brosur
+  gambarUtama    String   // URL foto utama / cover listing
+  galeri         Json     // array of strings (semua foto galeri)
+  fotoBrosur     Json?    // array of strings (foto terpilih khusus brosur)
+  brosurUrl      String?  // Cloudinary HD brochure URL
+  
+  status         String   @default("tersedia") // tersedia | terjual | proses
+  developerNama  String?
+  pemilikNama    String?
+  deskripsi      String   @db.Text
+  deskripsiEn    String   @db.Text
+  featured       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+// ── 4. Artikel Blog ───────────────────────────────────────────
+model Artikel {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  judul          String
+  judulEn        String
+  ringkasan      String   @db.Text
+  ringkasanEn    String   @db.Text
+  konten         String   @db.Text
+  kontenEn       String   @db.Text
+  thumbnail      String
+  tagKawasan     Json     // array of kawasan slugs
+  tags           Json     // array of SEO keywords
+  isPublished    Boolean  @default(true)
+  tanggalPublish DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+// ── 5. Testimoni Klien ────────────────────────────────────────
+model Testimoni {
+  id          String   @id @default(cuid())
+  namaKlien   String
+  fotoKlien   String?
+  kawasanSlug String
+  komentar    String   @db.Text
+  komentarEn  String   @db.Text
+  rating      Int      @default(5)
+  tanggal     DateTime @default(now())
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ── 6. Pengaturan Website & Profil ────────────────────────────
+model SiteSetting {
+  id        String   @id @default("global-setting")
+  key       String   @unique
+  value     Json
+  updatedAt DateTime @updatedAt
 }

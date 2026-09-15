@@ -21,7 +21,7 @@ export default function NotFound() {
           Halaman Tidak Ditemukan
         </h1>
         <p className="font-sans text-body text-neutral-600 mb-8">
-          Properti atau halaman yang Anda cari tidak tersedia. Mungkin sudah terjual atau URL-nya berubah.
+          Properti atau halaman yang Anda cari tidak tersedia. Mungkin sudah terjual atau alamat situs berubah.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
