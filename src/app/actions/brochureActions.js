@@ -7,6 +7,7 @@ import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { generateBrochureImage } from '@/lib/brochure/generator';
+import { deleteCloudinaryAsset } from '@/lib/cloudinary';
 
 export async function generateCuratedBrochureAction({ listingId, coverImage, interiorImages = [] }) {
   try {
@@ -30,12 +31,17 @@ export async function generateCuratedBrochureAction({ listingId, coverImage, int
       return { error: 'Data listing tidak ditemukan di database' };
     }
 
+    // 3. Hapus berkas brosur lama dari Cloudinary terlebih dahulu agar tidak menumpuk
+    if (listing.brosurUrl) {
+      await deleteCloudinaryAsset(listing.brosurUrl);
+    }
+
     const effectiveCover = coverImage || listing.gambarUtama || listing.galeri?.[0];
     const effectiveInterior = Array.isArray(interiorImages) && interiorImages.length > 0
       ? interiorImages.slice(0, 5)
       : (Array.isArray(listing.galeri) ? listing.galeri.slice(1, 6) : []);
 
-    // 3. Jalankan Puppeteer Generator dengan opsi kurasi foto
+    // 4. Jalankan Puppeteer Generator dengan opsi kurasi foto
     const result = await generateBrochureImage(
       {
         ...listing,

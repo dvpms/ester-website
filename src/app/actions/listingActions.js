@@ -6,6 +6,10 @@
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
+import {
+  deleteCloudinaryAssets,
+  deleteCloudinaryFolder,
+} from '@/lib/cloudinary';
 
 /**
  * Helper untuk memverifikasi apakah sesi pengguna memiliki akses admin.
@@ -23,33 +27,31 @@ async function requireAdminSession() {
  * Menghasilkan slug URL yang ramah SEO dan unik.
  * 
  * @param {string} text - Teks judul properti
- * @param {string} [id] - ID listing saat ini untuk pengecualian saat update
+ * @param {string} [excludeId] - ID properti yang dikecualikan (saat edit)
  * @returns {Promise<string>}
  */
-async function generateUniqueSlug(text, id = null) {
-  let baseSlug = text
+async function generateUniqueSlug(text, excludeId = null) {
+  const baseSlug = text
     .toLowerCase()
     .trim()
     .replace(/[^\w\s-]/g, '')
     .replace(/[\s_-]+/g, '-')
     .replace(/^-+|-+$/g, '');
 
-  if (!baseSlug) baseSlug = 'properti';
-
-  let currentSlug = baseSlug;
+  let candidateSlug = baseSlug;
   let counter = 1;
 
   while (true) {
     const existing = await prisma.listing.findUnique({
-      where: { slug: currentSlug },
+      where: { slug: candidateSlug },
       select: { id: true },
     });
 
-    if (!existing || (id && existing.id === id)) {
-      return currentSlug;
+    if (!existing || (excludeId && existing.id === excludeId)) {
+      return candidateSlug;
     }
 
-    currentSlug = `${baseSlug}-${counter}`;
+    candidateSlug = `${baseSlug}-${counter}`;
     counter++;
   }
 }
@@ -57,7 +59,7 @@ async function generateUniqueSlug(text, id = null) {
 /**
  * Membuat listing properti baru di database Neon Postgres.
  * 
- * @param {Object} data - Data lengkap listing
+ * @param {Object} data - Payload data properti
  * @returns {Promise<{ success?: boolean, listing?: any, error?: string }>}
  */
 export async function createListing(data) {
@@ -68,37 +70,29 @@ export async function createListing(data) {
       return { error: 'Nama properti wajib diisi' };
     }
     if (!data.kawasanId) {
-      return { error: 'Kawasan hub wajib dipilih' };
-    }
-    if (!data.gambarUtama) {
-      return { error: 'Gambar utama wajib dipilih untuk sampul listing' };
-    }
-
-    // Ambil data kawasan untuk memastikan relasi dan mendapatkan kawasanSlug
-    const kawasan = await prisma.kawasan.findUnique({
-      where: { id: data.kawasanId },
-      select: { id: true, slug: true },
-    });
-
-    if (!kawasan) {
-      return { error: 'Kawasan yang dipilih tidak ditemukan di database' };
+      return { error: 'Kawasan wajib dipilih' };
     }
 
     const slug = await generateUniqueSlug(data.slug || data.nama);
-    const hargaParsed = BigInt(Math.round(Number(data.harga || 0)));
 
-    const newListing = await prisma.listing.create({
+    // Ambil slug kawasan untuk indexing
+    const kawasan = await prisma.kawasan.findUnique({
+      where: { id: data.kawasanId },
+      select: { slug: true },
+    });
+
+    const created = await prisma.listing.create({
       data: {
         slug,
         nama: data.nama,
         namaEn: data.namaEn || data.nama,
-        judulBrosur: data.judulBrosur || data.nama,
-        segmen: data.segmen || 'secondary',
+        judulBrosur: data.judulBrosur || null,
+        segmen: data.segmen || 'primary',
         jenisProperti: data.jenisProperti || 'rumah',
         transaksi: data.transaksi || 'dijual',
-        kawasanId: kawasan.id,
-        kawasanSlug: kawasan.slug,
-        harga: hargaParsed,
+        kawasanId: data.kawasanId,
+        kawasanSlug: kawasan?.slug || 'bsd-city',
+        harga: BigInt(Math.round(Number(data.harga) || 0)),
         lokasiDetail: data.lokasiDetail || '',
         spesifikasi: data.spesifikasi || {},
         fiturUnggulan: Array.isArray(data.fiturUnggulan) ? data.fiturUnggulan : [],
@@ -243,11 +237,33 @@ export async function deleteListing(id) {
 
     const existing = await prisma.listing.findUnique({
       where: { id },
-      select: { slug: true, kawasanSlug: true },
+      select: {
+        slug: true,
+        kawasanSlug: true,
+        galeri: true,
+        gambarUtama: true,
+        brosurUrl: true,
+      },
     });
 
     if (!existing) {
       return { error: 'Listing tidak ditemukan' };
+    }
+
+    // Bersihkan seluruh berkas foto dan brosur di Cloudinary
+    const assetsToDelete = [
+      ...(Array.isArray(existing.galeri) ? existing.galeri : []),
+      existing.gambarUtama,
+      existing.brosurUrl,
+    ].filter((u) => u && typeof u === 'string' && u.includes('cloudinary.com'));
+
+    if (assetsToDelete.length > 0) {
+      await deleteCloudinaryAssets(assetsToDelete);
+    }
+
+    // Hapus folder listing di Cloudinary agar tidak meninggalkan sisa
+    if (existing.slug) {
+      await deleteCloudinaryFolder(`esther-website/listings/${existing.slug}`);
     }
 
     await prisma.listing.delete({
