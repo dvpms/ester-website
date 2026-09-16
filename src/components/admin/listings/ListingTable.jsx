@@ -3,7 +3,8 @@
 // src/components/admin/listings/ListingTable.jsx
 // Komponen tabel daftar properti admin dengan quick actions & brochure curator trigger
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { formatHarga } from '@/lib/utils';
@@ -19,14 +20,15 @@ import {
 } from 'react-icons/hi2';
 
 export function ListingTable({ listings = [] }) {
+  const router = useRouter();
   const [items, setItems] = useState(listings);
   const [loadingId, setLoadingId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
 
-  // Sinkronkan jika data prop berubah
-  if (listings !== items && !loadingId && !deletingId) {
+  // Sinkronkan jika data listings dari server berubah
+  useEffect(() => {
     setItems(listings);
-  }
+  }, [listings]);
 
   const handleToggleFeatured = async (id) => {
     try {
@@ -88,6 +90,7 @@ export function ListingTable({ listings = [] }) {
           icon: 'success',
           title: 'Properti berhasil dihapus',
         });
+        router.refresh();
       } else {
         showErrorAlert('Gagal Menghapus Properti', res.error);
       }

@@ -3,7 +3,7 @@
 // src/components/admin/listings/ListingManager.jsx
 // Client interactive manager untuk daftar properti dengan Server-Side & Database-Level Pagination
 
-import { useState, useTransition } from 'react';
+import { useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { ListingFilterBar } from './ListingFilterBar';
@@ -25,9 +25,6 @@ export function ListingManager({
   const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
-
-  // Local listings state for immediate in-page updates
-  const [localListings, setLocalListings] = useState(initialListings);
 
   // Helper untuk navigasi URL dengan query string baru
   const updateQueryParams = (updates) => {
@@ -139,7 +136,7 @@ export function ListingManager({
       {/* Listings Table */}
       <div className={`transition-opacity duration-200 ${isPending ? 'opacity-60 pointer-events-none' : 'opacity-100'}`}>
         <ListingTable
-          listings={localListings.length > 0 ? localListings : initialListings}
+          listings={initialListings}
         />
       </div>
 
