@@ -15,21 +15,23 @@ model User {
   id            String    @id @default(cuid())
   name          String?
   email         String    @unique
-  passwordHash  String?
+  passwordHash  String?   @map("password_hash")
   role          String    @default("admin")
-  emailVerified DateTime?
+  emailVerified DateTime? @map("email_verified")
   image         String?
   accounts      Account[]
   sessions      Session[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  @@map("users")
 }
 
 model Account {
-  userId            String
+  userId            String   @map("user_id")
   type              String
   provider          String
-  providerAccountId String
+  providerAccountId String   @map("provider_account_id")
   refresh_token     String?  @db.Text
   access_token      String?  @db.Text
   expires_at        Int?
@@ -37,20 +39,23 @@ model Account {
   scope             String?
   id_token          String?  @db.Text
   session_state     String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+  @@map("accounts")
 }
 
 model Session {
-  sessionToken String   @unique
-  userId       String
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("sessions")
 }
 
 model VerificationToken {
@@ -59,6 +64,7 @@ model VerificationToken {
   expires    DateTime
 
   @@id([identifier, token])
+  @@map("verification_tokens")
 }
 
 // ── 2. Kawasan (Hub SEO) ──────────────────────────────────────
@@ -66,17 +72,19 @@ model Kawasan {
   id                 String    @id // slug unik (misal: "bsd-city")
   slug               String    @unique
   nama               String
-  namaEn             String
+  namaEn             String    @map("nama_en")
   deskripsi          String    @db.Text
-  deskripsiEn        String    @db.Text
-  fotoHero           String
-  fasilitasUnggulan   Json      // array of strings
-  fasilitasUnggulanEn Json      // array of strings
+  deskripsiEn        String    @db.Text @map("deskripsi_en")
+  fotoHero           String    @map("foto_hero")
+  fasilitasUnggulan   Json      @map("fasilitas_unggulan") // array of strings
+  fasilitasUnggulanEn Json      @map("fasilitas_unggulan_en") // array of strings
   lat                Float?
   lng                Float?
   listings           Listing[]
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  @@map("kawasan")
 }
 
 // ── 3. Listing Properti ───────────────────────────────────────
@@ -84,37 +92,39 @@ model Listing {
   id             String   @id @default(cuid())
   slug           String   @unique
   nama           String
-  namaEn         String
-  judulBrosur    String?
+  namaEn         String   @map("nama_en")
+  judulBrosur    String?  @map("judul_brosur")
   segmen         String   // primary | secondary
-  jenisProperti  String   // rumah | ruko | kavling | apartemen
+  jenisProperti  String   @map("jenis_properti") // rumah | ruko | kavling | apartemen
   transaksi      String   // dijual | disewakan
-  kawasanId      String
+  kawasanId      String   @map("kawasan_id")
   kawasan        Kawasan  @relation(fields: [kawasanId], references: [id], onDelete: Restrict)
-  kawasanSlug    String
+  kawasanSlug    String   @map("kawasan_slug")
   harga          BigInt   // Angka harga Rupiah
-  lokasiDetail   String
+  lokasiDetail   String   @map("lokasi_detail")
   spesifikasi    Json     // { lt, lb, kamarTidur, kamarMandi, lantai, hadap, listrik, air, sertifikat }
-  fiturUnggulan  Json     // array of strings
-  bonusInterior  Json?    // array of strings
+  fiturUnggulan  Json     @map("fitur_unggulan") // array of strings
+  bonusInterior  Json?    @map("bonus_interior") // array of strings
   lat            Float?
   lng            Float?
-  tautanMaps     String?
+  tautanMaps     String?  @map("tautan_maps")
   
   // Manajemen Foto & Brosur
-  gambarUtama    String   // URL foto utama / cover listing
+  gambarUtama    String   @map("gambar_utama") // URL foto utama / cover listing
   galeri         Json     // array of strings (semua foto galeri)
-  fotoBrosur     Json?    // array of strings (foto terpilih khusus brosur)
-  brosurUrl      String?  // Cloudinary HD brochure URL
+  fotoBrosur     Json?    @map("foto_brosur") // array of strings (foto terpilih khusus brosur)
+  brosurUrl      String?  @map("brosur_url") // Cloudinary HD brochure URL
   
   status         String   @default("tersedia") // tersedia | terjual | proses
-  developerNama  String?
-  pemilikNama    String?
+  developerNama  String?  @map("developer_nama")
+  pemilikNama    String?  @map("pemilik_nama")
   deskripsi      String   @db.Text
-  deskripsiEn    String   @db.Text
+  deskripsiEn    String   @db.Text @map("deskripsi_en")
   featured       Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("listings")
 }
 
 // ── 4. Artikel Blog ───────────────────────────────────────────
@@ -122,33 +132,37 @@ model Artikel {
   id             String   @id @default(cuid())
   slug           String   @unique
   judul          String
-  judulEn        String
+  judulEn        String   @map("judul_en")
   ringkasan      String   @db.Text
-  ringkasanEn    String   @db.Text
+  ringkasanEn    String   @db.Text @map("ringkasan_en")
   konten         String   @db.Text
-  kontenEn       String   @db.Text
+  kontenEn       String   @db.Text @map("konten_en")
   thumbnail      String
-  tagKawasan     Json     // array of kawasan slugs
+  tagKawasan     Json     @map("tag_kawasan") // array of kawasan slugs
   tags           Json     // array of SEO keywords
-  isPublished    Boolean  @default(true)
-  tanggalPublish DateTime @default(now())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  isPublished    Boolean  @default(true) @map("is_published")
+  tanggalPublish DateTime @default(now()) @map("tanggal_publish")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("artikel")
 }
 
 // ── 5. Testimoni Klien ────────────────────────────────────────
 model Testimoni {
   id          String   @id @default(cuid())
-  namaKlien   String
-  fotoKlien   String?
-  kawasanSlug String
+  namaKlien   String   @map("nama_klien")
+  fotoKlien   String?  @map("foto_klien")
+  kawasanSlug String   @map("kawasan_slug")
   komentar    String   @db.Text
-  komentarEn  String   @db.Text
+  komentarEn  String   @db.Text @map("komentar_en")
   rating      Int      @default(5)
   tanggal     DateTime @default(now())
-  isPublished Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  isPublished Boolean  @default(true) @map("is_published")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("testimoni")
 }
 
 // ── 6. Pengaturan Website & Profil ────────────────────────────
@@ -156,5 +170,7 @@ model SiteSetting {
   id        String   @id @default("global-setting")
   key       String   @unique
   value     Json
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("site_settings")
 }
