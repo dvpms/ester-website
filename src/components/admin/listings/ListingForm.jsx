@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { createListing, updateListing } from "@/app/actions/listingActions";
+import { createListing, updateListing, deleteListingImageAction } from "@/app/actions/listingActions";
 import { generateCuratedBrochureAction } from "@/app/actions/brochureActions";
 import { ImageUploader } from "./ImageUploader";
 import { MainImageSelector } from "./MainImageSelector";
@@ -136,7 +136,8 @@ export function ListingForm({
     });
   };
 
-  const handleRemoveImage = (urlToRemove) => {
+  const handleRemoveImage = async (urlToRemove) => {
+    // 1. Optimistic / immediate state update
     setFormData((prev) => {
       const updated = prev.galeri.filter((url) => url !== urlToRemove);
       let newMain = prev.gambarUtama;
@@ -153,6 +154,32 @@ export function ListingForm({
       setSelectedCover("");
     }
     setSelectedInterior((prev) => prev.filter((u) => u !== urlToRemove));
+
+    // 2. Langsung hapus file dari Cloudinary dan sinkronkan database jika listing tersimpan
+    try {
+      const res = await deleteListingImageAction({
+        imageUrl: urlToRemove,
+        listingId: isEdit ? initialData?.id : null,
+      });
+
+      if (res?.error) {
+        toast.fire({
+          icon: "error",
+          title: res.error,
+        });
+      } else {
+        toast.fire({
+          icon: "success",
+          title: "Foto berhasil dihapus",
+        });
+      }
+    } catch (err) {
+      console.error("Gagal menghapus foto:", err);
+      toast.fire({
+        icon: "error",
+        title: "Gagal menghapus foto dari penyimpanan",
+      });
+    }
   };
 
   // ── Brochure Curation & Generation State ──────────────────────────

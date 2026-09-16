@@ -109,18 +109,26 @@ export function getCloudinaryPublicId(urlOrPublicId) {
   }
 
   try {
+    // 1. Jika URL memuat root folder proyek ("esther-website/"), potong langsung dari folder tersebut
+    const estherIndex = urlOrPublicId.indexOf('esther-website/');
+    if (estherIndex !== -1) {
+      let path = decodeURIComponent(urlOrPublicId.substring(estherIndex)).split('?')[0];
+      const dotIndex = path.lastIndexOf('.');
+      if (dotIndex !== -1) {
+        return path.substring(0, dotIndex);
+      }
+      return path;
+    }
+
+    // 2. Fallback untuk format URL Cloudinary umum lainnya
     const uploadIndex = urlOrPublicId.indexOf('/upload/');
     if (uploadIndex === -1) return null;
 
     const afterUpload = urlOrPublicId.substring(uploadIndex + 8);
-    // Lewati transformasi opsional dan versi (misal: /v1726462728/ atau /c_fill,w_300/v1234/)
     const versionMatch = afterUpload.match(/(?:.*\/)?v\d+\/(.+)$/);
     let publicIdWithExt = versionMatch ? versionMatch[1] : afterUpload;
 
-    // Hapus query parameters jika ada
-    publicIdWithExt = publicIdWithExt.split('?')[0];
-
-    // Hapus ekstensi file (.jpg, .png, .webp, .pdf, dll.)
+    publicIdWithExt = decodeURIComponent(publicIdWithExt).split('?')[0];
     const lastDotIndex = publicIdWithExt.lastIndexOf('.');
     if (lastDotIndex !== -1) {
       return publicIdWithExt.substring(0, lastDotIndex);
@@ -144,7 +152,11 @@ export async function deleteCloudinaryAsset(urlOrPublicId, resourceType = 'image
   if (!publicId) return null;
 
   try {
-    const result = await cloudinary.uploader.destroy(publicId, { resource_type: resourceType });
+    const result = await cloudinary.uploader.destroy(publicId, {
+      resource_type: resourceType,
+      invalidate: true,
+    });
+    console.log(`[Cloudinary] destroy (${publicId}):`, result);
     return result;
   } catch (error) {
     console.warn(`Gagal menghapus aset Cloudinary (${publicId}):`, error.message);

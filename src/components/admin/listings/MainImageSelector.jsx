@@ -3,6 +3,7 @@
 // src/components/admin/listings/MainImageSelector.jsx
 // Pemilih foto sampul utama listing dan pengelola galeri foto
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { HiStar, HiTrash } from 'react-icons/hi2';
 import { showConfirmDialog } from '@/lib/swal';
@@ -13,6 +14,8 @@ export function MainImageSelector({
   onSelectMainImage,
   onRemoveImage,
 }) {
+  const [deletingUrl, setDeletingUrl] = useState(null);
+
   if (!images || images.length === 0) {
     return (
       <div className="p-8 text-center bg-neutral-100/50 border border-dashed border-border-c rounded-card text-neutral-500 text-xs font-sans">
@@ -75,22 +78,32 @@ export function MainImageSelector({
                 <div className="flex justify-end">
                   <button
                     type="button"
+                    disabled={Boolean(deletingUrl)}
                     onClick={async (e) => {
                       e.stopPropagation();
                       const confirmed = await showConfirmDialog({
                         title: 'Hapus Foto?',
-                        text: 'Foto ini akan dihapus dari daftar galeri properti.',
+                        text: 'Foto ini akan dihapus dari daftar galeri dan penyimpanan Cloudinary.',
                         confirmText: 'Ya, Hapus',
                         isDanger: true,
                       });
                       if (confirmed) {
-                        onRemoveImage(imgUrl);
+                        setDeletingUrl(imgUrl);
+                        try {
+                          await onRemoveImage(imgUrl);
+                        } finally {
+                          setDeletingUrl(null);
+                        }
                       }
                     }}
-                    className="p-1.5 rounded-full bg-white/90 text-remax-red hover:bg-white hover:text-red-700 shadow-xs transition-colors cursor-pointer"
+                    className="p-1.5 rounded-full bg-white/90 text-remax-red hover:bg-white hover:text-red-700 shadow-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Hapus foto ini"
                   >
-                    <HiTrash className="text-xs" />
+                    {deletingUrl === imgUrl ? (
+                      <span className="w-3 h-3 border-2 border-remax-red/30 border-t-remax-red rounded-full animate-spin inline-block" />
+                    ) : (
+                      <HiTrash className="text-xs" />
+                    )}
                   </button>
                 </div>
 

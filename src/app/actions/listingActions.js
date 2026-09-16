@@ -7,6 +7,7 @@ import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import {
+  deleteCloudinaryAsset,
   deleteCloudinaryAssets,
   deleteCloudinaryFolder,
 } from '@/lib/cloudinary';
@@ -148,11 +149,28 @@ export async function updateListing(id, data) {
 
     const current = await prisma.listing.findUnique({
       where: { id },
-      select: { id: true, slug: true, kawasanSlug: true },
+      select: {
+        id: true,
+        slug: true,
+        kawasanSlug: true,
+        galeri: true,
+        gambarUtama: true,
+      },
     });
 
     if (!current) {
       return { error: 'Listing tidak ditemukan' };
+    }
+
+    // Bersihkan foto lama di Cloudinary jika dihapus dari galeri
+    if (data.galeri && Array.isArray(data.galeri) && Array.isArray(current.galeri)) {
+      const remainingUrls = new Set([...data.galeri, data.gambarUtama].filter(Boolean));
+      const removedCloudinaryUrls = current.galeri.filter(
+        (url) => !remainingUrls.has(url) && typeof url === 'string' && url.includes('cloudinary.com')
+      );
+      if (removedCloudinaryUrls.length > 0) {
+        await deleteCloudinaryAssets(removedCloudinaryUrls);
+      }
     }
 
     let slug = current.slug;
@@ -350,3 +368,74 @@ export async function updateListingStatus(id, status) {
     return { error: error.message || 'Gagal memperbarui status ketersediaan' };
   }
 }
+
+/**
+ * Menghapus foto properti secara langsung dari Cloudinary dan database (jika ada listingId).
+ * Dipanggil langsung saat admin menekan tombol hapus (ikon tempat sampah) pada daftar foto.
+ * 
+ * @param {Object} params
+ * @param {string} params.imageUrl - URL foto yang akan dihapus
+ * @param {string} [params.listingId] - ID listing jika sedang mengedit listing yang sudah tersimpan
+ * @returns {Promise<{ success?: boolean, error?: string }>}
+ */
+export async function deleteListingImageAction({ imageUrl, listingId = null }) {
+  try {
+    await requireAdminSession();
+
+    if (!imageUrl) {
+      return { error: 'URL foto tidak valid' };
+    }
+
+    // 1. Hapus aset dari Cloudinary jika URL berasal dari Cloudinary
+    let cloudinaryResult = null;
+    if (imageUrl.includes('cloudinary.com')) {
+      cloudinaryResult = await deleteCloudinaryAsset(imageUrl);
+    }
+
+    // 2. Jika listingId tersedia (mode edit), sinkronkan perubahan langsung ke database
+    if (listingId) {
+      const existing = await prisma.listing.findUnique({
+        where: { id: listingId },
+        select: {
+          id: true,
+          galeri: true,
+          gambarUtama: true,
+          fotoBrosur: true,
+        },
+      });
+
+      if (existing) {
+        const currentGaleri = Array.isArray(existing.galeri) ? existing.galeri : [];
+        const updatedGaleri = currentGaleri.filter((url) => url !== imageUrl);
+        
+        let newGambarUtama = existing.gambarUtama;
+        if (existing.gambarUtama === imageUrl) {
+          newGambarUtama = updatedGaleri[0] || null;
+        }
+
+        const currentFotoBrosur = Array.isArray(existing.fotoBrosur) ? existing.fotoBrosur : [];
+        const updatedFotoBrosur = currentFotoBrosur.filter((url) => url !== imageUrl);
+
+        await prisma.listing.update({
+          where: { id: listingId },
+          data: {
+            galeri: updatedGaleri,
+            gambarUtama: newGambarUtama,
+            fotoBrosur: updatedFotoBrosur,
+          },
+        });
+
+        // Revalidasi halaman admin & publik terkait
+        revalidatePath('/admin');
+        revalidatePath('/admin/properti');
+        revalidatePath(`/admin/properti/${listingId}/edit`);
+      }
+    }
+
+    return { success: true, cloudinaryResult };
+  } catch (error) {
+    console.error('Error in deleteListingImageAction:', error);
+    return { error: error.message || 'Gagal menghapus foto dari penyimpanan' };
+  }
+}
+
