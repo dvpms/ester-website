@@ -82,7 +82,7 @@ export async function createListing(data) {
       select: { slug: true },
     });
 
-    const created = await prisma.listing.create({
+    const newListing = await prisma.listing.create({
       data: {
         slug,
         nama: data.nama,
@@ -118,7 +118,9 @@ export async function createListing(data) {
     revalidatePath('/admin');
     revalidatePath('/admin/properti');
     revalidatePath('/properti');
-    revalidatePath(`/kawasan/${kawasan.slug}`);
+    if (kawasan?.slug) {
+      revalidatePath(`/kawasan/${kawasan.slug}`);
+    }
     revalidatePath('/');
 
     return {
