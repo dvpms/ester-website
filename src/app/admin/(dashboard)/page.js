@@ -36,7 +36,18 @@ export default async function AdminDashboardPage() {
     prisma.listing.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },
-      include: { kawasan: { select: { nama: true } } },
+      select: {
+        id: true,
+        nama: true,
+        slug: true,
+        harga: true,
+        status: true,
+        featured: true,
+        kawasanSlug: true,
+        kawasan: {
+          select: { nama: true },
+        },
+      },
     }).catch(() => []),
   ]);
 
@@ -148,7 +159,7 @@ export default async function AdminDashboardPage() {
               Listing Properti Terbaru
             </h2>
             <p className="text-xs text-neutral-600 mt-0.5">
-              5 properti terakhir yang terdaftar di database Neon
+              5 properti terakhir yang ditambahkan
             </p>
           </div>
           <Link
