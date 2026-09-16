@@ -70,7 +70,13 @@ async function executeImageGeneration(listing, options) {
       deviceScaleFactor: 2,
     });
 
-    const targetUrl = `${getBaseUrl()}/preview-brosur/print?slug=${listing.slug}`;
+    let targetUrl = `${getBaseUrl()}/preview-brosur/print?slug=${listing.slug}`;
+    if (options.coverImage || options.interiorImages) {
+      const coverParam = options.coverImage ? `&cover=${encodeURIComponent(options.coverImage)}` : '';
+      const interiorParam = options.interiorImages ? `&interior=${encodeURIComponent(JSON.stringify(options.interiorImages))}` : '';
+      targetUrl = `${targetUrl}${coverParam}${interiorParam}`;
+    }
+
     await page.goto(targetUrl, {
       waitUntil: ['load', 'networkidle0'],
       timeout: 30000,
@@ -117,6 +123,7 @@ async function executeImageGeneration(listing, options) {
     let cloudinaryUrl;
     if (options.upload) {
       const uploadResult = await uploadToCloudinary(Buffer.from(imageBytes), {
+        folder: `esther-website/listings/${listing.slug}/brochure`,
         public_id: `brosur-${listing.slug}`,
         resource_type: 'image',
         format: 'jpg',

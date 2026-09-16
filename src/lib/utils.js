@@ -146,3 +146,18 @@ export function getCloudinaryAttachmentUrl(url) {
   }
   return url;
 }
+
+/**
+ * Format string atau number ke format angka ribuan dengan pemisah titik (standar mata uang Indonesia).
+ * Contoh: 3500000000 -> "3.500.000.000"
+ *
+ * @param {string|number|null|undefined} val
+ * @returns {string}
+ */
+export function formatRibuan(val) {
+  if (!val && val !== 0) return "";
+  const digits = String(val).replace(/\D/g, "");
+  if (!digits) return "";
+  return new Intl.NumberFormat("id-ID").format(Number(digits));
+}
+
