@@ -15,20 +15,24 @@ async function main() {
 
   // 1. Seed Superadmin User
   const defaultAdminEmail = 'admin@estherproperti.com';
-  const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD || 'AdminEsther2026!';
-  const passwordHash = await bcrypt.hash(defaultPassword, 12);
+  const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD;
 
-  const admin = await prisma.user.upsert({
-    where: { email: defaultAdminEmail },
-    update: {},
-    create: {
-      email: defaultAdminEmail,
-      name: 'Esther',
-      passwordHash,
-      role: 'superadmin',
-    },
-  });
-  console.log(`✅ Default admin created/verified: ${admin.email}`);
+  if (defaultPassword) {
+    const passwordHash = await bcrypt.hash(defaultPassword, 12);
+    const admin = await prisma.user.upsert({
+      where: { email: defaultAdminEmail },
+      update: {},
+      create: {
+        email: defaultAdminEmail,
+        name: 'Esther',
+        passwordHash,
+        role: 'superadmin',
+      },
+    });
+    console.log(`✅ Default admin created/verified: ${admin.email}`);
+  } else {
+    console.log('ℹ️ DEFAULT_ADMIN_PASSWORD tidak diatur di .env, lewati pembuatan akun admin awal.');
+  }
 
   // 2. Seed Kawasan
   console.log(`⏳ Seeding ${kawasanList.length} Kawasan...`);
