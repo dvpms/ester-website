@@ -13,6 +13,7 @@ import { ImageUploader } from "./ImageUploader";
 import { MainImageSelector } from "./MainImageSelector";
 import { RichTextEditor } from "@/components/ui/RichTextEditor";
 import { BrochurePreviewModal } from "./BrochurePreviewModal";
+import { formatRibuan } from "@/lib/utils";
 import {
   toast,
   showSuccessAlert,
@@ -530,16 +531,29 @@ export function ListingForm({
                   <label className="block text-xs font-semibold text-neutral-900 mb-1">
                     Harga (Rupiah) *
                   </label>
-                  <input
-                    type="number"
-                    required
-                    min="0"
-                    value={formData.harga}
-                    onChange={(e) => handleChange("harga", e.target.value)}
-                    className="w-full px-3.5 py-2 bg-white border border-border-c rounded-btn text-xs text-neutral-900 font-mono font-semibold focus:outline-none focus:border-remax-blue"
-                  />
+                  <div className="relative">
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-neutral-500 pointer-events-none select-none">
+                      Rp
+                    </span>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      required
+                      placeholder="0"
+                      value={formatRibuan(formData.harga)}
+                      onChange={(e) =>
+                        handleChange(
+                          "harga",
+                          e.target.value.replace(/\D/g, ""),
+                        )
+                      }
+                      className="w-full pl-9 pr-3.5 py-2 bg-white border border-border-c rounded-btn text-xs text-neutral-900 font-mono font-semibold focus:outline-none focus:border-remax-blue"
+                    />
+                  </div>
                   <p className="text-[11px] text-neutral-500 mt-1">
-                    Contoh: 3500000000 (Tulis angka saja tanpa titik atau koma)
+                    {formData.harga
+                      ? `Terformat: Rp ${formatRibuan(formData.harga)}`
+                      : "Contoh: 3.500.000.000 (Ketik angka saja, titik pemisah ribuan otomatis terisi)"}
                   </p>
                 </div>
 
