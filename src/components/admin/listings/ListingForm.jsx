@@ -12,6 +12,7 @@ import { generateCuratedBrochureAction } from "@/app/actions/brochureActions";
 import { ImageUploader } from "./ImageUploader";
 import { MainImageSelector } from "./MainImageSelector";
 import { RichTextEditor } from "@/components/ui/RichTextEditor";
+import { BrochurePreviewModal } from "./BrochurePreviewModal";
 import {
   toast,
   showSuccessAlert,
@@ -33,6 +34,8 @@ import {
   HiArrowPath,
   HiPhoto,
   HiDocumentArrowDown,
+  HiEye,
+  HiInformationCircle,
 } from "react-icons/hi2";
 
 export function ListingForm({
@@ -44,6 +47,7 @@ export function ListingForm({
   const [activeTab, setActiveTab] = useState("properti"); // 'properti' | 'brosur'
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -145,6 +149,10 @@ export function ListingForm({
         gambarUtama: newMain,
       };
     });
+    if (selectedCover === urlToRemove) {
+      setSelectedCover("");
+    }
+    setSelectedInterior((prev) => prev.filter((u) => u !== urlToRemove));
   };
 
   // ── Brochure Curation & Generation State ──────────────────────────
@@ -156,46 +164,75 @@ export function ListingForm({
       "",
   );
   const [selectedInterior, setSelectedInterior] = useState(() => {
-    if (
-      Array.isArray(initialData?.fotoBrosur) &&
-      initialData.fotoBrosur.length > 0
-    ) {
-      return initialData.fotoBrosur;
-    }
-    const cover = initialData?.gambarUtama || initialData?.galeri?.[0] || "";
-    return Array.isArray(initialData?.galeri)
-      ? initialData.galeri.filter((img) => img !== cover).slice(0, 5)
-      : [];
+    const currentCover =
+      initialData?.gambarUtama ||
+      initialData?.galeri?.[0] ||
+      formData.galeri?.[0] ||
+      "";
+    const rawList =
+      Array.isArray(initialData?.fotoBrosur) && initialData.fotoBrosur.length > 0
+        ? initialData.fotoBrosur
+        : Array.isArray(initialData?.galeri)
+          ? initialData.galeri
+          : [];
+
+    // Filter ketat: pastikan foto sampul TIDAK PERNAH masuk dan hanya foto yang ada di galeri
+    return rawList
+      .filter(
+        (img) =>
+          img !== currentCover && (formData.galeri || []).includes(img),
+      )
+      .slice(0, 5);
   });
   const [isGeneratingBrochure, setIsGeneratingBrochure] = useState(false);
 
+  // Sanitasi daftar foto interior: buang foto sampul & buang foto yang tidak ada di galeri saat ini
+  const cleanSelectedInterior = selectedInterior.filter(
+    (u) => u !== selectedCover && formData.galeri.includes(u),
+  );
+
   const handleSelectCover = (imgUrl) => {
     setSelectedCover(imgUrl);
-    if (selectedInterior.includes(imgUrl)) {
-      setSelectedInterior((prev) => prev.filter((u) => u !== imgUrl));
-    }
+    // Foto sampul otomatis dikeluarkan dari daftar foto interior
+    setSelectedInterior((prev) => prev.filter((u) => u !== imgUrl));
   };
 
   const handleToggleInterior = (imgUrl) => {
-    if (selectedInterior.includes(imgUrl)) {
-      setSelectedInterior((prev) => prev.filter((u) => u !== imgUrl));
-    } else {
-      if (selectedInterior.length >= 5) {
+    if (imgUrl === selectedCover) {
+      showWarningAlert(
+        "Foto Merupakan Sampul",
+        "Foto ini sudah dipilih sebagai foto sampul utama lembar brosur.",
+      );
+      return;
+    }
+
+    setSelectedInterior((prev) => {
+      // Selalu bersihkan dari foto sampul atau foto yang sudah tidak ada di galeri
+      const validPrev = prev.filter(
+        (u) => u !== selectedCover && formData.galeri.includes(u),
+      );
+
+      if (validPrev.includes(imgUrl)) {
+        return validPrev.filter((u) => u !== imgUrl);
+      }
+
+      if (validPrev.length >= 5) {
         showWarningAlert(
           "Batas Foto Tercapai",
           "Maksimal 5 foto pendukung interior/fasilitas untuk lembar brosur.",
         );
-        return;
+        return validPrev;
       }
-      setSelectedInterior((prev) => [...prev, imgUrl]);
-    }
+
+      return [...validPrev, imgUrl];
+    });
   };
 
   const handleGenerateBrochure = async () => {
     if (!isEdit || !initialData?.id) {
       showWarningAlert(
         "Simpan Properti Terlebih Dahulu",
-        "Harap simpan data properti terlebih dahulu sebelum membuat brosur siap cetak.",
+        "Properti baru perlu disimpan ke database terlebih dahulu sebelum berkas brosur cetak Cloudinary dapat dibuat.",
       );
       return;
     }
@@ -211,13 +248,14 @@ export function ListingForm({
     try {
       setIsGeneratingBrochure(true);
 
-      // Simpan pembaruan teks materi brosur ke database terlebih dahulu
+      // 1. Simpan pembaruan formulir terkini ke database terlebih dahulu secara otomatis
       await updateListing(initialData.id, formData);
 
+      // 2. Buat brosur HD dengan foto-foto terkurasi
       const res = await generateCuratedBrochureAction({
         listingId: initialData.id,
         coverImage: selectedCover,
-        interiorImages: selectedInterior,
+        interiorImages: cleanSelectedInterior,
       });
 
       if (res?.error) {
@@ -228,7 +266,7 @@ export function ListingForm({
       setBrosurUrl(res.brosurUrl);
       showSuccessAlert(
         "Brosur Berhasil Dibuat!",
-        "Lembar cetak A4 resolusi tinggi telah siap dan tersimpan di Cloudinary.",
+        "Perubahan data formulir otomatis tersimpan dan lembar cetak A4 Ultra-HD siap di Cloudinary.",
       );
     } catch (err) {
       console.error("Error generating brochure:", err);
@@ -239,6 +277,30 @@ export function ListingForm({
     } finally {
       setIsGeneratingBrochure(false);
     }
+  };
+
+  // Objek listing untuk pratinjau langsung brosur
+  const currentKawasan = kawasanList.find((k) => k.id === formData.kawasanId);
+  const previewListingData = {
+    ...formData,
+    id: initialData?.id || "preview-id",
+    slug: initialData?.slug || "preview-slug",
+    harga: Number(formData.harga) || 0,
+    kawasan: currentKawasan || { nama: "BSD City" },
+    kawasanId: currentKawasan?.slug || currentKawasan?.nama || "bsd-city",
+    gambarUtama:
+      selectedCover || formData.gambarUtama || formData.galeri[0] || "",
+    galeri: [
+      selectedCover || formData.gambarUtama || formData.galeri[0] || "",
+      ...cleanSelectedInterior,
+    ],
+    spesifikasi: formData.spesifikasi,
+    fiturUnggulan: formData.fiturUnggulan,
+    bonusInterior: formData.bonusInterior,
+    judulBrosur: formData.judulBrosur || formData.nama,
+    lokasiDetail: formData.lokasiDetail,
+    transaksi: formData.transaksi || "Dijual",
+    status: formData.status || "Tersedia",
   };
 
   const handleSubmit = async (e) => {
@@ -797,20 +859,38 @@ export function ListingForm({
         {/* ─────────────────────────────────────────────────────────────── */}
         {activeTab === "brosur" && (
           <div className="space-y-6">
-            {/* Card Penjelasan Brosur */}
-            <div className="bg-blue-tint/60 border border-blue-200 rounded-card p-5 flex items-start gap-3">
-              <div className="p-2 bg-remax-blue text-white rounded-btn shrink-0">
-                <HiSparkles className="text-lg" />
+            {/* Card Penjelasan Brosur & Panduan Alur Kerja */}
+            <div className="bg-blue-tint/70 border border-blue-200 rounded-card p-5 space-y-3.5">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-remax-blue text-white rounded-btn shrink-0 mt-0.5 shadow-xs">
+                  <HiSparkles className="text-lg" />
+                </div>
+                <div>
+                  <h2 className="text-xs font-bold text-neutral-900">
+                    Panduan Alur & Materi Lembar Brosur Cetak (A4 300 DPI)
+                  </h2>
+                  <p className="text-[11px] text-neutral-600 mt-0.5 leading-relaxed">
+                    Materi di tab ini dicetak khusus pada lembar brosur fisik profesional untuk calon pembeli.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h2 className="text-xs font-bold text-neutral-900">
-                  Pengaturan Materi Promosi Brosur Cetak
-                </h2>
-                <p className="text-[11px] text-neutral-600 mt-0.5 leading-relaxed">
-                  Informasi di halaman ini digunakan khusus saat mencetak lembar
-                  brosur A4 profesional. Pastikan poin-poin keunggulan dan bonus
-                  dibuat ringkas dan menarik perhatian calon pembeli.
-                </p>
+
+              <div className="bg-white/90 border border-blue-200/90 rounded-btn p-3.5 text-xs text-neutral-700 space-y-2 shadow-2xs">
+                <span className="font-bold text-remax-blue flex items-center gap-1.5 text-[11px]">
+                  <HiInformationCircle className="text-sm shrink-0" />
+                  Alur Kerja Penyusunan Brosur:
+                </span>
+                <ol className="list-decimal list-inside space-y-1.5 text-[11px] text-neutral-600 pl-1 leading-relaxed">
+                  <li>
+                    <strong className="text-neutral-900">Lengkapi Materi:</strong> Tulis judul khusus brosur, poin keunggulan, serta pilih 1 foto sampul utama dan maksimal 5 foto interior pendukung di bawah.
+                  </li>
+                  <li>
+                    <strong className="text-neutral-900">Pratinjau Brosur (Preview):</strong> Klik tombol <span className="font-semibold text-remax-blue">&quot;Pratinjau Brosur&quot;</span> di bagian bawah kapan saja untuk memeriksa tampilan tata letak cetak secara instan 1:1 tanpa perlu menunggu atau menyimpan dulu.
+                  </li>
+                  <li>
+                    <strong className="text-neutral-900">Buat / Perbarui Brosur HD:</strong> Klik tombol <span className="font-semibold text-remax-blue">&quot;Buat / Perbarui Brosur Siap Cetak&quot;</span>. Sistem akan <em>otomatis menyimpan seluruh data formulir terbaru ke database terlebih dahulu</em>, lalu mencetak berkas resolusi tinggi ke Cloudinary. Anda <u>tidak perlu</u> repot menekan tombol &apos;Simpan Perubahan&apos; terlebih dahulu.
+                  </li>
+                </ol>
               </div>
             </div>
 
@@ -1059,14 +1139,15 @@ export function ListingForm({
                         2. Foto Interior & Fasilitas Pendukung (Maksimal 5 Foto)
                       </label>
                       <span className="text-[11px] font-semibold text-remax-blue bg-blue-tint px-2.5 py-0.5 rounded-full">
-                        Terpilih {selectedInterior.length} / 5 Foto
+                        Terpilih {cleanSelectedInterior.length} / 5 Foto
                       </span>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                       {formData.galeri
                         .filter((img) => img !== selectedCover)
                         .map((imgUrl, idx) => {
-                          const isSelected = selectedInterior.includes(imgUrl);
+                          const isSelected =
+                            cleanSelectedInterior.includes(imgUrl);
                           return (
                             <div
                               key={`interior-${idx}`}
@@ -1156,6 +1237,19 @@ export function ListingForm({
                     </div>
 
                     <div className="flex flex-wrap items-center gap-3 pt-2">
+                      {/* Tombol Pratinjau Brosur Modal */}
+                      <button
+                        type="button"
+                        onClick={() => setIsPreviewOpen(true)}
+                        disabled={formData.galeri.length === 0}
+                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-neutral-100 border border-neutral-300 text-neutral-800 rounded-btn text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
+                        title="Lihat tampilan lembar brosur 1:1 secara instan sebelum generate"
+                      >
+                        <HiEye className="text-base text-remax-blue" />
+                        <span>Pratinjau Brosur (Preview)</span>
+                      </button>
+
+                      {/* Tombol Generate / Update ke Cloudinary */}
                       <button
                         type="button"
                         onClick={handleGenerateBrochure}
@@ -1174,8 +1268,8 @@ export function ListingForm({
                             <HiSparkles className="text-base text-amber-300" />
                             <span>
                               {brosurUrl
-                                ? "Perbarui Brosur Siap Cetak"
-                                : "Buat Brosur Siap Cetak Sekarang"}
+                                ? "Update Brosur Siap Cetak"
+                                : "Buat Brosur Siap Cetak"}
                             </span>
                           </>
                         )}
@@ -1186,21 +1280,36 @@ export function ListingForm({
                           href={brosurUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-neutral-100 border border-border-c text-neutral-900 rounded-btn text-xs font-semibold shadow-2xs transition-colors"
+                          className="inline-flex items-center gap-2 px-4 py-2.5 bg-neutral-100 hover:bg-neutral-200 border border-border-c text-neutral-900 rounded-btn text-xs font-semibold shadow-2xs transition-colors"
                         >
                           <HiArrowTopRightOnSquare className="text-base text-remax-blue" />
-                          <span>Lihat Brosur HD (Tab Baru)</span>
+                          <span>Buka Brosur HD (Cloudinary)</span>
                         </a>
                       )}
+                    </div>
+
+                    {/* Penjelasan Alur Kerja Eksekusi Brosur */}
+                    <div className="p-3 bg-neutral-50 border border-neutral-200/80 rounded-btn text-[11px] text-neutral-600 leading-relaxed">
+                      💡 <strong>Petunjuk Alur:</strong> Anda <u>tidak perlu</u> menekan tombol <em>Simpan Perubahan</em> di bawah terlebih dahulu. Mengklik tombol <strong>&quot;{brosurUrl ? "Update Brosur Siap Cetak" : "Buat Brosur Siap Cetak"}&quot;</strong> akan secara otomatis menyimpan seluruh perubahan data formulir terbaru ke database terlebih dahulu, lalu langsung membuat dan mengunggah berkas cetak resolusi tinggi ke Cloudinary.
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="p-4 bg-amber-50 border border-amber-200 rounded-btn text-xs text-amber-800">
-                  💡 <strong>Informasi:</strong> Simpan data properti terlebih
-                  dahulu dengan tombol <em>Simpan Properti</em> di bawah.
-                  Setelah properti tersimpan, Anda dapat langsung membuat brosur
-                  siap cetak otomatis di halaman ini.
+                <div className="p-4 bg-amber-50 border border-amber-200 rounded-btn text-xs text-amber-800 space-y-3">
+                  <p>
+                    💡 <strong>Informasi:</strong> Simpan data properti terlebih
+                    dahulu dengan tombol <em>Simpan Properti</em> di bawah agar tercatat di database. Setelah itu, Anda dapat langsung membuat berkas brosur cetak Cloudinary di halaman ini.
+                  </p>
+                  {formData.galeri.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setIsPreviewOpen(true)}
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-amber-100/60 border border-amber-300 text-amber-900 rounded-btn text-xs font-semibold transition-colors cursor-pointer"
+                    >
+                      <HiEye className="text-base text-amber-700" />
+                      <span>Coba Pratinjau Tata Letak Brosur Sekarang</span>
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -1227,6 +1336,15 @@ export function ListingForm({
                 : "Simpan Properti"}
           </button>
         </div>
+
+        {/* ── Interactive Live Brochure Preview Modal ──────────────────── */}
+        <BrochurePreviewModal
+          isOpen={isPreviewOpen}
+          onClose={() => setIsPreviewOpen(false)}
+          listing={previewListingData}
+          onGenerateBrochure={isEdit ? handleGenerateBrochure : null}
+          isGeneratingBrochure={isGeneratingBrochure}
+        />
       </form>
     );
 }
