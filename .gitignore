@@ -48,3 +48,6 @@ src/app/preview-brosur/print/page.js
 ester-website.code-workspace
 
 /generated
+
+.vercel
+.env*
