@@ -392,24 +392,6 @@ export function ListingForm({
               </p>
             </div>
           </div>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-remax-blue hover:bg-blue-800 disabled:opacity-50 text-white rounded-btn text-xs font-semibold shadow-sm transition-all cursor-pointer"
-          >
-            {isSubmitting ? (
-              <>
-                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                <span>Menyimpan...</span>
-              </>
-            ) : (
-              <>
-                <HiCheck className="text-base" />
-                <span>{isEdit ? "Simpan Perubahan" : "Simpan Properti"}</span>
-              </>
-            )}
-          </button>
         </div>
 
         {errorMessage && (
@@ -859,38 +841,20 @@ export function ListingForm({
         {/* ─────────────────────────────────────────────────────────────── */}
         {activeTab === "brosur" && (
           <div className="space-y-6">
-            {/* Card Penjelasan Brosur & Panduan Alur Kerja */}
-            <div className="bg-blue-tint/70 border border-blue-200 rounded-card p-5 space-y-3.5">
-              <div className="flex items-start gap-3">
-                <div className="p-2 bg-remax-blue text-white rounded-btn shrink-0 mt-0.5 shadow-xs">
-                  <HiSparkles className="text-lg" />
-                </div>
-                <div>
-                  <h2 className="text-xs font-bold text-neutral-900">
-                    Panduan Alur & Materi Lembar Brosur Cetak (A4 300 DPI)
-                  </h2>
-                  <p className="text-[11px] text-neutral-600 mt-0.5 leading-relaxed">
-                    Materi di tab ini dicetak khusus pada lembar brosur fisik profesional untuk calon pembeli.
-                  </p>
-                </div>
+            {/* Panduan Alur Brosur */}
+            <div className="bg-blue-tint/70 border border-blue-200 rounded-card p-4 flex items-start gap-3">
+              <div className="p-2 bg-remax-blue text-white rounded-btn shrink-0 mt-0.5">
+                <HiInformationCircle className="text-lg" />
               </div>
-
-              <div className="bg-white/90 border border-blue-200/90 rounded-btn p-3.5 text-xs text-neutral-700 space-y-2 shadow-2xs">
-                <span className="font-bold text-remax-blue flex items-center gap-1.5 text-[11px]">
-                  <HiInformationCircle className="text-sm shrink-0" />
-                  Alur Kerja Penyusunan Brosur:
-                </span>
-                <ol className="list-decimal list-inside space-y-1.5 text-[11px] text-neutral-600 pl-1 leading-relaxed">
-                  <li>
-                    <strong className="text-neutral-900">Lengkapi Materi:</strong> Tulis judul khusus brosur, poin keunggulan, serta pilih 1 foto sampul utama dan maksimal 5 foto interior pendukung di bawah.
-                  </li>
-                  <li>
-                    <strong className="text-neutral-900">Pratinjau Brosur (Preview):</strong> Klik tombol <span className="font-semibold text-remax-blue">&quot;Pratinjau Brosur&quot;</span> di bagian bawah kapan saja untuk memeriksa tampilan tata letak cetak secara instan 1:1 tanpa perlu menunggu atau menyimpan dulu.
-                  </li>
-                  <li>
-                    <strong className="text-neutral-900">Buat / Perbarui Brosur HD:</strong> Klik tombol <span className="font-semibold text-remax-blue">&quot;Buat / Perbarui Brosur Siap Cetak&quot;</span>. Sistem akan <em>otomatis menyimpan seluruh data formulir terbaru ke database terlebih dahulu</em>, lalu mencetak berkas resolusi tinggi ke Cloudinary. Anda <u>tidak perlu</u> repot menekan tombol &apos;Simpan Perubahan&apos; terlebih dahulu.
-                  </li>
-                </ol>
+              <div className="space-y-1 text-xs">
+                <h2 className="font-bold text-neutral-900">
+                  Cara Membuat Brosur Siap Cetak
+                </h2>
+                <div className="text-neutral-600 leading-relaxed text-[11px] space-y-0.5">
+                  <p>1. Lengkapi judul, keunggulan, serta pilih 1 foto sampul dan maksimal 5 foto pendukung di bawah.</p>
+                  <p>2. Klik <strong>Pratinjau Brosur</strong> jika ingin melihat tampilannya terlebih dahulu.</p>
+                  <p>3. Klik <strong>Update Brosur Siap Cetak</strong> untuk langsung menyimpan dan membuat brosur.</p>
+                </div>
               </div>
             </div>
 
@@ -1231,8 +1195,8 @@ export function ListingForm({
                       </h3>
                       <p className="text-[11px] text-neutral-500 mt-1 leading-relaxed">
                         {brosurUrl
-                          ? "Lembar brosur cetak Ultra-HD telah berhasil digenerate dan tersimpan di Cloudinary. Anda dapat langsung membuka file resolusi tinggi untuk dicetak atau dibagikan ke calon pembeli."
-                          : "Klik tombol di bawah untuk membuat lembar brosur resolusi tinggi (300 DPI A4) dengan foto sampul dan foto interior yang telah Anda tentukan di atas."}
+                          ? "Brosur cetak sudah siap digunakan. Anda dapat langsung melihat atau mengunduh berkas brosur untuk dicetak."
+                          : "Pilih foto sampul dan foto pendukung di atas, lalu klik tombol di bawah untuk membuat brosur siap cetak."}
                       </p>
                     </div>
 
@@ -1243,13 +1207,13 @@ export function ListingForm({
                         onClick={() => setIsPreviewOpen(true)}
                         disabled={formData.galeri.length === 0}
                         className="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-neutral-100 border border-neutral-300 text-neutral-800 rounded-btn text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
-                        title="Lihat tampilan lembar brosur 1:1 secara instan sebelum generate"
+                        title="Lihat tampilan brosur sebelum membuat file cetak"
                       >
                         <HiEye className="text-base text-remax-blue" />
-                        <span>Pratinjau Brosur (Preview)</span>
+                        <span>Pratinjau Brosur</span>
                       </button>
 
-                      {/* Tombol Generate / Update ke Cloudinary */}
+                      {/* Tombol Generate / Update */}
                       <button
                         type="button"
                         onClick={handleGenerateBrochure}
@@ -1261,7 +1225,7 @@ export function ListingForm({
                         {isGeneratingBrochure ? (
                           <>
                             <HiArrowPath className="animate-spin text-base" />
-                            <span>Memproses Brosur HD (Puppeteer)...</span>
+                            <span>Membuat Brosur...</span>
                           </>
                         ) : (
                           <>
@@ -1283,22 +1247,16 @@ export function ListingForm({
                           className="inline-flex items-center gap-2 px-4 py-2.5 bg-neutral-100 hover:bg-neutral-200 border border-border-c text-neutral-900 rounded-btn text-xs font-semibold shadow-2xs transition-colors"
                         >
                           <HiArrowTopRightOnSquare className="text-base text-remax-blue" />
-                          <span>Buka Brosur HD (Cloudinary)</span>
+                          <span>Lihat / Unduh Brosur</span>
                         </a>
                       )}
-                    </div>
-
-                    {/* Penjelasan Alur Kerja Eksekusi Brosur */}
-                    <div className="p-3 bg-neutral-50 border border-neutral-200/80 rounded-btn text-[11px] text-neutral-600 leading-relaxed">
-                      💡 <strong>Petunjuk Alur:</strong> Anda <u>tidak perlu</u> menekan tombol <em>Simpan Perubahan</em> di bawah terlebih dahulu. Mengklik tombol <strong>&quot;{brosurUrl ? "Update Brosur Siap Cetak" : "Buat Brosur Siap Cetak"}&quot;</strong> akan secara otomatis menyimpan seluruh perubahan data formulir terbaru ke database terlebih dahulu, lalu langsung membuat dan mengunggah berkas cetak resolusi tinggi ke Cloudinary.
                     </div>
                   </div>
                 </div>
               ) : (
                 <div className="p-4 bg-amber-50 border border-amber-200 rounded-btn text-xs text-amber-800 space-y-3">
                   <p>
-                    💡 <strong>Informasi:</strong> Simpan data properti terlebih
-                    dahulu dengan tombol <em>Simpan Properti</em> di bawah agar tercatat di database. Setelah itu, Anda dapat langsung membuat berkas brosur cetak Cloudinary di halaman ini.
+                    💡 Simpan properti terlebih dahulu pada tab &quot;Properti&quot; sebelum membuat brosur cetak.
                   </p>
                   {formData.galeri.length > 0 && (
                     <button
@@ -1307,7 +1265,7 @@ export function ListingForm({
                       className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-amber-100/60 border border-amber-300 text-amber-900 rounded-btn text-xs font-semibold transition-colors cursor-pointer"
                     >
                       <HiEye className="text-base text-amber-700" />
-                      <span>Coba Pratinjau Tata Letak Brosur Sekarang</span>
+                      <span>Coba Pratinjau Tampilan Brosur</span>
                     </button>
                   )}
                 </div>
@@ -1316,26 +1274,53 @@ export function ListingForm({
           </div>
         )}
 
-        {/* ── Bottom Submit Bar ────────────────────────────────────────── */}
-        <div className="flex items-center justify-between pt-4 border-t border-border-c">
-          <Link
-            href="/admin/properti"
-            className="px-5 py-2 bg-white hover:bg-neutral-100 border border-border-c text-neutral-900 rounded-btn text-xs font-semibold transition-colors"
-          >
-            Batal
-          </Link>
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="inline-flex items-center gap-2 px-6 py-2.5 bg-remax-blue hover:bg-blue-800 disabled:opacity-50 text-white rounded-btn text-xs font-semibold shadow-sm transition-all cursor-pointer"
-          >
-            {isSubmitting
-              ? "Menyimpan..."
-              : isEdit
-                ? "Simpan Perubahan"
-                : "Simpan Properti"}
-          </button>
-        </div>
+        {/* ── Bottom Bar: Tab Informasi Properti ────────────────────────── */}
+        {activeTab === "properti" && (
+          <div className="flex items-center justify-between pt-4 border-t border-border-c">
+            <Link
+              href="/admin/properti"
+              className="px-5 py-2 bg-white hover:bg-neutral-100 border border-border-c text-neutral-900 rounded-btn text-xs font-semibold transition-colors"
+            >
+              Batal
+            </Link>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-remax-blue hover:bg-blue-800 disabled:opacity-50 text-white rounded-btn text-xs font-semibold shadow-sm transition-all cursor-pointer"
+            >
+              {isSubmitting ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <span>Menyimpan...</span>
+                </>
+              ) : (
+                <>
+                  <HiCheck className="text-base" />
+                  <span>{isEdit ? "Simpan Perubahan" : "Simpan Properti"}</span>
+                </>
+              )}
+            </button>
+          </div>
+        )}
+
+        {/* ── Bottom Bar: Tab Materi Brosur ────────────────────────────── */}
+        {activeTab === "brosur" && (
+          <div className="flex items-center justify-between pt-4 border-t border-border-c">
+            <Link
+              href="/admin/properti"
+              className="px-5 py-2 bg-white hover:bg-neutral-100 border border-border-c text-neutral-900 rounded-btn text-xs font-semibold transition-colors"
+            >
+              Kembali ke Daftar Properti
+            </Link>
+            <button
+              type="button"
+              onClick={() => setActiveTab("properti")}
+              className="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 border border-border-c text-neutral-700 rounded-btn text-xs font-semibold transition-colors cursor-pointer"
+            >
+              ← Buka Tab Informasi Properti
+            </button>
+          </div>
+        )}
 
         {/* ── Interactive Live Brochure Preview Modal ──────────────────── */}
         <BrochurePreviewModal

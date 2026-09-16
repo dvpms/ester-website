@@ -61,14 +61,11 @@ export function BrochurePreviewModal({
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-sm sm:text-base font-bold text-white font-serif tracking-tight">
-                  Pratinjau Brosur Cetak A4
+                  Pratinjau Brosur Cetak
                 </h2>
-                <span className="hidden sm:inline-flex items-center px-2 py-0.5 text-[10px] font-semibold bg-blue-500/10 text-blue-300 border border-blue-500/20 rounded-full">
-                  Live Preview Interaktif
-                </span>
               </div>
               <p className="text-[11px] text-neutral-400">
-                {listing.judulBrosur || listing.nama || 'Brosur Properti'} • Sesuai format cetak 1:1
+                {listing.judulBrosur || listing.nama || 'Brosur Properti'}
               </p>
             </div>
           </div>
@@ -101,7 +98,7 @@ export function BrochurePreviewModal({
           <div className="text-neutral-400 text-center sm:text-left flex items-center gap-2">
             <HiPrinter className="text-base text-neutral-500 hidden sm:inline" />
             <span>
-              Tampilan di atas adalah tata letak aktual yang akan dicetak pada berkas PDF / gambar Ultra-HD.
+              Tampilan di atas adalah hasil yang akan tercetak pada lembar brosur.
             </span>
           </div>
 
@@ -112,7 +109,7 @@ export function BrochurePreviewModal({
               disabled={isGeneratingBrochure}
               className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 rounded-btn font-semibold transition-colors cursor-pointer"
             >
-              Tutup Pratinjau
+              Tutup
             </button>
 
             {onGenerateBrochure && (
@@ -127,12 +124,12 @@ export function BrochurePreviewModal({
                 {isGeneratingBrochure ? (
                   <>
                     <HiArrowPath className="animate-spin text-base" />
-                    <span>Memproses Brosur HD...</span>
+                    <span>Membuat Brosur...</span>
                   </>
                 ) : (
                   <>
                     <HiSparkles className="text-base text-amber-300" />
-                    <span>Buat Brosur Siap Cetak Sekarang</span>
+                    <span>Update Brosur Siap Cetak</span>
                   </>
                 )}
               </button>
