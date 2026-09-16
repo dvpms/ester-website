@@ -8,7 +8,6 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { ListingFilterBar } from './ListingFilterBar';
 import { ListingTable } from './ListingTable';
-import { BrochureCuratorModal } from './BrochureCuratorModal';
 import {
   HiPlus,
   HiBuildingOffice2,
@@ -27,11 +26,7 @@ export function ListingManager({
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
 
-  // Modal State
-  const [selectedListingForBrochure, setSelectedListingForBrochure] = useState(null);
-  const [isCuratorOpen, setIsCuratorOpen] = useState(false);
-
-  // Local listings state for immediate in-page updates (e.g. after brochure generated)
+  // Local listings state for immediate in-page updates
   const [localListings, setLocalListings] = useState(initialListings);
 
   // Helper untuk navigasi URL dengan query string baru
@@ -93,23 +88,6 @@ export function ListingManager({
     });
   };
 
-  const handleOpenBrochureCurator = (listing) => {
-    setSelectedListingForBrochure(listing);
-    setIsCuratorOpen(true);
-  };
-
-  const handleBrochureGenerated = (brosurUrl, fotoBrosur) => {
-    if (!selectedListingForBrochure) return;
-    setLocalListings((prev) =>
-      prev.map((item) =>
-        item.id === selectedListingForBrochure.id
-          ? { ...item, brosurUrl, fotoBrosur }
-          : item
-      )
-    );
-    router.refresh();
-  };
-
   const { currentPage, pageSize, totalItems, totalPages } = pagination;
   const startItem = totalItems > 0 ? (currentPage - 1) * pageSize + 1 : 0;
   const endItem = Math.min(currentPage * pageSize, totalItems);
@@ -162,7 +140,6 @@ export function ListingManager({
       <div className={`transition-opacity duration-200 ${isPending ? 'opacity-60 pointer-events-none' : 'opacity-100'}`}>
         <ListingTable
           listings={localListings.length > 0 ? localListings : initialListings}
-          onOpenBrochureCurator={handleOpenBrochureCurator}
         />
       </div>
 
@@ -247,19 +224,6 @@ export function ListingManager({
             </div>
           </div>
         </div>
-      )}
-
-      {/* Interactive Brochure Curator Modal */}
-      {selectedListingForBrochure && (
-        <BrochureCuratorModal
-          listing={selectedListingForBrochure}
-          isOpen={isCuratorOpen}
-          onClose={() => {
-            setIsCuratorOpen(false);
-            setSelectedListingForBrochure(null);
-          }}
-          onBrochureGenerated={handleBrochureGenerated}
-        />
       )}
     </div>
   );

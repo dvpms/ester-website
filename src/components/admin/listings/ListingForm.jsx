@@ -6,11 +6,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { createListing, updateListing } from '@/app/actions/listingActions';
+import { generateCuratedBrochureAction } from '@/app/actions/brochureActions';
 import { ImageUploader } from './ImageUploader';
 import { MainImageSelector } from './MainImageSelector';
 import { RichTextEditor } from '@/components/ui/RichTextEditor';
-import { toast, showWarningAlert, showErrorAlert } from '@/lib/swal';
+import { toast, showSuccessAlert, showWarningAlert, showErrorAlert } from '@/lib/swal';
 import {
   HiArrowLeft,
   HiCheck,
@@ -20,6 +22,12 @@ import {
   HiHomeModern,
   HiDocumentText,
   HiSparkles,
+  HiStar,
+  HiCheckCircle,
+  HiArrowTopRightOnSquare,
+  HiArrowPath,
+  HiPhoto,
+  HiDocumentArrowDown,
 } from 'react-icons/hi2';
 
 export function ListingForm({ initialData = null, kawasanList = [], isEdit = false }) {
@@ -122,6 +130,77 @@ export function ListingForm({ initialData = null, kawasanList = [], isEdit = fal
         gambarUtama: newMain,
       };
     });
+  // ── Brochure Curation & Generation State ──────────────────────────
+  const [brosurUrl, setBrosurUrl] = useState(initialData?.brosurUrl || null);
+  const [selectedCover, setSelectedCover] = useState(
+    initialData?.gambarUtama || (initialData?.galeri?.[0] || formData.galeri?.[0] || '')
+  );
+  const [selectedInterior, setSelectedInterior] = useState(() => {
+    if (Array.isArray(initialData?.fotoBrosur) && initialData.fotoBrosur.length > 0) {
+      return initialData.fotoBrosur;
+    }
+    const cover = initialData?.gambarUtama || (initialData?.galeri?.[0] || '');
+    return Array.isArray(initialData?.galeri)
+      ? initialData.galeri.filter((img) => img !== cover).slice(0, 5)
+      : [];
+  });
+  const [isGeneratingBrochure, setIsGeneratingBrochure] = useState(false);
+
+  const handleSelectCover = (imgUrl) => {
+    setSelectedCover(imgUrl);
+    if (selectedInterior.includes(imgUrl)) {
+      setSelectedInterior((prev) => prev.filter((u) => u !== imgUrl));
+    }
+  };
+
+  const handleToggleInterior = (imgUrl) => {
+    if (selectedInterior.includes(imgUrl)) {
+      setSelectedInterior((prev) => prev.filter((u) => u !== imgUrl));
+    } else {
+      if (selectedInterior.length >= 5) {
+        showWarningAlert('Batas Foto Tercapai', 'Maksimal 5 foto pendukung interior/fasilitas untuk lembar brosur.');
+        return;
+      }
+      setSelectedInterior((prev) => [...prev, imgUrl]);
+    }
+  };
+
+  const handleGenerateBrochure = async () => {
+    if (!isEdit || !initialData?.id) {
+      showWarningAlert('Simpan Properti Terlebih Dahulu', 'Harap simpan data properti terlebih dahulu sebelum membuat brosur siap cetak.');
+      return;
+    }
+
+    if (!selectedCover) {
+      showWarningAlert('Foto Sampul Belum Dipilih', 'Pilih 1 foto sampul utama untuk brosur cetak.');
+      return;
+    }
+
+    try {
+      setIsGeneratingBrochure(true);
+
+      // Simpan pembaruan teks materi brosur ke database terlebih dahulu
+      await updateListing(initialData.id, formData);
+
+      const res = await generateCuratedBrochureAction({
+        listingId: initialData.id,
+        coverImage: selectedCover,
+        interiorImages: selectedInterior,
+      });
+
+      if (res?.error) {
+        showErrorAlert('Gagal Membuat Brosur', res.error);
+        return;
+      }
+
+      setBrosurUrl(res.brosurUrl);
+      showSuccessAlert('Brosur Berhasil Dibuat!', 'Lembar cetak A4 resolusi tinggi telah siap dan tersimpan di Cloudinary.');
+    } catch (err) {
+      console.error('Error generating brochure:', err);
+      showErrorAlert('Terjadi Kesalahan', err.message || 'Gagal memproses brosur.');
+    } finally {
+      setIsGeneratingBrochure(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -750,6 +829,207 @@ export function ListingForm({ initialData = null, kawasanList = [], isEdit = fal
                 )}
               </div>
             </div>
+          </div>
+
+          {/* Card 4: Kurasi Foto Brosur (Sampul & Interior) */}
+          <div className="bg-white border border-border-c rounded-card p-6 shadow-card space-y-6">
+            <div>
+              <h2 className="text-sm font-bold font-serif text-neutral-900 border-b border-border-c pb-3 flex items-center justify-between">
+                <span>Kurasi Foto Lembar Brosur</span>
+                <span className="text-xs font-sans font-normal text-neutral-500">
+                  {formData.galeri.length} foto tersedia di galeri
+                </span>
+              </h2>
+              <p className="text-xs text-neutral-500 mt-1.5">
+                Pilih 1 foto fasad utama untuk sampul atas brosur, dan pilih hingga maksimal 5 foto interior/fasilitas untuk galeri strip di bawah spesifikasi.
+              </p>
+            </div>
+
+            {formData.galeri.length === 0 ? (
+              <div className="p-8 text-center bg-neutral-100/50 rounded-btn border border-dashed border-border-c">
+                <HiPhoto className="text-3xl text-neutral-400 mx-auto mb-2" />
+                <p className="text-xs text-neutral-600 font-medium">Belum ada foto galeri.</p>
+                <p className="text-[11px] text-neutral-500 mt-0.5">
+                  Unggah foto pada tab <strong>Informasi Properti</strong> terlebih dahulu agar dapat dipilih untuk brosur.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {/* 1. Pilih Foto Sampul (1 Foto) */}
+                <div>
+                  <label className="block text-xs font-bold text-neutral-800 mb-2">
+                    1. Foto Sampul Utama Brosur (Pilih 1 Foto)
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                    {formData.galeri.map((imgUrl, idx) => {
+                      const isCover = selectedCover === imgUrl;
+                      return (
+                        <div
+                          key={`cover-${idx}`}
+                          onClick={() => handleSelectCover(imgUrl)}
+                          className={`group relative aspect-4/3 rounded-btn overflow-hidden cursor-pointer border-2 transition-all ${
+                            isCover
+                              ? 'border-remax-blue ring-2 ring-remax-blue/20 shadow-sm'
+                              : 'border-border-c hover:border-neutral-400 opacity-70 hover:opacity-100'
+                          }`}
+                        >
+                          <Image
+                            src={imgUrl}
+                            alt={`Foto ${idx + 1}`}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 640px) 50vw, 20vw"
+                          />
+                          {isCover && (
+                            <div className="absolute top-2 left-2 bg-remax-blue text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+                              <HiStar className="text-xs text-amber-300" />
+                              <span>Sampul</span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* 2. Pilih Foto Pendukung / Interior (Maks 5 Foto) */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-xs font-bold text-neutral-800">
+                      2. Foto Interior & Fasilitas Pendukung (Maksimal 5 Foto)
+                    </label>
+                    <span className="text-[11px] font-semibold text-remax-blue bg-blue-tint px-2.5 py-0.5 rounded-full">
+                      Terpilih {selectedInterior.length} / 5 Foto
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                    {formData.galeri
+                      .filter((img) => img !== selectedCover)
+                      .map((imgUrl, idx) => {
+                        const isSelected = selectedInterior.includes(imgUrl);
+                        return (
+                          <div
+                            key={`interior-${idx}`}
+                            onClick={() => handleToggleInterior(imgUrl)}
+                            className={`group relative aspect-4/3 rounded-btn overflow-hidden cursor-pointer border-2 transition-all ${
+                              isSelected
+                                ? 'border-emerald-500 ring-2 ring-emerald-500/20 shadow-sm'
+                                : 'border-border-c hover:border-neutral-400 opacity-60 hover:opacity-100'
+                            }`}
+                          >
+                            <Image
+                              src={imgUrl}
+                              alt={`Interior ${idx + 1}`}
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 640px) 50vw, 20vw"
+                            />
+                            {isSelected ? (
+                              <div className="absolute top-2 left-2 bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+                                <HiCheckCircle className="text-xs" />
+                                <span>Brosur</span>
+                              </div>
+                            ) : (
+                              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                <span className="bg-white/90 text-neutral-900 text-[10px] font-bold px-2 py-1 rounded shadow">
+                                  + Pilih
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Card 5: Generator & Hasil Brosur Siap Cetak */}
+          <div className="bg-white border border-border-c rounded-card p-6 shadow-card space-y-4">
+            <div>
+              <h2 className="text-sm font-bold font-serif text-neutral-900 border-b border-border-c pb-3 flex items-center justify-between">
+                <span>Status & Pembuatan Brosur Cetak</span>
+                {brosurUrl && (
+                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+                    <HiCheckCircle className="text-xs" /> Siap Cetak
+                  </span>
+                )}
+              </h2>
+            </div>
+
+            {isEdit ? (
+              <div className="flex flex-col sm:flex-row items-start gap-6 pt-2">
+                {/* Preview Thumbnail Brosur */}
+                <div className="w-full sm:w-48 aspect-210/297 bg-neutral-100 border border-border-c rounded-btn overflow-hidden relative shrink-0 shadow-sm flex items-center justify-center text-center p-2">
+                  {brosurUrl ? (
+                    <Image
+                      src={brosurUrl}
+                      alt="Preview Brosur"
+                      fill
+                      className="object-contain"
+                      sizes="200px"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center text-neutral-400 gap-2">
+                      <HiDocumentText className="text-4xl" />
+                      <span className="text-[10px] font-medium">Brosur Belum Dibuat</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Kontrol & Aksi Brosur */}
+                <div className="flex-1 space-y-4">
+                  <div>
+                    <h3 className="text-xs font-bold text-neutral-900">
+                      {brosurUrl ? 'Lembar Brosur Siap Digunakan' : 'Brosur Belum Dibuat'}
+                    </h3>
+                    <p className="text-[11px] text-neutral-500 mt-1 leading-relaxed">
+                      {brosurUrl
+                        ? 'Lembar brosur cetak Ultra-HD telah berhasil digenerate dan tersimpan di Cloudinary. Anda dapat langsung membuka file resolusi tinggi untuk dicetak atau dibagikan ke calon pembeli.'
+                        : 'Klik tombol di bawah untuk membuat lembar brosur resolusi tinggi (300 DPI A4) dengan foto sampul dan foto interior yang telah Anda tentukan di atas.'}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={handleGenerateBrochure}
+                      disabled={isGeneratingBrochure || formData.galeri.length === 0}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-remax-blue hover:bg-blue-800 disabled:opacity-50 text-white rounded-btn text-xs font-semibold shadow-sm transition-all cursor-pointer"
+                    >
+                      {isGeneratingBrochure ? (
+                        <>
+                          <HiArrowPath className="animate-spin text-base" />
+                          <span>Memproses Brosur HD (Puppeteer)...</span>
+                        </>
+                      ) : (
+                        <>
+                          <HiSparkles className="text-base text-amber-300" />
+                          <span>{brosurUrl ? 'Perbarui Brosur Siap Cetak' : 'Buat Brosur Siap Cetak Sekarang'}</span>
+                        </>
+                      )}
+                    </button>
+
+                    {brosurUrl && (
+                      <a
+                        href={brosurUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-neutral-100 border border-border-c text-neutral-900 rounded-btn text-xs font-semibold shadow-2xs transition-colors"
+                      >
+                        <HiArrowTopRightOnSquare className="text-base text-remax-blue" />
+                        <span>Lihat Brosur HD (Tab Baru)</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="p-4 bg-amber-50 border border-amber-200 rounded-btn text-xs text-amber-800">
+                💡 <strong>Informasi:</strong> Simpan data properti terlebih dahulu dengan tombol <em>Simpan Properti</em> di bawah. Setelah properti tersimpan, Anda dapat langsung membuat brosur siap cetak otomatis di halaman ini.
+              </div>
+            )}
           </div>
         </div>
       )}

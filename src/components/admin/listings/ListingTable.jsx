@@ -14,11 +14,11 @@ import {
   HiTrash,
   HiStar,
   HiArrowTopRightOnSquare,
-  HiDocumentChartBar,
+  HiDocumentText,
   HiPhoto,
 } from 'react-icons/hi2';
 
-export function ListingTable({ listings = [], onOpenBrochureCurator }) {
+export function ListingTable({ listings = [] }) {
   const [items, setItems] = useState(listings);
   const [loadingId, setLoadingId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
@@ -224,30 +224,25 @@ export function ListingTable({ listings = [], onOpenBrochureCurator }) {
                     </select>
                   </td>
 
-                  {/* Brochure Status & Curator Button */}
+                  {/* Brochure Status Indicator */}
                   <td className="py-3.5 px-4 whitespace-nowrap">
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => onOpenBrochureCurator(item)}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-btn text-[11px] font-medium bg-blue-tint text-remax-blue hover:bg-blue-100 border border-blue-200 transition-colors"
-                        title="Pilih foto & generate brosur HD"
+                    {item.brosurUrl ? (
+                      <a
+                        href={item.brosurUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                        title="Buka brosur siap cetak di tab baru"
                       >
-                        <HiDocumentChartBar className="text-sm" />
-                        <span>{item.brosurUrl ? 'Update Brosur' : 'Buat Brosur'}</span>
-                      </button>
-                      {item.brosurUrl && (
-                        <a
-                          href={item.brosurUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-1 text-neutral-600 hover:text-remax-blue rounded"
-                          title="Buka Brosur di Tab Baru"
-                        >
-                          <HiArrowTopRightOnSquare className="text-xs" />
-                        </a>
-                      )}
-                    </div>
+                        <HiDocumentText className="text-sm" />
+                        <span>Siap Cetak</span>
+                        <HiArrowTopRightOnSquare className="text-[10px]" />
+                      </a>
+                    ) : (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] text-neutral-400 bg-neutral-100/60 border border-border-c">
+                        Belum Dibuat
+                      </span>
+                    )}
                   </td>
 
                   {/* Actions */}
