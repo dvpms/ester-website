@@ -4,12 +4,19 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { uploadListingImage } from '@/lib/cloudinary';
+import { applyRateLimit, RateLimits } from '@/lib/rateLimit';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
   try {
+    // 0. Rate Limiting Protection (Maks 20 upload / menit per IP)
+    const rateCheck = applyRateLimit(request, RateLimits.UPLOAD);
+    if (!rateCheck.allowed) {
+      return rateCheck.response;
+    }
+
     // 1. Verifikasi Autentikasi Admin
     const session = await auth();
     if (!session || !session.user) {
