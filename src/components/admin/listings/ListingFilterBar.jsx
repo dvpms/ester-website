@@ -3,6 +3,7 @@
 // src/components/admin/listings/ListingFilterBar.jsx
 // Bar pencarian dan filter untuk halaman daftar properti admin
 
+import { useState, useEffect } from 'react';
 import { HiMagnifyingGlass, HiFunnel, HiXMark } from 'react-icons/hi2';
 
 export function ListingFilterBar({
@@ -17,27 +18,50 @@ export function ListingFilterBar({
   kawasanList = [],
   onResetFilters,
 }) {
-  const hasActiveFilters = searchQuery || statusFilter || kawasanFilter || segmenFilter;
+  // Local state untuk input search agar typing tetap instant & mulus
+  const [localSearch, setLocalSearch] = useState(searchQuery || '');
+
+  // Sinkronisasi jika parent mengubah searchQuery (misal saat reset filter)
+  useEffect(() => {
+    setLocalSearch(searchQuery || '');
+  }, [searchQuery]);
+
+  // Debounce 350ms sebelum memanggil onSearchChange (menghemat request server & DB)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (localSearch !== (searchQuery || '')) {
+        onSearchChange(localSearch);
+      }
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [localSearch, searchQuery, onSearchChange]);
+
+  const hasActiveFilters = Boolean(searchQuery || statusFilter || kawasanFilter || segmenFilter);
 
   return (
     <div className="bg-white border border-border-c rounded-card p-4 shadow-card space-y-3 font-sans">
       <div className="flex flex-col md:flex-row items-center gap-3">
-        {/* Search Input */}
+        {/* Search Input dengan Debounce */}
         <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-600">
             <HiMagnifyingGlass className="text-base" />
           </div>
           <input
             type="text"
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
             placeholder="Cari nama properti, lokasi, atau slug..."
             className="w-full pl-10 pr-4 py-2 bg-neutral-100/60 border border-border-c rounded-btn text-xs text-neutral-900 placeholder-neutral-600/60 focus:outline-none focus:border-remax-blue focus:ring-1 focus:ring-remax-blue/20 transition-all"
           />
-          {searchQuery && (
+          {localSearch && (
             <button
-              onClick={() => onSearchChange('')}
+              onClick={() => {
+                setLocalSearch('');
+                onSearchChange('');
+              }}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-600 hover:text-neutral-900"
+              title="Hapus pencarian"
             >
               <HiXMark className="text-sm" />
             </button>

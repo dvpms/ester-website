@@ -1,10 +1,11 @@
 'use client';
 
 // src/components/admin/listings/ListingManager.jsx
-// Client interactive manager untuk daftar properti, filter, pencarian, pagination, dan modal kurasi brosur
+// Client interactive manager untuk daftar properti dengan Server-Side & Database-Level Pagination
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useTransition } from 'react';
 import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 import { ListingFilterBar } from './ListingFilterBar';
 import { ListingTable } from './ListingTable';
 import { BrochureCuratorModal } from './BrochureCuratorModal';
@@ -13,75 +14,83 @@ import {
   HiBuildingOffice2,
   HiChevronLeft,
   HiChevronRight,
+  HiArrowPath,
 } from 'react-icons/hi2';
 
-export function ListingManager({ initialListings = [], kawasanList = [] }) {
-  const [listings, setListings] = useState(initialListings);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
-  const [kawasanFilter, setKawasanFilter] = useState('');
-  const [segmenFilter, setSegmenFilter] = useState('');
-
-  // Pagination State
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+export function ListingManager({
+  initialListings = [],
+  pagination = { currentPage: 1, pageSize: 10, totalItems: 0, totalPages: 1 },
+  kawasanList = [],
+  currentFilters = { search: '', status: '', kawasan: '', segmen: '', page: 1, pageSize: 10 },
+}) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isPending, startTransition] = useTransition();
 
   // Modal State
   const [selectedListingForBrochure, setSelectedListingForBrochure] = useState(null);
   const [isCuratorOpen, setIsCuratorOpen] = useState(false);
 
-  // Reset page to 1 whenever any filter changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, statusFilter, kawasanFilter, segmenFilter, pageSize]);
+  // Local listings state for immediate in-page updates (e.g. after brochure generated)
+  const [localListings, setLocalListings] = useState(initialListings);
 
-  // Filter & Search Logic
-  const filteredListings = useMemo(() => {
-    return listings.filter((item) => {
-      // Search query
-      if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        const matchName = item.nama?.toLowerCase().includes(q);
-        const matchSlug = item.slug?.toLowerCase().includes(q);
-        const matchLocation = item.lokasiDetail?.toLowerCase().includes(q);
-        if (!matchName && !matchSlug && !matchLocation) return false;
-      }
+  // Helper untuk navigasi URL dengan query string baru
+  const updateQueryParams = (updates) => {
+    const params = new URLSearchParams();
 
-      // Status filter
-      if (statusFilter && item.status !== statusFilter) {
-        return false;
-      }
+    const merged = {
+      search: currentFilters.search,
+      status: currentFilters.status,
+      kawasan: currentFilters.kawasan,
+      segmen: currentFilters.segmen,
+      page: currentFilters.page,
+      pageSize: currentFilters.pageSize,
+      ...updates,
+    };
 
-      // Kawasan filter
-      if (kawasanFilter && item.kawasanId !== kawasanFilter) {
-        return false;
-      }
+    if (merged.search) params.set('search', merged.search);
+    if (merged.status) params.set('status', merged.status);
+    if (merged.kawasan) params.set('kawasan', merged.kawasan);
+    if (merged.segmen) params.set('segmen', merged.segmen);
+    if (merged.pageSize && merged.pageSize !== 10) params.set('pageSize', String(merged.pageSize));
+    if (merged.page && merged.page > 1) params.set('page', String(merged.page));
 
-      // Segmen filter
-      if (segmenFilter && item.segmen !== segmenFilter) {
-        return false;
-      }
+    const queryString = params.toString();
+    const targetUrl = queryString ? `${pathname}?${queryString}` : pathname;
 
-      return true;
+    startTransition(() => {
+      router.push(targetUrl, { scroll: false });
     });
-  }, [listings, searchQuery, statusFilter, kawasanFilter, segmenFilter]);
+  };
 
-  // Pagination Calculations
-  const totalItems = filteredListings.length;
-  const totalPages = Math.ceil(totalItems / pageSize) || 1;
-  const safePage = Math.min(Math.max(currentPage, 1), totalPages);
-  const startIndex = (safePage - 1) * pageSize;
-  const endIndex = Math.min(startIndex + pageSize, totalItems);
-  const paginatedListings = useMemo(() => {
-    return filteredListings.slice(startIndex, endIndex);
-  }, [filteredListings, startIndex, endIndex]);
+  const handleSearchChange = (newSearch) => {
+    updateQueryParams({ search: newSearch, page: 1 });
+  };
+
+  const handleStatusChange = (newStatus) => {
+    updateQueryParams({ status: newStatus, page: 1 });
+  };
+
+  const handleKawasanChange = (newKawasan) => {
+    updateQueryParams({ kawasan: newKawasan, page: 1 });
+  };
+
+  const handleSegmenChange = (newSegmen) => {
+    updateQueryParams({ segmen: newSegmen, page: 1 });
+  };
+
+  const handlePageChange = (newPage) => {
+    updateQueryParams({ page: newPage });
+  };
+
+  const handlePageSizeChange = (newSize) => {
+    updateQueryParams({ pageSize: newSize, page: 1 });
+  };
 
   const handleResetFilters = () => {
-    setSearchQuery('');
-    setStatusFilter('');
-    setKawasanFilter('');
-    setSegmenFilter('');
-    setCurrentPage(1);
+    startTransition(() => {
+      router.push(pathname, { scroll: false });
+    });
   };
 
   const handleOpenBrochureCurator = (listing) => {
@@ -91,14 +100,19 @@ export function ListingManager({ initialListings = [], kawasanList = [] }) {
 
   const handleBrochureGenerated = (brosurUrl, fotoBrosur) => {
     if (!selectedListingForBrochure) return;
-    setListings((prev) =>
+    setLocalListings((prev) =>
       prev.map((item) =>
         item.id === selectedListingForBrochure.id
           ? { ...item, brosurUrl, fotoBrosur }
           : item
       )
     );
+    router.refresh();
   };
+
+  const { currentPage, pageSize, totalItems, totalPages } = pagination;
+  const startItem = totalItems > 0 ? (currentPage - 1) * pageSize + 1 : 0;
+  const endItem = Math.min(currentPage * pageSize, totalItems);
 
   return (
     <div className="space-y-6 font-sans">
@@ -110,9 +124,14 @@ export function ListingManager({ initialListings = [], kawasanList = [] }) {
             <h1 className="text-xl sm:text-2xl font-bold font-serif text-neutral-900">
               Listing Properti
             </h1>
+            {isPending && (
+              <span className="inline-flex items-center gap-1 text-[11px] text-neutral-500 bg-neutral-100 px-2 py-0.5 rounded-full animate-pulse">
+                <HiArrowPath className="animate-spin text-remax-blue" /> Memuat data...
+              </span>
+            )}
           </div>
           <p className="text-xs text-neutral-500 mt-1">
-            Total {listings.length} properti terdaftar.
+            Total {totalItems} properti terdaftar di database.
           </p>
         </div>
 
@@ -125,32 +144,34 @@ export function ListingManager({ initialListings = [], kawasanList = [] }) {
         </Link>
       </div>
 
-      {/* Filter Bar */}
+      {/* Filter Bar (dengan Debounce dan Navigasi Server) */}
       <ListingFilterBar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        statusFilter={statusFilter}
-        onStatusChange={setStatusFilter}
-        kawasanFilter={kawasanFilter}
-        onKawasanChange={setKawasanFilter}
-        segmenFilter={segmenFilter}
-        onSegmenChange={setSegmenFilter}
+        searchQuery={currentFilters.search}
+        onSearchChange={handleSearchChange}
+        statusFilter={currentFilters.status}
+        onStatusChange={handleStatusChange}
+        kawasanFilter={currentFilters.kawasan}
+        onKawasanChange={handleKawasanChange}
+        segmenFilter={currentFilters.segmen}
+        onSegmenChange={handleSegmenChange}
         kawasanList={kawasanList}
         onResetFilters={handleResetFilters}
       />
 
-      {/* Listings Table with Paginated Data */}
-      <ListingTable
-        listings={paginatedListings}
-        onOpenBrochureCurator={handleOpenBrochureCurator}
-      />
+      {/* Listings Table */}
+      <div className={`transition-opacity duration-200 ${isPending ? 'opacity-60 pointer-events-none' : 'opacity-100'}`}>
+        <ListingTable
+          listings={localListings.length > 0 ? localListings : initialListings}
+          onOpenBrochureCurator={handleOpenBrochureCurator}
+        />
+      </div>
 
-      {/* Pagination Controls */}
+      {/* Database-Level Pagination Controls */}
       {totalItems > 0 && (
         <div className="bg-white border border-border-c rounded-card p-4 shadow-card flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-sans">
           {/* Item Count Info */}
           <div className="text-neutral-600">
-            Menampilkan <span className="font-semibold text-neutral-900">{totalItems > 0 ? startIndex + 1 : 0}</span> - <span className="font-semibold text-neutral-900">{endIndex}</span> dari <span className="font-semibold text-neutral-900">{totalItems}</span> properti
+            Menampilkan <span className="font-semibold text-neutral-900">{startItem}</span> - <span className="font-semibold text-neutral-900">{endItem}</span> dari <span className="font-semibold text-neutral-900">{totalItems}</span> properti
           </div>
 
           {/* Page Buttons & Size Selector */}
@@ -160,8 +181,8 @@ export function ListingManager({ initialListings = [], kawasanList = [] }) {
               <span className="text-neutral-500 hidden sm:inline">Tampilkan:</span>
               <select
                 value={pageSize}
-                onChange={(e) => setPageSize(Number(e.target.value))}
-                className="py-1.5 px-2.5 bg-neutral-100 border border-border-c rounded-btn text-xs text-neutral-900 font-medium focus:outline-none focus:border-remax-blue"
+                onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+                className="py-1.5 px-2.5 bg-neutral-100 border border-border-c rounded-btn text-xs text-neutral-900 font-medium focus:outline-none focus:border-remax-blue cursor-pointer"
               >
                 <option value={10}>10 / halaman</option>
                 <option value={20}>20 / halaman</option>
@@ -173,8 +194,8 @@ export function ListingManager({ initialListings = [], kawasanList = [] }) {
             <div className="flex items-center gap-1">
               <button
                 type="button"
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={safePage <= 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage <= 1 || isPending}
                 className="p-1.5 rounded-btn border border-border-c text-neutral-700 hover:bg-neutral-100 disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer transition-colors"
                 title="Halaman Sebelumnya"
               >
@@ -184,12 +205,11 @@ export function ListingManager({ initialListings = [], kawasanList = [] }) {
               {/* Numbered page indicators */}
               <div className="flex items-center gap-1 px-1">
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
-                  // Only show current page, 1, last page, and adjacent pages if many pages
                   if (
                     totalPages > 7 &&
                     pageNum !== 1 &&
                     pageNum !== totalPages &&
-                    Math.abs(pageNum - safePage) > 1
+                    Math.abs(pageNum - currentPage) > 1
                   ) {
                     if (pageNum === 2 || pageNum === totalPages - 1) {
                       return <span key={pageNum} className="px-1 text-neutral-400">...</span>;
@@ -201,9 +221,10 @@ export function ListingManager({ initialListings = [], kawasanList = [] }) {
                     <button
                       key={pageNum}
                       type="button"
-                      onClick={() => setCurrentPage(pageNum)}
+                      onClick={() => handlePageChange(pageNum)}
+                      disabled={isPending}
                       className={`min-w-[30px] h-[30px] rounded-btn text-xs font-semibold transition-colors cursor-pointer ${
-                        pageNum === safePage
+                        pageNum === currentPage
                           ? 'bg-remax-blue text-white shadow-2xs'
                           : 'text-neutral-700 hover:bg-neutral-100 border border-transparent hover:border-border-c'
                       }`}
@@ -216,8 +237,8 @@ export function ListingManager({ initialListings = [], kawasanList = [] }) {
 
               <button
                 type="button"
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                disabled={safePage >= totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage >= totalPages || isPending}
                 className="p-1.5 rounded-btn border border-border-c text-neutral-700 hover:bg-neutral-100 disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer transition-colors"
                 title="Halaman Berikutnya"
               >
