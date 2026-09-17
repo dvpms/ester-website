@@ -13,15 +13,13 @@ const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
  * @returns {string}
  */
 function getBaseUrl() {
-  // In Vercel preview environment, prioritize the unique preview URL
-  if (process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL) {
+  // On Vercel (Preview or Production), always prioritize VERCEL_URL so Puppeteer accesses
+  // the current deployment's own routes (rather than external production which may not have new routes)
+  if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
   }
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '');
-  }
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
   }
   const port = process.env.PORT || 3000;
   return `http://localhost:${port}`;
@@ -153,15 +151,21 @@ async function executeImageGeneration(listing, options) {
       }
     });
 
-    // 2. Navigasi cepat dengan 'domcontentloaded' (tidak menunggu idle network yang lambat)
-    await page.goto(targetUrl, {
+    // 2. Navigasi cepat dengan 'domcontentloaded'
+    console.log(`[Puppeteer] Navigating to: ${targetUrl}`);
+    const response = await page.goto(targetUrl, {
       waitUntil: 'domcontentloaded',
       timeout: 25000,
     });
+    const status = response ? response.status() : null;
+    console.log(`[Puppeteer] Page response status: ${status} for ${targetUrl}`);
+    if (status && status >= 400) {
+      throw new Error(`Puppeteer gagal memuat brosur: HTTP ${status} di ${targetUrl}`);
+    }
 
     // 3. Pastikan elemen brosur dan seluruh font web telah selesai termuat
     await Promise.all([
-      page.waitForSelector('#brochure-container', { timeout: 10000 }).catch(() => null),
+      page.waitForSelector('#brochure-container', { timeout: 15000 }),
       page.evaluate(() => (document.fonts ? document.fonts.ready : Promise.resolve())).catch(() => null),
     ]);
 
