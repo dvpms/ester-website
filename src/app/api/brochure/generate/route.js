@@ -3,6 +3,7 @@ import { listings } from '@/data/listings';
 import { generateBrochureImage } from '@/lib/brochure/generator';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 /**
  * Helper to find a listing by slug or ID with fallback to first listing.
