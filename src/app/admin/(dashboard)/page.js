@@ -18,27 +18,45 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboardPage() {
   // Ambil metrik ringkasan dari database Neon
+  // Menggunakan raw query FILTER clause untuk agregasi status properti dalam 1 round-trip
   const [
-    totalListings,
-    availableListings,
-    soldListings,
+    listingStatsRaw,
     totalKawasan,
     totalArticles,
     totalTestimonials,
     recentListings,
   ] = await Promise.all([
-    prisma.listing.count().catch(() => 0),
-    prisma.listing.count({ where: { status: 'tersedia' } }).catch(() => 0),
-    prisma.listing.count({ where: { status: 'terjual' } }).catch(() => 0),
+    prisma.$queryRaw`
+      SELECT 
+        COUNT(*)::int AS "total",
+        COUNT(*) FILTER (WHERE status = 'tersedia')::int AS "available",
+        COUNT(*) FILTER (WHERE status = 'terjual')::int AS "sold"
+      FROM listings;
+    `.catch(() => [{ total: 0, available: 0, sold: 0 }]),
     prisma.kawasan.count().catch(() => 0),
     prisma.artikel.count().catch(() => 0),
     prisma.testimoni.count().catch(() => 0),
     prisma.listing.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },
-      include: { kawasan: { select: { nama: true } } },
+      select: {
+        id: true,
+        nama: true,
+        slug: true,
+        harga: true,
+        status: true,
+        featured: true,
+        kawasanSlug: true,
+        kawasan: {
+          select: { nama: true },
+        },
+      },
     }).catch(() => []),
   ]);
+
+  const totalListings = listingStatsRaw?.[0]?.total || 0;
+  const availableListings = listingStatsRaw?.[0]?.available || 0;
+  const soldListings = listingStatsRaw?.[0]?.sold || 0;
 
   const stats = [
     {
@@ -148,7 +166,7 @@ export default async function AdminDashboardPage() {
               Listing Properti Terbaru
             </h2>
             <p className="text-xs text-neutral-600 mt-0.5">
-              5 properti terakhir yang terdaftar di database Neon
+              5 properti terakhir yang ditambahkan
             </p>
           </div>
           <Link
