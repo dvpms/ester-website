@@ -4,6 +4,7 @@
 // Server Action untuk meng-generate brosur HD dengan foto-foto terkurasi & simpan ke Cloudinary
 
 import { revalidatePath } from 'next/cache';
+import { headers } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { generateBrochureImage } from '@/lib/brochure/generator';
@@ -41,7 +42,14 @@ export async function generateCuratedBrochureAction({ listingId, coverImage, int
       ? interiorImages.slice(0, 5)
       : (Array.isArray(listing.galeri) ? listing.galeri.slice(1, 6) : []);
 
-    // 4. Jalankan Puppeteer Generator dengan opsi kurasi foto
+    // 4. Ambil origin dan cookies dari request agar Puppeteer mengakses domain yang sama dan lolos autentikasi
+    const headersList = await headers();
+    const host = headersList.get('x-forwarded-host') || headersList.get('host');
+    const proto = headersList.get('x-forwarded-proto') || 'https';
+    const origin = host ? `${proto}://${host}` : undefined;
+    const cookie = headersList.get('cookie') || undefined;
+
+    // 5. Jalankan Puppeteer Generator dengan opsi kurasi foto
     const result = await generateBrochureImage(
       {
         ...listing,
@@ -52,6 +60,8 @@ export async function generateCuratedBrochureAction({ listingId, coverImage, int
         forceFresh: true,
         coverImage: effectiveCover,
         interiorImages: effectiveInterior,
+        origin,
+        cookie,
       }
     );
 
