@@ -20,7 +20,7 @@ export function ListingManager({
   initialListings = [],
   pagination = { currentPage: 1, pageSize: 10, totalItems: 0, totalPages: 1 },
   kawasanList = [],
-  currentFilters = { search: '', status: '', kawasan: '', segmen: '', page: 1, pageSize: 10 },
+  currentFilters = { search: '', status: '', kawasan: '', segmen: '', jenis: '', page: 1, pageSize: 10 },
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -35,6 +35,7 @@ export function ListingManager({
       status: currentFilters.status,
       kawasan: currentFilters.kawasan,
       segmen: currentFilters.segmen,
+      jenis: currentFilters.jenis,
       page: currentFilters.page,
       pageSize: currentFilters.pageSize,
       ...updates,
@@ -44,6 +45,7 @@ export function ListingManager({
     if (merged.status) params.set('status', merged.status);
     if (merged.kawasan) params.set('kawasan', merged.kawasan);
     if (merged.segmen) params.set('segmen', merged.segmen);
+    if (merged.jenis) params.set('jenis', merged.jenis);
     if (merged.pageSize && merged.pageSize !== 10) params.set('pageSize', String(merged.pageSize));
     if (merged.page && merged.page > 1) params.set('page', String(merged.page));
 
@@ -69,6 +71,10 @@ export function ListingManager({
 
   const handleSegmenChange = (newSegmen) => {
     updateQueryParams({ segmen: newSegmen, page: 1 });
+  };
+
+  const handleJenisChange = (newJenis) => {
+    updateQueryParams({ jenis: newJenis, page: 1 });
   };
 
   const handlePageChange = (newPage) => {
@@ -129,6 +135,8 @@ export function ListingManager({
         onKawasanChange={handleKawasanChange}
         segmenFilter={currentFilters.segmen}
         onSegmenChange={handleSegmenChange}
+        jenisFilter={currentFilters.jenis}
+        onJenisChange={handleJenisChange}
         kawasanList={kawasanList}
         onResetFilters={handleResetFilters}
       />
