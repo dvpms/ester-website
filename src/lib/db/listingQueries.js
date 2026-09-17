@@ -26,6 +26,7 @@ export async function getPaginatedListings({
   status = '',
   kawasanId = '',
   segmen = '',
+  jenis = '',
 } = {}) {
   const safePage = Math.max(1, parseInt(page, 10) || 1);
   const safePageSize = Math.min(100, Math.max(1, parseInt(pageSize, 10) || 10));
@@ -55,6 +56,11 @@ export async function getPaginatedListings({
   const trimmedSegmen = (segmen || '').trim();
   if (trimmedSegmen) {
     conditions.push(Prisma.sql`l.segmen = ${trimmedSegmen}`);
+  }
+
+  const trimmedJenis = (jenis || '').trim();
+  if (trimmedJenis) {
+    conditions.push(Prisma.sql`l.jenis_properti = ${trimmedJenis}`);
   }
 
   const whereClause =

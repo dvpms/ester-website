@@ -294,7 +294,7 @@ export function ListingForm({
       setBrosurUrl(res.brosurUrl);
       showSuccessAlert(
         "Brosur Berhasil Dibuat!",
-        "Perubahan data formulir otomatis tersimpan dan lembar cetak A4 Ultra-HD siap di Cloudinary.",
+        "Brosur siap digunakan",
       );
     } catch (err) {
       console.error("Error generating brochure:", err);

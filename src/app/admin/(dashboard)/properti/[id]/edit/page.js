@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma';
 import { ListingForm } from '@/components/admin/listings/ListingForm';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 export async function generateMetadata({ params }) {
   const { id } = await params;

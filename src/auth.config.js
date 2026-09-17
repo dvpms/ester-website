@@ -3,6 +3,7 @@
 
 /** @type {import('next-auth').NextAuthConfig} */
 export const authConfig = {
+  trustHost: true,
   pages: {
     signIn: '/admin/login',
   },

@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactCompiler: true,
-  serverExternalPackages: ['puppeteer'],
+  serverExternalPackages: ['puppeteer-core', '@sparticuz/chromium', 'puppeteer'],
+  outputFileTracingIncludes: {
+    '/*': [
+      './node_modules/@sparticuz/chromium/bin/**/*',
+    ],
+  },
   images: {
     remotePatterns: [
       {
