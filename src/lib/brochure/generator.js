@@ -126,11 +126,24 @@ async function executeImageGeneration(listing, options) {
       deviceScaleFactor: 2,
     });
 
-    let targetUrl = `${getBaseUrl()}/preview-brosur/print?slug=${listing.slug}`;
+    const base = options.origin || getBaseUrl();
+    let targetUrl = `${base}/preview-brosur/print?slug=${listing.slug}`;
     if (options.coverImage || options.interiorImages) {
       const coverParam = options.coverImage ? `&cover=${encodeURIComponent(options.coverImage)}` : '';
       const interiorParam = options.interiorImages ? `&interior=${encodeURIComponent(JSON.stringify(options.interiorImages))}` : '';
       targetUrl = `${targetUrl}${coverParam}${interiorParam}`;
+    }
+
+    // Teruskan cookie sesi pengguna dan bypass secret agar lolos autentikasi Vercel Deployment Protection
+    const extraHeaders = {};
+    if (options.cookie) {
+      extraHeaders.cookie = options.cookie;
+    }
+    if (process.env.VERCEL_AUTOMATION_BYPASS_SECRET) {
+      extraHeaders['x-vercel-protection-bypass'] = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+    }
+    if (Object.keys(extraHeaders).length > 0) {
+      await page.setExtraHTTPHeaders(extraHeaders);
     }
 
     // 1. Optimasi request interception untuk memblokir tracking/analitik yang memperlambat render

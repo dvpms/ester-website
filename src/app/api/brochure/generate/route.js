@@ -42,11 +42,16 @@ export async function GET(request) {
       );
     }
 
+    const origin = request.nextUrl.origin;
+    const cookie = request.headers.get('cookie') || undefined;
+
     // Jika download=true, kirim langsung sebagai attachment file download stream
     if (isDownload) {
       const { imageBytes } = await generateBrochureImage(listing, {
         upload: false,
         forceFresh: isFresh,
+        origin,
+        cookie,
       });
       return new NextResponse(imageBytes, {
         status: 200,
@@ -61,6 +66,8 @@ export async function GET(request) {
     const { cloudinaryUrl } = await generateBrochureImage(listing, {
       upload: true,
       forceFresh: isFresh,
+      origin,
+      cookie,
     });
 
     return NextResponse.json({
