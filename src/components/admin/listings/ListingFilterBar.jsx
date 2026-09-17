@@ -15,6 +15,8 @@ export function ListingFilterBar({
   onKawasanChange,
   segmenFilter,
   onSegmenChange,
+  jenisFilter,
+  onJenisChange,
   kawasanList = [],
   onResetFilters,
 }) {
@@ -37,7 +39,7 @@ export function ListingFilterBar({
     return () => clearTimeout(timer);
   }, [localSearch, searchQuery, onSearchChange]);
 
-  const hasActiveFilters = Boolean(searchQuery || statusFilter || kawasanFilter || segmenFilter);
+  const hasActiveFilters = Boolean(searchQuery || statusFilter || kawasanFilter || segmenFilter || jenisFilter);
 
   return (
     <div className="bg-white border border-border-c rounded-card p-4 shadow-card space-y-3 font-sans">
@@ -80,6 +82,19 @@ export function ListingFilterBar({
             <option value="tersedia">Tersedia</option>
             <option value="proses">Dalam Proses</option>
             <option value="terjual">Terjual</option>
+          </select>
+
+          {/* Jenis Properti Filter */}
+          <select
+            value={jenisFilter}
+            onChange={(e) => onJenisChange(e.target.value)}
+            className="py-2 px-3 bg-white border border-border-c rounded-btn text-xs text-neutral-900 focus:outline-none focus:border-remax-blue font-medium"
+          >
+            <option value="">Semua Jenis</option>
+            <option value="rumah">Rumah</option>
+            <option value="ruko">Ruko / Rukan</option>
+            <option value="kavling">Tanah Kavling</option>
+            <option value="apartemen">Apartemen</option>
           </select>
 
           {/* Kawasan Filter */}

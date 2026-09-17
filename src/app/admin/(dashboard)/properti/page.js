@@ -21,6 +21,7 @@ export default async function AdminPropertiPage(props) {
   const status = searchParams?.status || '';
   const kawasanId = searchParams?.kawasan || '';
   const segmen = searchParams?.segmen || '';
+  const jenis = searchParams?.jenis || '';
 
   // Ambil data listing terpaginasi (database LIMIT & OFFSET) dan master kawasan
   const [paginatedData, kawasanList] = await Promise.all([
@@ -31,6 +32,7 @@ export default async function AdminPropertiPage(props) {
       status,
       kawasanId,
       segmen,
+      jenis,
     }),
     prisma.kawasan.findMany({
       orderBy: { nama: 'asc' },
@@ -48,6 +50,7 @@ export default async function AdminPropertiPage(props) {
         status,
         kawasan: kawasanId,
         segmen,
+        jenis,
         page,
         pageSize,
       }}
